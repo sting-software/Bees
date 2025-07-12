@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search_hives"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search_label"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_select_all_hives"
+        android:icon="@drawable/ic_select_all"
+        android:title="@string/select_all_label"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_move_selected_hives"
+        android:icon="@drawable/ic_move"
+        android:title="@string/move_selected_label"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_edit_selected_hives"
+        android:icon="@drawable/ic_edit"
+        android:title="@string/edit_selected_label"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_delete_selected_hives"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/delete_selected_label"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_cancel_selection"
+        android:icon="@drawable/ic_cancel"
+        android:title="@string/cancel_selection_label"
+        android:visible="false"
+        app:showAsAction="always" />
+
+</menu>

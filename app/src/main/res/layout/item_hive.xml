@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/hive_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hive_item_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- CheckBox for multi-selection -->
+        <CheckBox
+            android:id="@+id/checkbox_hive_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="8dp"
+            tools:visibility="visible" />
+
+        <!-- Hive Number -->
+        <TextView
+            android:id="@+id/text_view_hive_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="?android:attr/textColorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkbox_hive_select"
+            app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
+            tools:text="Hive #45" />
+
+        <!-- Hive Type -->
+        <TextView
+            android:id="@+id/text_view_hive_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hive_number"
+            app:layout_constraintStart_toEndOf="@id/checkbox_hive_select"
+            app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
+            tools:text="Type: Langstroth" />
+
+        <!-- Frame Type -->
+        <TextView
+            android:id="@+id/text_view_frame_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_hive_type"
+            app:layout_constraintStart_toEndOf="@id/checkbox_hive_select"
+            app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
+            tools:text="Frames: Deep" />
+
+        <!-- Breed -->
+        <TextView
+            android:id="@+id/text_view_breed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_frame_type"
+            app:layout_constraintStart_toEndOf="@id/checkbox_hive_select"
+            app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
+            tools:text="Breed: Carniolan" />
+
+        <!-- Last Inspection Date -->
+        <TextView
+            android:id="@+id/text_view_last_inspection_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?android:attr/textColorSecondary"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_breed"
+            app:layout_constraintStart_toEndOf="@id/checkbox_hive_select"
+            app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
+            tools:text="Last Inspection: 15/06/2025" />
+
+        <!-- Edit Button -->
+        <ImageButton
+            android:id="@+id/image_button_edit_hive"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_edit"
+            app:tint="?attr/colorAccent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="Edit hive" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

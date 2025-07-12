@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.inspectionedit.AddEditInspectionFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Inspection Date -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_inspection_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/inspection_date_hint"
+            app:endIconDrawable="@drawable/ic_calendar"
+            app:endIconMode="custom"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_inspection_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Queen & Brood Status Section -->
+        <!-- Removed: text_view_queen_brood_status_title -->
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox_queen_cells_present"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/queen_cells_present"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Queen Cells Count (Conditional Visibility) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_queen_cells_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/queen_cells_count_hint"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintTop_toBottomOf="@id/checkbox_queen_cells_present"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_queen_cells_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Detailed Frame Counts Section -->
+        <TextView
+            android:id="@+id/text_view_detailed_frames_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/detailed_frames_title"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_cells_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_frames_eggs_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/frames_eggs_count_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_detailed_frames_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_frames_eggs_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_frames_open_brood_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/frames_open_brood_count_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_eggs_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_frames_open_brood_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_frames_capped_brood_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/frames_capped_brood_count_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_open_brood_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_frames_capped_brood_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_frames_honey_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/frames_honey_count_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_capped_brood_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_frames_honey_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_frames_pollen_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/frames_pollen_count_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_honey_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_frames_pollen_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Health & Treatment Section -->
+        <TextView
+            android:id="@+id/text_view_health_treatment_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/health_treatment_title"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_pollen_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_pests_diseases_observed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/pests_diseases_observed_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_health_treatment_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_pests_diseases_observed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_treatment_applied"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/treatment_applied_hint"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_pests_diseases_observed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_treatment_applied"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Temperament Rating Section -->
+        <TextView
+            android:id="@+id/text_view_temperament_rating_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/temperament_rating_title"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_treatment_applied"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/radio_group_temperament"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_temperament_rating_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <RadioButton
+                android:id="@+id/radio_temperament_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/temperament_rating_1" />
+
+            <RadioButton
+                android:id="@+id/radio_temperament_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/temperament_rating_2" />
+
+            <RadioButton
+                android:id="@+id/radio_temperament_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/temperament_rating_3" />
+
+            <RadioButton
+                android:id="@+id/radio_temperament_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/temperament_rating_4" />
+        </RadioGroup>
+
+        <!-- Management Actions Taken -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_management_actions_taken"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/management_actions_taken_hint"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/radio_group_temperament"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_management_actions_taken"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- General Notes -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_layout_inspection_notes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/notes_hint"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_management_actions_taken"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_inspection_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Save and Cancel Buttons -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_save_inspection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save_button"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_notes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_cancel_inspection"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_cancel_inspection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_button"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_notes"
+            app:layout_constraintStart_toEndOf="@id/button_save_inspection"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Standard Material Design Colors (you might have these already) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Your App's Primary and Accent Colors (example values) -->
+    <color name="colorPrimary">#4CAF50</color>       <!-- A green color -->
+    <color name="colorPrimaryVariant">#388E3C</color>  <!-- A darker green -->
+    <color name="colorOnPrimary">#FFFFFF</color>      <!-- White text on primary background -->
+
+    <color name="colorSecondary">#FFC107</color>      <!-- An amber color -->
+    <color name="colorSecondaryVariant">#FFA000</color> <!-- A darker amber -->
+    <color name="colorOnSecondary">#000000</color>    <!-- Black text on secondary background -->
+
+    <color name="colorError">#F44336</color>          <!-- Red for errors -->
+    <color name="colorOnError">#FFFFFF</color>
+
+    <!-- You can also define specific text colors if you want to override default Android ones -->
+    <color name="app_text_primary">#212121</color>
+    <color name="app_text_secondary">#757575</color>
+
+    <!-- NEW: Default background color for unselected hive views in light mode -->
+    <color name="colorHiveDefaultBackground">#F0F0F0</color> <!-- A very light grey -->
+    <!-- NEW: Color for selected hive background in light mode (subtle grey) -->
+    <color name="colorHiveSelectedBackground">#E0E0E0</color>
+</resources>

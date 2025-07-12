@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for dark mode, now extending DarkActionBar to show the top bar -->
+    <style name="Base.Theme.Pasika" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <!-- Error color. -->
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorOnError</item>
+        <!-- Surface and background colors for dark mode. -->
+        <item name="colorSurface">#121212</item> <!-- Dark surface for cards, etc. -->
+        <item name="colorOnSurface">@color/app_text_primary</item> <!-- Light text on dark surface -->
+        <item name="android:colorBackground">#121212</item> <!-- Dark background for screen -->
+        <item name="colorOnBackground">@color/app_text_primary</item> <!-- Light text on dark background -->
+
+        <!-- Updated: Text colors for dark mode -->
+        <item name="android:textColorPrimary">@color/app_text_primary</item>
+        <item name="android:textColorSecondary">@color/app_text_secondary</item>
+
+        <!-- Color for action menu items (text) in the toolbar -->
+        <item name="actionMenuTextColor">@color/app_text_primary</item>
+
+        <!-- NEW: Style for the toolbar to control icon tinting -->
+        <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
+
+        <!-- Status bar color -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Make status bar icons light for dark status bar background -->
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <!-- Navigation bar color -->
+        <item name="android:navigationBarColor" tools:targetApi="l">?android:attr/colorBackground</item>
+    </style>
+
+    <!-- NEW: Custom Toolbar Style to set icon tint (colorControlNormal) -->
+    <style name="Widget.App.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <!-- This attribute controls the tint of drawables (icons) in the toolbar -->
+        <item name="colorControlNormal">@color/app_text_primary</item>
+    </style>
+
+    <!-- The main theme for your application, inheriting from the base. -->
+    <style name="Theme.Pasika" parent="Base.Theme.Pasika" />
+</resources>

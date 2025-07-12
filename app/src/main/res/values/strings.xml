@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Pasika</string>
+    <string name="save_button">Save</string>
+    <string name="delete_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="notes_hint">Notes (Optional)</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="undo">UNDO</string>
+    <string name="search_label">Search</string>
+    <string name="select_all_label">Select All</string>
+    <string name="edit_selected_label">Edit Selected</string>
+    <string name="delete_selected_label">Delete Selected</string>
+    <string name="cancel_selection_label">Cancel Selection</string>
+    <string name="selected_count_format">%d Selected</string>
+
+    <string name="apiaries_empty_state">No apiaries added yet. Tap \'+\' to add one!</string>
+    <string name="add_new_apiary_content_description">Add new apiary</string>
+    <string name="delete_apiary_confirmation_title">Delete Apiary?</string>
+    <string name="delete_apiary_confirmation_message">Are you sure you want to delete this apiary and all its hives?</string>
+    <string name="apiary_deleted_message">Apiary deleted.</string>
+    <string name="delete_selected_apiaries_title">Delete Selected Apiaries</string>
+    <string name="delete_selected_apiaries_message">Are you sure you want to delete %d selected apiaries? All associated hives will also be deleted.</string>
+    <string name="no_apiaries_selected_for_deletion">No apiaries selected for deletion.</string>
+
+    <string name="hives_count">Hives: %d</string>
+    <string name="no_hives_yet">No hives added yet. Tap \'+\' to add one!</string>
+    <string name="apiary_not_found_message">Apiary not found!</string>
+    <string name="edit_apiary_content_description">Edit apiary</string>
+    <string name="add_new_hive_content_description">Add new hive</string>
+
+    <string name="add_new_apiary">Add New Apiary</string>
+    <string name="edit_apiary">Edit Apiary</string>
+    <string name="apiary_name_hint">Apiary Name</string>
+    <string name="apiary_location_hint">Location</string>
+    <string name="apiary_type_hint">Apiary Type</string>
+    <string name="apiary_name_required">Apiary name cannot be empty</string>
+    <string name="location_required">Location cannot be empty</string>
+    <string name="apiary_type_required">Apiary type cannot be empty</string>
+    <string name="number_of_hives_required">Number of Hives must be a positive number</string>
+    <string name="last_inspection_date_hint">Last Inspection Date (Optional)</string>
+    <string name="auto_number_apiary_hives_checkbox">Automatically Number Hives in this Apiary</string>
+    <string name="apiary_hives_added_message">Apiary and Hives added!</string>
+    <string name="apiary_updated_message">Apiary updated successfully!</string>
+    <string name="save_apiary_failed_message">Failed to save apiary. Please try again.</string>
+    <string name="update_apiary_date_title">Update Apiary Date?</string>
+    <string name="update_apiary_date_message">Do you want to set the apiary\'s last inspection date to this hive\'s date?</string>
+    <string-array name="apiary_types">
+        <item>Stationary</item>
+        <item>Migratory</item>
+    </string-array>
+
+    <string name="hive_number_format">Hive #%s</string>
+    <string name="hive_number_unknown">Hive #Unknown</string>
+    <string name="hive_type_format">Type: %s</string>
+    <string name="frame_type_format">Frames: %s</string>
+    <string name="breed_format">Breed: %s</string>
+    <string name="last_inspection_format">Last Inspection: %s</string>
+    <string name="last_inspection_none">Last Inspection: None</string>
+
+    <string name="add_multiple_hives">Add Multiple Hives</string>
+    <string name="automatic_numbering">Automatic Numbering</string>
+    <string name="from_label">From</string>
+    <string name="to_label">To</string>
+    <string name="hive_number_hint">Hive Number (Optional)</string>
+    <string name="hives_added_message">%d hive(s) added!</string>
+    <string name="invalid_from_number">"From" number is invalid.</string>
+    <string name="invalid_to_number">"To" number is invalid.</string>
+    <string name="hive_characteristics_title">Hive Characteristics</string>
+    <string name="spinner_material_prompt">Material</string>
+    <string-array name="material_choices">
+        <item>Wood</item>
+        <item>Polyurethane</item>
+        <item>Styrofoam</item>
+        <item>Other</item>
+    </string-array>
+    <string name="spinner_hive_type_prompt">Hive Type</string>
+    <string-array name="hive_types">
+        <item>6-frame</item>
+        <item>8-frame</item>
+        <item>10-frame</item>
+        <item>12-frame</item>
+        <item>Horizontal</item>
+        <item>Nuc</item>
+        <item>Other</item>
+    </string-array>
+    <string name="spinner_frame_type_prompt">Frame Type</string>
+    <string-array name="frame_types">
+        <item>300</item>
+        <item>230</item>
+        <item>435</item>
+        <item>145</item>
+        <item>Other</item>
+    </string-array>
+    <string name="spinner_breed_prompt">Breed</string>
+    <string-array name="breed_choices">
+        <item>Buckfast</item>
+        <item>Carniolan</item>
+        <item>Carpathian</item>
+        <item>Stepp</item>
+        <item>Italian</item>
+        <item>Other</item>
+    </string-array>
+    <string name="frames_title">Frames</string>
+    <string name="frames_total">Total:</string>
+    <string name="frames_eggs">Eggs</string>
+    <string name="frames_open_brood">Open Brood</string>
+    <string name="frames_capped_brood">Capped</string>
+    <string name="frames_feed">Feed</string>
+    <string name="queen_section_title">Queen Bee</string>
+    <string name="queen_tag_color_prompt">Tag Colour</string>
+    <string-array name="queen_tag_colors">
+        <item>White</item>
+        <item>Yellow</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Other</item>
+    </string-array>
+    <string name="queen_number_hint">Tag Number</string>
+    <string name="queen_year_hint">Year</string>
+    <string name="queen_line_hint">Line</string>
+    <string name="queen_cells_hint">Queen Cells</string>
+    <string name="isolation_from_date_hint">Isolation From Date</string>
+    <string name="isolation_to_date_hint">Isolation To Date</string>
+    <string name="defensiveness_rating_title">Defensiveness Rating</string>
+    <string name="defensiveness_rating_1">1</string>
+    <string name="defensiveness_rating_2">2</string>
+    <string name="defensiveness_rating_3">3</string>
+    <string name="defensiveness_rating_4">4</string>
+    <string name="given_taken_title">Given/Taken</string>
+    <string name="given_taken_built_combs">Built Combs</string>
+    <string name="given_taken_foundation">Foundation</string>
+    <string name="given_taken_brood">Brood</string>
+    <string name="given_taken_bees_kg">Bees, kg</string>
+    <string name="given_taken_honey_kg">Honey, kg</string>
+    <string name="given_taken_sugar_kg">Sugar, kg</string>
+    <string name="treatment_title">Treatment</string>
+    <string name="treatment_hint">Treatment Details</string>
+
+    <string name="bulk_edit_hives">Bulk Edit Hives</string>
+    <string name="bulk_edit_hives_count">Editing %d selected hives</string>
+    <string name="bulk_edit_quantity_mismatch_warning">Calculated quantity (%d) must match selected hives count (%d).</string>
+    <string name="bulk_edit_invalid_range_warning">Please enter a valid number range.</string>
+    <string name="no_hives_selected_for_editing">No hives selected for editing.</string>
+    <string name="no_hives_selected_for_deletion">No hives selected for deletion.</string>
+    <string name="swipe_delete_multi_select_warning">Cannot swipe to delete in multi-select mode. Use delete button.</string>
+    <string name="delete_hive_dialog_title">Delete Hive</string>
+    <string name="delete_hive_dialog_message">Are you sure you want to delete Hive %s?</string>
+    <string name="delete_selected_hives_title">Delete Selected Hives</string>
+    <string name="delete_selected_hives_message">Are you sure you want to delete %d selected hives?</string>
+    <string name="hives_deleted_message_plural">%d hives deleted.</string>
+
+    <string name="no_inspections_yet">No inspections yet. Tap \'+\' to add one!</string>
+    <string name="inspection_date_hint">Inspection Date</string>
+    <string name="queen_cells_present">Queen Cells Present</string>
+    <string name="queen_cells_count_hint">Number of Queen Cells</string>
+    <string name="detailed_frames_title">Detailed Frame Counts</string>
+    <string name="frames_eggs_count_hint">Eggs</string>
+    <string name="frames_open_brood_count_hint">Open Brood</string>
+    <string name="frames_capped_brood_count_hint">Capped Brood</string>
+    <string name="frames_honey_count_hint">Honey</string>
+    <string name="frames_pollen_count_hint">Pollen</string>
+    <string name="honey_stores_estimate_hint">Honey Stores (frames)</string>
+    <string name="pollen_stores_estimate_hint">Pollen Stores (frames)</string>
+    <string name="health_treatment_title">Health &amp; Treatment</string>
+    <string name="pests_diseases_observed_hint">Pests/Diseases Observed</string>
+    <string name="treatment_applied_hint">Treatment Applied</string>
+    <string name="temperament_rating_title">Temperament Rating</string>
+    <string name="management_actions_taken_hint">Management Actions Taken</string>
+    <string name="inspection_date_format">Inspection: %s</string>
+    <string name="queen_cells_present_with_count">Queen Cells: Yes (%d)</string>
+    <string name="queen_cells_present_no_count">Queen Cells: Yes</string>
+    <string name="eggs_short_with_count">Eggs(%d)</string>
+    <string name="open_brood_short_with_count">Open(%d)</string>
+    <string name="capped_brood_short_with_count">Capped(%d)</string>
+    <string name="brood_status_format">Brood: %s</string>
+    <string name="honey_stores_format">Honey: %d frames</string>
+    <string name="pests_diseases_format">Pests: %s</string>
+    <string name="treatment_applied_format">Treatment: %s</string>
+    <string name="temperament_rating_format">Temperament: %d</string>
+    <string name="management_actions_format">Actions: %s</string>
+    <string name="notes_format">Notes: %s</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_category_display">Display</string>
+    <string name="settings_theme_title">Dark Theme</string>
+    <string name="settings_theme_summary_on">Enabled</string>
+    <string name="settings_theme_summary_off">Disabled</string>
+    <string name="settings_category_app">Application</string>
+    <string name="settings_exit_title">Exit App</string>
+    <string name="settings_exit_summary">Close the application</string>
+    <string name="settings_exit_dialog_title">Exit Application</string>
+    <string name="settings_exit_dialog_message">Are you sure you want to exit the application?</string>
+
+    <string name="temperament_rating_1">1</string>
+    <string name="temperament_rating_2">2</string>
+    <string name="temperament_rating_3">3</string>
+    <string name="temperament_rating_4">4</string>
+
+    <string name="select_apiaries_title">Select Apiaries</string>
+
+    <string name="export_to_csv">Export to CSV</string>
+    <string name="export_to_pdf">Export to PDF</string>
+    <string name="export_format_title">Choose Export Format</string>
+
+    <string name="move_selected_label">Move Selected</string>
+
+</resources>
