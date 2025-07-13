@@ -5,162 +5,134 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <!-- Home Fragment: Displays list of apiaries -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.stingsoftware.pasika.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
-        <!-- Action to navigate to Add/Edit Apiary screen -->
         <action
             android:id="@+id/action_homeFragment_to_addEditApiaryFragment"
             app:destination="@id/addEditApiaryFragment" />
-        <!-- Action to navigate to Apiary Detail screen -->
         <action
             android:id="@+id/action_homeFragment_to_apiaryDetailFragment"
             app:destination="@id/apiaryDetailFragment" />
     </fragment>
 
-    <!-- Stats Fragment: Displays overall statistics -->
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.stingsoftware.pasika.ui.stats.StatsFragment"
         android:label="Statistics"
         tools:layout="@layout/fragment_stats" />
 
-    <!-- Add/Edit Apiary Fragment -->
     <fragment
         android:id="@+id/addEditApiaryFragment"
         android:name="com.stingsoftware.pasika.ui.addedit.AddEditApiaryFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_edit_apiary">
-        <!-- Argument for apiaryId (default -1L for new apiary) -->
         <argument
             android:name="apiaryId"
             app:argType="long"
             android:defaultValue="-1L" />
-        <!-- Argument for title (e.g., "Add New Apiary", "Edit Apiary") -->
         <argument
             android:name="title"
             app:argType="string"
             android:defaultValue="Apiary" />
-        <!-- Action to navigate from AddEditApiaryFragment to ApiaryDetailFragment -->
         <action
             android:id="@+id/action_addEditApiaryFragment_to_apiaryDetailFragment"
-            app:destination="@id/apiaryDetailFragment" />
+            app:destination="@id/apiaryDetailFragment"
+            app:popUpTo="@id/addEditApiaryFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
-    <!-- Apiary Detail Fragment: Displays details of a specific apiary and its hives -->
     <fragment
         android:id="@+id/apiaryDetailFragment"
         android:name="com.stingsoftware.pasika.ui.apiarydetail.ApiaryDetailFragment"
         android:label="{apiaryName}"
         tools:layout="@layout/fragment_apiary_detail">
-        <!-- Argument for apiaryId -->
         <argument
             android:name="apiaryId"
             app:argType="long" />
-        <!-- Argument for apiaryName (for setting fragment title) -->
         <argument
             android:name="apiaryName"
             app:argType="string"
             android:defaultValue="Apiary Details" />
-        <!-- Action to navigate to Add/Edit Hive screen -->
         <action
             android:id="@+id/action_apiaryDetailFragment_to_addEditHiveFragment"
             app:destination="@id/addEditHiveFragment" />
-        <!-- Action to navigate to Add/Edit Apiary screen (for editing current apiary) -->
         <action
             android:id="@+id/action_apiaryDetailFragment_to_addEditApiaryFragment"
             app:destination="@id/addEditApiaryFragment" />
-        <!-- NEW: Action to navigate to Bulk Edit Hive screen -->
         <action
             android:id="@+id/action_apiaryDetailFragment_to_bulkEditHiveFragment"
             app:destination="@id/bulkEditHiveFragment" />
-        <!-- NEW: Action to navigate to Inspection List screen -->
         <action
             android:id="@+id/action_apiaryDetailFragment_to_inspectionListFragment"
             app:destination="@id/inspectionListFragment" />
     </fragment>
 
-    <!-- Add/Edit Hive Fragment -->
     <fragment
         android:id="@+id/addEditHiveFragment"
         android:name="com.stingsoftware.pasika.ui.hiveedit.AddEditHiveFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_edit_hive">
-        <!-- Argument for apiaryId (required) -->
         <argument
             android:name="apiaryId"
             app:argType="long" />
-        <!-- Argument for hiveId (default -1L for new hive) -->
         <argument
             android:name="hiveId"
             app:argType="long"
             android:defaultValue="-1L" />
-        <!-- Argument for title (e.g., "Add New Hive", "Edit Hive") -->
         <argument
             android:name="title"
             app:argType="string"
             android:defaultValue="Hive" />
     </fragment>
 
-    <!-- NEW: Bulk Edit Hive Fragment -->
     <fragment
         android:id="@+id/bulkEditHiveFragment"
         android:name="com.stingsoftware.pasika.ui.bulkedit.BulkEditHiveFragment"
         android:label="Bulk Edit Hives"
         tools:layout="@layout/fragment_bulk_edit_hive">
-        <!-- Argument for list of hive IDs to edit -->
         <argument
             android:name="hiveIds"
             app:argType="long[]" />
     </fragment>
 
-    <!-- NEW: Settings Fragment -->
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.stingsoftware.pasika.ui.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
 
-    <!-- NEW: Inspection List Fragment -->
     <fragment
         android:id="@+id/inspectionListFragment"
         android:name="com.stingsoftware.pasika.ui.inspectionlist.InspectionListFragment"
         android:label="Inspections for Hive #{hiveNumber}"
         tools:layout="@layout/fragment_inspection_list">
-        <!-- Argument for hiveId (required) -->
         <argument
             android:name="hiveId"
             app:argType="long" />
-        <!-- Argument for hiveNumber (for setting fragment title) -->
         <argument
             android:name="hiveNumber"
             app:argType="string"
             android:defaultValue="N/A" />
-        <!-- Action to navigate to Add/Edit Inspection screen -->
         <action
             android:id="@+id/action_inspectionListFragment_to_addEditInspectionFragment"
             app:destination="@id/addEditInspectionFragment" />
     </fragment>
 
-    <!-- Add/Edit Inspection Fragment (already created in previous step) -->
     <fragment
         android:id="@+id/addEditInspectionFragment"
         android:name="com.stingsoftware.pasika.ui.inspectionedit.AddEditInspectionFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_edit_inspection">
-        <!-- Argument for hiveId (required) -->
         <argument
             android:name="hiveId"
             app:argType="long" />
-        <!-- Argument for inspectionId (default -1L for new inspection) -->
         <argument
             android:name="inspectionId"
             app:argType="long"
             android:defaultValue="-1L" />
-        <!-- Argument for title (e.g., "Add New Inspection", "Edit Inspection") -->
         <argument
             android:name="title"
             app:argType="string"

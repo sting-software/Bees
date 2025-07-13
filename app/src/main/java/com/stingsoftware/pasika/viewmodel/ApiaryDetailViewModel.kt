@@ -25,34 +25,37 @@ class ApiaryDetailViewModel @Inject constructor(
 
     private val apiaryId: Long = savedStateHandle.get<Long>("apiaryId")!!
 
-    // --- NEW: LiveData to hold all apiaries for the move dialog ---
     val allApiaries: LiveData<List<Apiary>> = repository.allApiaries.asLiveData()
 
-    // --- NEW: LiveData for move operation status ---
     private val _moveStatus = MutableLiveData<Boolean?>()
     val moveStatus: LiveData<Boolean?> = _moveStatus
 
-    // ... (existing properties and functions)
-    val apiary: LiveData<Apiary?> = liveData { emit(repository.getApiaryById(apiaryId)) }
-    val allHivesForApiary: LiveData<List<Hive>> = repository.getHivesForApiary(apiaryId).asLiveData()
-    val filteredHivesForApiary: MediatorLiveData<List<Hive>> = MediatorLiveData()
     private val _hiveSearchQuery = MutableStateFlow<String?>(null)
+    val hiveSearchQuery = _hiveSearchQuery.asStateFlow()
+
+    val apiary: LiveData<Apiary?> = liveData {
+        emit(repository.getApiaryById(apiaryId))
+    }
+
+    val allHivesForApiary: LiveData<List<Hive>> = repository.getHivesForApiary(apiaryId).asLiveData()
+
+    val filteredHivesForApiary: MediatorLiveData<List<Hive>> = MediatorLiveData()
 
     init {
-        // MediatorLiveData setup
         var latestHives: List<Hive>? = null
         var latestSearchQuery: String? = null
+
         filteredHivesForApiary.addSource(allHivesForApiary) { hives ->
             latestHives = hives
             filteredHivesForApiary.value = filterHives(latestHives, latestSearchQuery)
         }
+
         filteredHivesForApiary.addSource(_hiveSearchQuery.asLiveData()) { query ->
             latestSearchQuery = query
             filteredHivesForApiary.value = filterHives(latestHives, latestSearchQuery)
         }
     }
 
-    // --- NEW: Function to trigger the move operation ---
     fun moveHives(hiveIds: List<Long>, destinationApiaryId: Long) {
         viewModelScope.launch {
             try {
@@ -63,9 +66,32 @@ class ApiaryDetailViewModel @Inject constructor(
             }
         }
     }
+
     fun onMoveStatusHandled() {
         _moveStatus.value = null
     }
 
-    // ... (existing functions: setHiveSearchQuery, filterHives, deleteHive)
+    fun setHiveSearchQuery(query: String?) {
+        _hiveSearchQuery.value = query
+    }
+
+    private fun filterHives(hives: List<Hive>?, query: String?): List<Hive> {
+        if (hives.isNullOrEmpty()) {
+            return emptyList()
+        }
+        return if (query.isNullOrBlank()) {
+            hives
+        } else {
+            hives.filter { hive ->
+                hive.hiveNumber?.contains(query, ignoreCase = true) == true ||
+                        hive.notes?.contains(query, ignoreCase = true) == true
+            }
+        }
+    }
+
+    // --- The restored function ---
+    fun deleteHive(hive: Hive) = viewModelScope.launch {
+        repository.deleteHive(hive)
+        repository.updateApiaryHiveCount(hive.apiaryId)
+    }
 }
