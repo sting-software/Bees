@@ -1,4 +1,3 @@
-// app/src/main/java/com/stingsoftware/pasika/data/Converters.kt
 package com.stingsoftware.pasika.data
 
 import androidx.room.TypeConverter

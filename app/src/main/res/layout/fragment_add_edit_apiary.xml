@@ -29,7 +29,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Apiary Details"
+                    android:text="@string/apiary_details"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:layout_marginBottom="16dp"/>
 
@@ -131,7 +131,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Initial Hives (for new apiaries)"
+                    android:text="@string/initial_hives_for_new_apiaries"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:layout_marginBottom="16dp"/>
 
@@ -177,7 +177,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="Number of Hives">
+                    android:hint="@string/number_of_hives">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_number_of_hives"
                         android:layout_width="match_parent"

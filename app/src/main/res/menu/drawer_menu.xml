@@ -9,7 +9,7 @@
             app:actionLayout="@layout/drawer_switch_item" />
     </group>
 
-    <item android:title="Application">
+    <item android:title="@string/application">
         <menu>
             <item
                 android:id="@+id/drawer_exit_app"

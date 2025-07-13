@@ -12,7 +12,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Statistic Type"
+        android:hint="@string/statistic_type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -53,7 +53,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Apiaries"
+                    android:text="@string/total_apiaries"
                     android:textAppearance="?attr/textAppearanceBody2" />
 
                 <TextView
@@ -74,7 +74,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Hives"
+                    android:text="@string/total_hives"
                     android:textAppearance="?attr/textAppearanceBody2" />
 
                 <TextView
@@ -95,7 +95,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Avg. Hives"
+                    android:text="@string/avg_hives"
                     android:textAppearance="?attr/textAppearanceBody2" />
 
                 <TextView

@@ -1,4 +1,4 @@
-package com.stingsoftware.pasika.ui.todo
+package com.stingsoftware.pasika.todo
 
 import android.Manifest
 import android.app.DatePickerDialog

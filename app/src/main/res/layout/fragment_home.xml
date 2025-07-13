@@ -31,14 +31,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@android:color/white"
-        android:contentDescription="Add new apiary" />
+        android:contentDescription="@string/add_new_apiary_string" />
 
     <!-- Placeholder for empty state -->
     <TextView
         android:id="@+id/text_view_empty_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No apiaries added yet. Tap '+' to add one!"
+        android:text="@string/no_apiaries_added_yet_tap_to_add_one"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone"

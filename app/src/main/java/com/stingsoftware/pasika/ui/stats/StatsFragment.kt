@@ -47,13 +47,13 @@ class StatsFragment : Fragment() {
     }
 
     private fun setupDropdown() {
-        val statTypes = StatsType.values().map { it.name.replace('_', ' ').replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
+        val statTypes = StatsType.entries.map { it.name.replace('_', ' ').replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, statTypes)
         binding.autoCompleteTextViewStatsType.setAdapter(adapter)
         binding.autoCompleteTextViewStatsType.setText(statTypes[0], false)
 
         binding.autoCompleteTextViewStatsType.setOnItemClickListener { _, _, position, _ ->
-            statsViewModel.setStatsType(StatsType.values()[position])
+            statsViewModel.setStatsType(StatsType.entries[position])
         }
     }
 

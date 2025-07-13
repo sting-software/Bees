@@ -56,7 +56,7 @@
         app:tint="?attr/colorAccent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Edit apiary" />
+        android:contentDescription="@string/edit_apiary_string" />
 
     <!-- Separator Line -->
     <View
@@ -108,14 +108,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@android:color/white"
-        android:contentDescription="Add new hive" />
+        android:contentDescription="@string/add_new_hive" />
 
     <!-- Empty state for hives list -->
     <TextView
         android:id="@+id/text_view_no_hives_yet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No hives added yet. Tap '+' to add one!"
+        android:text="@string/no_hives_added_yet_tap_to_add_one"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone"

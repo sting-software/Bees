@@ -105,7 +105,7 @@
             app:tint="?attr/colorAccent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="Edit hive" />
+            android:contentDescription="@string/edit_hive_string" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

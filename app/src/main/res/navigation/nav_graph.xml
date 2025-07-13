@@ -158,7 +158,7 @@
 
     <fragment
         android:id="@+id/addEditTaskFragment"
-        android:name="com.stingsoftware.pasika.ui.todo.AddEditTaskFragment"
+        android:name="com.stingsoftware.pasika.todo.AddEditTaskFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_edit_task">
         <argument

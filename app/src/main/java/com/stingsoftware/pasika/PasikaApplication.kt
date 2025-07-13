@@ -1,7 +1,6 @@
 package com.stingsoftware.pasika
 
 import android.app.Application
-import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import dagger.hilt.android.HiltAndroidApp
 
@@ -12,7 +11,7 @@ class PasikaApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val sharedPrefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences("app_settings", MODE_PRIVATE)
         val savedThemeMode = sharedPrefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         AppCompatDelegate.setDefaultNightMode(savedThemeMode)
     }

@@ -80,10 +80,12 @@ class TodoAdapter(
                 textViewTaskDescription.visibility = if (task.description.isNullOrBlank()) View.GONE else View.VISIBLE
                 textViewTaskDescription.text = task.description
 
-                textViewDueDate.visibility = if (task.dueDate != null) View.VISIBLE else View.GONE
-                task.dueDate?.let {
+                if (task.dueDate != null) {
                     val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                    textViewDueDate.text = "Due: ${sdf.format(Date(it))}"
+                    textViewDueDate.text = itemView.context.getString(R.string.due_date_format, sdf.format(Date(task.dueDate)))
+                    textViewDueDate.visibility = View.VISIBLE
+                } else {
+                    textViewDueDate.visibility = View.GONE
                 }
 
                 val cardColor = if (selectedItems.contains(task.id)) {
@@ -102,9 +104,11 @@ class TodoAdapter(
         if (isMultiSelectMode != enabled) {
             isMultiSelectMode = enabled
             if (!enabled) {
-                clearSelection()
+                selectedItems.clear()
+                onSelectionChange(0)
             }
-            notifyDataSetChanged()
+            // Redraw the entire list to show/hide checkboxes and update selection states
+            notifyItemRangeChanged(0, itemCount)
         }
     }
 
@@ -125,14 +129,9 @@ class TodoAdapter(
             selectedItems.clear()
             currentList.forEach { selectedItems.add(it.id) }
         }
-        notifyDataSetChanged()
+        // Redraw all items to reflect the new selection state
+        notifyItemRangeChanged(0, itemCount)
         onSelectionChange(selectedItems.size)
-    }
-
-    fun clearSelection() {
-        selectedItems.clear()
-        notifyDataSetChanged()
-        onSelectionChange(0)
     }
 
     fun getSelectedItems(): List<Task> {

@@ -70,7 +70,7 @@ class BulkEditApiaryFragment : Fragment() {
     }
 
     private fun setupDropdown() {
-        val apiaryTypes = ApiaryType.values().map { it.name.lowercase(Locale.getDefault()).replaceFirstChar { char -> char.titlecase(Locale.getDefault()) } }
+        val apiaryTypes = ApiaryType.entries.map { it.name.lowercase(Locale.getDefault()).replaceFirstChar { char -> char.titlecase(Locale.getDefault()) } }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, apiaryTypes)
         binding.autoCompleteTextViewApiaryType.setAdapter(adapter)
     }

@@ -1,6 +1,5 @@
 package com.stingsoftware.pasika.ui.apiarydetail
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -25,7 +24,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stingsoftware.pasika.R
-import com.stingsoftware.pasika.data.Apiary
 import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.databinding.FragmentApiaryDetailBinding
 import com.stingsoftware.pasika.viewmodel.ApiaryDetailViewModel
@@ -305,9 +303,6 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                 }
             }
 
-            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerViewHives)
     }

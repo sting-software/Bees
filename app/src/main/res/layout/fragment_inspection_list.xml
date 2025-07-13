@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@android:color/white"
-        android:contentDescription="Add new inspection" />
+        android:contentDescription="@string/add_new_inspection" />
 
     <!-- Placeholder for empty state -->
     <TextView

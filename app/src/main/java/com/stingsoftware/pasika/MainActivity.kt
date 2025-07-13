@@ -1,6 +1,5 @@
 package com.stingsoftware.pasika
 
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
@@ -100,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupDrawerContent(navigationView: NavigationView) {
         val darkModeSwitch = navigationView.menu.findItem(R.id.drawer_dark_mode).actionView as SwitchCompat
-        val sharedPrefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences("app_settings", MODE_PRIVATE)
 
         val currentNightMode = AppCompatDelegate.getDefaultNightMode()
         darkModeSwitch.isChecked = when (currentNightMode) {

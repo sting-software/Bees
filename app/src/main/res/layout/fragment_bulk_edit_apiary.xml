@@ -27,7 +27,7 @@
             android:id="@+id/text_view_bulk_edit_instructions"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Only filled fields will be updated. Leave fields blank to keep existing values."
+            android:text="@string/only_filled_fields_will_be_updated_leave_fields_blank_to_keep_existing_values"
             android:textAppearance="?attr/textAppearanceCaption"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/text_view_selected_apiaries_count"
