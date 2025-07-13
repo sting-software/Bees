@@ -208,4 +208,7 @@
 
     <string name="move_selected_label">Move Selected</string>
 
+    <string name="statistic_type_hint">Statistic Type</string>
+    <string name="stats_no_data">No data to display.</string>
+
 </resources>

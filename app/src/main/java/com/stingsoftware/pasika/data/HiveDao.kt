@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface HiveDao {
 
-    // ... (existing functions: insert, update, delete, etc.)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(hive: Hive): Long
 
@@ -34,7 +32,19 @@ interface HiveDao {
     @Query("SELECT COUNT(*) FROM hives WHERE apiaryId = :apiaryId")
     suspend fun getHiveCountForApiary(apiaryId: Long): Int
 
-    // --- NEW: Function to move hives ---
     @Query("UPDATE hives SET apiaryId = :newApiaryId WHERE id IN (:hiveIds)")
     suspend fun moveHives(hiveIds: List<Long>, newApiaryId: Long)
+
+    // This function was missing and has been restored
+    @Query("""
+        SELECT breed,
+               COUNT(id) as hiveCount,
+               SUM(framesTotal) as totalFrames,
+               AVG(defensivenessRating) as avgDefensiveness
+        FROM hives
+        WHERE breed IS NOT NULL AND breed != ''
+        GROUP BY breed
+        ORDER BY hiveCount DESC
+    """)
+    fun getStatsByBreed(): Flow<List<StatsByBreed>>
 }

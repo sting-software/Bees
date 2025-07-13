@@ -6,6 +6,7 @@ import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.data.HiveDao
 import com.stingsoftware.pasika.data.Inspection
 import com.stingsoftware.pasika.data.InspectionDao
+import com.stingsoftware.pasika.data.StatsByBreed
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -98,5 +99,10 @@ class ApiaryRepository @Inject constructor(
 
     suspend fun getInspectionCountForHive(hiveId: Long): Int {
         return inspectionDao.getInspectionCountForHive(hiveId)
+    }
+
+    // Stats operations
+    fun getStatsByBreed(): Flow<List<StatsByBreed>> {
+        return hiveDao.getStatsByBreed()
     }
 }
