@@ -1,13 +1,19 @@
 package com.stingsoftware.pasika.repository
 
+import androidx.room.Transaction
 import com.stingsoftware.pasika.data.Apiary
 import com.stingsoftware.pasika.data.ApiaryDao
+import com.stingsoftware.pasika.data.ApiaryExportData
 import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.data.HiveDao
+import com.stingsoftware.pasika.data.HiveExportData
 import com.stingsoftware.pasika.data.Inspection
 import com.stingsoftware.pasika.data.InspectionDao
 import com.stingsoftware.pasika.data.StatsByBreed
+import com.stingsoftware.pasika.data.Task
+import com.stingsoftware.pasika.data.TaskDao
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,7 +21,8 @@ import javax.inject.Singleton
 class ApiaryRepository @Inject constructor(
     private val apiaryDao: ApiaryDao,
     private val hiveDao: HiveDao,
-    private val inspectionDao: InspectionDao
+    private val inspectionDao: InspectionDao,
+    private val taskDao: TaskDao // Add TaskDao to the constructor
 ) {
 
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()
@@ -71,6 +78,20 @@ class ApiaryRepository @Inject constructor(
     }
 
     suspend fun moveHives(hiveIds: List<Long>, sourceApiaryId: Long, destinationApiaryId: Long) {
+        val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name ?: "Unknown Apiary"
+        val destinationApiaryName = apiaryDao.getApiaryById(destinationApiaryId)?.name ?: "Unknown Apiary"
+        val note = "Hive moved from '$sourceApiaryName' to '$destinationApiaryName'."
+
+        hiveIds.forEach { hiveId ->
+            val moveRecord = Inspection(
+                hiveId = hiveId,
+                inspectionDate = System.currentTimeMillis(),
+                notes = note,
+                managementActionsTaken = "Hive Relocation"
+            )
+            inspectionDao.insert(moveRecord)
+        }
+
         hiveDao.moveHives(hiveIds, destinationApiaryId)
         updateApiaryHiveCount(sourceApiaryId)
         updateApiaryHiveCount(destinationApiaryId)
@@ -104,5 +125,57 @@ class ApiaryRepository @Inject constructor(
     // Stats operations
     fun getStatsByBreed(): Flow<List<StatsByBreed>> {
         return hiveDao.getStatsByBreed()
+    }
+
+    // Export/Import operations
+    suspend fun getApiaryExportData(apiaryId: Long): ApiaryExportData? {
+        val apiary = apiaryDao.getApiaryById(apiaryId) ?: return null
+        val hives = hiveDao.getHivesForApiary(apiaryId).first()
+        val hiveIds = hives.map { it.id }
+        val inspections = inspectionDao.getInspectionsForHives(hiveIds)
+
+        val inspectionsByHiveId = inspections.groupBy { it.hiveId }
+
+        val hivesWithInspections = hives.map { hive ->
+            HiveExportData(hive = hive, inspections = inspectionsByHiveId[hive.id] ?: emptyList())
+        }
+
+        return ApiaryExportData(apiary = apiary, hivesWithInspections = hivesWithInspections)
+    }
+
+    @Transaction
+    suspend fun importApiaryData(data: ApiaryExportData) {
+        val importedApiary = data.apiary.copy(id = 0, name = "${data.apiary.name} (Imported)")
+        val newApiaryId = apiaryDao.insert(importedApiary)
+
+        data.hivesWithInspections.forEach { hiveData ->
+            val importedHive = hiveData.hive.copy(id = 0, apiaryId = newApiaryId)
+            val newHiveId = hiveDao.insert(importedHive)
+
+            val importedInspections = hiveData.inspections.map {
+                it.copy(id = 0, hiveId = newHiveId)
+            }
+            importedInspections.forEach { inspectionDao.insert(it) }
+        }
+        updateApiaryHiveCount(newApiaryId)
+    }
+
+    // Task operations
+    fun getAllTasks(): Flow<List<Task>> = taskDao.getAllTasks()
+
+    suspend fun getTaskById(taskId: Long): Task? = taskDao.getTaskById(taskId)
+
+    suspend fun insertTask(task: Task): Long = taskDao.insert(task)
+
+    suspend fun updateTask(task: Task) = taskDao.update(task)
+
+    suspend fun deleteTask(task: Task) = taskDao.delete(task)
+
+    suspend fun markTasksAsCompleted(taskIds: List<Long>) {
+        taskDao.markTasksAsCompleted(taskIds)
+    }
+
+    suspend fun markTasksAsIncomplete(taskIds: List<Long>) {
+        taskDao.markTasksAsIncomplete(taskIds)
     }
 }

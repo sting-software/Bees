@@ -134,10 +134,21 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
             val startNum = binding.editTextStartingHiveNumberApiary.text.toString().toIntOrNull()
             val endNum = binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
 
-            if (startNum != null && endNum != null && endNum >= startNum) {
-                val count = endNum - startNum + 1
-                binding.editTextNumberOfHives.setText(count.toString())
+            if (startNum != null && endNum != null) {
+                // --- FIX: Validate the range and show/hide an error message ---
+                if (endNum >= startNum) {
+                    val count = endNum - startNum + 1
+                    binding.editTextNumberOfHives.setText(count.toString())
+                    // Clear error if the range becomes valid
+                    binding.textInputLayoutEndingHiveNumberApiary.error = null
+                } else {
+                    // Show error if the range is invalid
+                    binding.textInputLayoutEndingHiveNumberApiary.error = getString(R.string.error_invalid_range)
+                    binding.editTextNumberOfHives.setText("")
+                }
             } else {
+                // Clear error if one of the fields is empty
+                binding.textInputLayoutEndingHiveNumberApiary.error = null
                 binding.editTextNumberOfHives.setText("")
             }
         }
@@ -159,9 +170,13 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         if (autoNumberHives) {
             startingHiveNumber = binding.editTextStartingHiveNumberApiary.text.toString().toIntOrNull()
             endingHiveNumber = binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
-            if (startingHiveNumber != null && endingHiveNumber != null && endingHiveNumber >= startingHiveNumber) {
-                numberOfHives = endingHiveNumber - startingHiveNumber + 1
+
+            // --- FIX: Add validation check before attempting to save ---
+            if (startingHiveNumber == null || endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
+                Toast.makeText(requireContext(), "Please enter a valid hive number range.", Toast.LENGTH_SHORT).show()
+                return // Stop the save operation
             }
+            numberOfHives = endingHiveNumber - startingHiveNumber + 1
         } else {
             numberOfHives = binding.editTextNumberOfHives.text.toString().toIntOrNull() ?: 0
         }

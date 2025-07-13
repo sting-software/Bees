@@ -1,5 +1,6 @@
 package com.stingsoftware.pasika.ui.home
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -37,10 +39,15 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private val importApiaryLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            homeViewModel.importApiaryFromFile(requireContext(), it)
+        }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -63,7 +70,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             },
             onLongClick = { apiary ->
                 if (!apiaryAdapter.isMultiSelectMode()) {
-                    searchMenuItem?.collapseActionView()
                     setMultiSelectMode(true)
                     apiaryAdapter.toggleSelection(apiary)
                 }
@@ -100,6 +106,14 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
 
+        homeViewModel.importStatus.observe(viewLifecycleOwner) { success ->
+            success?.let {
+                val message = if (it) "Apiary imported successfully." else "Import failed. Invalid file or format."
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                homeViewModel.onImportStatusHandled()
+            }
+        }
+
         binding.fabAddApiary.setOnClickListener {
             val action = HomeFragmentDirections.actionHomeFragmentToAddEditApiaryFragment(-1L)
             findNavController().navigate(action)
@@ -121,78 +135,71 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_home, menu)
-
                 searchMenuItem = menu.findItem(R.id.action_search_apiaries)
                 searchView = searchMenuItem?.actionView as? SearchView
                 searchView?.setOnQueryTextListener(this@HomeFragment)
-
-                searchMenuItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-                    override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                        menu.findItem(R.id.action_delete_selected_apiaries)?.isVisible = false
-                        menu.findItem(R.id.action_cancel_selection)?.isVisible = false
-                        binding.fabAddApiary.visibility = View.GONE
-                        return true
-                    }
-
-                    override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                        homeViewModel.setSearchQuery(null)
-                        if (!apiaryAdapter.isMultiSelectMode()) {
-                            binding.fabAddApiary.visibility = View.VISIBLE
-                        }
-                        requireActivity().invalidateOptionsMenu()
-                        return true
-                    }
-                })
             }
 
             override fun onPrepareMenu(menu: Menu) {
                 val inMultiSelectMode = apiaryAdapter.isMultiSelectMode()
-                menu.findItem(R.id.action_delete_selected_apiaries)?.isVisible = inMultiSelectMode
-                menu.findItem(R.id.action_cancel_selection)?.isVisible = inMultiSelectMode
+
+                // Standard actions
+                menu.findItem(R.id.action_import_apiary)?.isVisible = !inMultiSelectMode
                 menu.findItem(R.id.action_search_apiaries)?.isVisible = !inMultiSelectMode
 
+                // Multi-select actions
+                menu.findItem(R.id.action_select_all_apiaries)?.isVisible = inMultiSelectMode
+                menu.findItem(R.id.action_edit_selected_apiaries)?.isVisible = inMultiSelectMode
+                menu.findItem(R.id.action_delete_selected_apiaries)?.isVisible = inMultiSelectMode
+                menu.findItem(R.id.action_cancel_selection)?.isVisible = inMultiSelectMode
+
+                // Other UI elements
                 binding.fabAddApiary.visibility = if (inMultiSelectMode) View.GONE else View.VISIBLE
 
-                if (inMultiSelectMode) {
+                if (inMultiSelectMode && searchMenuItem?.isActionViewExpanded == true) {
                     searchMenuItem?.collapseActionView()
                 }
                 super.onPrepareMenu(menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
+                when (menuItem.itemId) {
+                    R.id.action_import_apiary -> importApiaryLauncher.launch(arrayOf("application/json"))
+                    R.id.action_select_all_apiaries -> apiaryAdapter.selectAll()
+                    R.id.action_edit_selected_apiaries -> {
+                        val selectedIds = apiaryAdapter.getSelectedItems().map { it.id }.toLongArray()
+                        if (selectedIds.isNotEmpty()) {
+                            val action = HomeFragmentDirections.actionHomeFragmentToBulkEditApiaryFragment(selectedIds)
+                            findNavController().navigate(action)
+                            setMultiSelectMode(false)
+                        } else {
+                            Toast.makeText(requireContext(), "No apiaries selected.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                     R.id.action_delete_selected_apiaries -> {
                         val selectedApiaries = apiaryAdapter.getSelectedItems()
                         if (selectedApiaries.isNotEmpty()) {
                             showBulkDeleteConfirmationDialog(selectedApiaries)
                         } else {
-                            Toast.makeText(requireContext(), "No apiaries selected for deletion.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(), "No apiaries selected.", Toast.LENGTH_SHORT).show()
                         }
-                        true
                     }
-                    R.id.action_cancel_selection -> {
-                        setMultiSelectMode(false)
-                        true
-                    }
-                    else -> false
+                    R.id.action_cancel_selection -> setMultiSelectMode(false)
+                    else -> return false
                 }
+                return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setMultiSelectMode(enabled: Boolean) {
         apiaryAdapter.setMultiSelectMode(enabled)
-        if (!enabled) {
-            activity?.title = getString(R.string.app_name)
-        }
-        requireActivity().invalidateOptionsMenu()
+        activity?.invalidateOptionsMenu()
     }
 
     private fun updateToolbarTitleForSelection(count: Int) {
-        if (count > 0) {
-            activity?.title = getString(R.string.selected_count_format, count)
-        } else if (apiaryAdapter.isMultiSelectMode()) {
-            activity?.title = getString(R.string.select_apiaries_title)
+        if (apiaryAdapter.isMultiSelectMode()) {
+            activity?.title = if (count > 0) getString(R.string.selected_count_format, count) else "Select Apiaries"
         } else {
             activity?.title = getString(R.string.app_name)
         }
@@ -200,28 +207,24 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun showBulkDeleteConfirmationDialog(apiariesToDelete: List<Apiary>) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Selected Apiaries")
-            .setMessage("Are you sure you want to delete ${apiariesToDelete.size} selected apiaries? All associated hives will also be deleted.")
-            .setPositiveButton("Delete") { _, _ ->
-                apiariesToDelete.forEach { apiary ->
-                    homeViewModel.deleteApiary(apiary)
-                }
+            .setTitle(getString(R.string.delete_selected_apiaries_title))
+            .setMessage(getString(R.string.delete_selected_apiaries_message, apiariesToDelete.size))
+            .setPositiveButton(R.string.delete_button) { _, _ ->
+                apiariesToDelete.forEach { homeViewModel.deleteApiary(it) }
                 Toast.makeText(requireContext(), "${apiariesToDelete.size} apiaries deleted.", Toast.LENGTH_SHORT).show()
                 setMultiSelectMode(false)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel_button, null)
             .show()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         homeViewModel.setSearchQuery(query)
-        binding.recyclerViewApiaries.scrollToPosition(0)
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
         homeViewModel.setSearchQuery(newText)
-        binding.recyclerViewApiaries.scrollToPosition(0)
         return true
     }
 

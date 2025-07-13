@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme for dark mode, now extending DarkActionBar to show the top bar -->
-    <style name="Base.Theme.Pasika" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Base.Theme.Pasika" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>

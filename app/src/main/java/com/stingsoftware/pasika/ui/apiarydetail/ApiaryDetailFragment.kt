@@ -77,7 +77,6 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
             },
             onLongClick = { hive ->
                 if (!hiveAdapter.isMultiSelectMode()) {
-                    searchMenuItem?.collapseActionView()
                     setMultiSelectMode(true)
                     hiveAdapter.toggleSelection(hive)
                 }
@@ -129,6 +128,14 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
 
+        apiaryDetailViewModel.exportStatus.observe(viewLifecycleOwner) { success ->
+            success?.let {
+                val message = if (it) "Apiary exported successfully to Downloads/Pasika." else "Export failed."
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                apiaryDetailViewModel.onExportStatusHandled()
+            }
+        }
+
         binding.fabAddHive.setOnClickListener {
             val action = ApiaryDetailFragmentDirections.actionApiaryDetailFragmentToAddEditHiveFragment(args.apiaryId)
             findNavController().navigate(action)
@@ -177,17 +184,26 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
 
             override fun onPrepareMenu(menu: Menu) {
                 val inMultiSelectMode = hiveAdapter.isMultiSelectMode()
+
+                // --- FIX: Correct visibility logic ---
+                // Actions visible ONLY when NOT in multi-select mode
+                menu.findItem(R.id.action_search_hives)?.isVisible = !inMultiSelectMode
+
+                // Actions visible ONLY when in multi-select mode
                 menu.findItem(R.id.action_select_all_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_move_selected_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_edit_selected_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_delete_selected_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_cancel_selection)?.isVisible = inMultiSelectMode
-                menu.findItem(R.id.action_search_hives)?.isVisible = !inMultiSelectMode
 
+                // Export action is ALWAYS visible
+                menu.findItem(R.id.action_export_apiary)?.isVisible = true
+
+                // Hide FAB and other UI elements in multi-select mode
                 binding.fabAddHive.visibility = if (inMultiSelectMode) View.GONE else View.VISIBLE
                 binding.imageButtonEditApiary.visibility = if (inMultiSelectMode) View.GONE else View.VISIBLE
 
-                if (inMultiSelectMode) {
+                if (inMultiSelectMode && searchMenuItem?.isActionViewExpanded == true) {
                     searchMenuItem?.collapseActionView()
                 }
                 super.onPrepareMenu(menu)
@@ -195,6 +211,10 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
+                    R.id.action_export_apiary -> {
+                        apiaryDetailViewModel.exportApiaryData(requireContext())
+                        true
+                    }
                     R.id.action_select_all_hives -> {
                         hiveAdapter.selectAll()
                         true

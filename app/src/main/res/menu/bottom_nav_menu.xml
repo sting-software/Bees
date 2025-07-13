@@ -11,7 +11,7 @@
         android:title="Stats" />
 
     <item
-        android:id="@+id/settingsFragment"
-        android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:id="@+id/todoListFragment"
+        android:icon="@drawable/ic_todo"
+        android:title="To-Do" />
 </menu>

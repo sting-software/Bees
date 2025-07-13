@@ -210,5 +210,16 @@
 
     <string name="statistic_type_hint">Statistic Type</string>
     <string name="stats_no_data">No data to display.</string>
+    <string name="error_invalid_range">Ending number must be greater than or equal to the starting number.</string>
 
+    <string name="bulk_edit_apiaries_count">Editing %d selected apiaries</string>
+
+    <string name="export_apiary_label">Export Apiary</string>
+    <string name="import_apiary_label">Import Apiary</string>
+
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
+    <string name="mark_as_complete_label">Mark as Complete</string>
+    <string name="toast_mixed_selection_warning">Cannot change status for a mixed selection of tasks.</string>
 </resources>

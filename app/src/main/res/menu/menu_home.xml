@@ -2,25 +2,53 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Standard Actions (Visible when NOT in multi-select) -->
+    <item
+        android:id="@+id/action_import_apiary"
+        android:title="@string/import_apiary_label"
+        android:icon="@drawable/ic_import"
+        android:orderInCategory="10"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_search_apiaries"
-        android:title="Search Apiaries"
+        android:title="@string/search_label"
         android:icon="@drawable/ic_search"
+        android:orderInCategory="20"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <!-- Multi-Select Actions (Visible ONLY in multi-select) -->
+    <item
+        android:id="@+id/action_select_all_apiaries"
+        android:title="@string/select_all_label"
+        android:icon="@drawable/ic_select_all"
+        android:orderInCategory="100"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_edit_selected_apiaries"
+        android:title="@string/edit_selected_label"
+        android:icon="@drawable/ic_edit"
+        android:orderInCategory="110"
+        android:visible="false"
+        app:showAsAction="always" />
+
     <item
         android:id="@+id/action_delete_selected_apiaries"
-        android:title="Delete Selected"
+        android:title="@string/delete_selected_label"
         android:icon="@drawable/ic_delete"
-        app:showAsAction="ifRoom"
-        android:visible="false" />
+        android:orderInCategory="120"
+        android:visible="false"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_cancel_selection"
-        android:title="Cancel"
-        android:icon="@drawable/ic_close"
-        app:showAsAction="ifRoom"
-        android:visible="false" />
+        android:title="@string/cancel_selection_label"
+        android:icon="@drawable/ic_cancel"
+        android:orderInCategory="130"
+        android:visible="false"
+        app:showAsAction="always" />
 
 </menu>
