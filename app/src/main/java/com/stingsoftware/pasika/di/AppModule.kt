@@ -1,8 +1,8 @@
-// app/src/main/java/com/stingsoftware/pasika/di/AppModule.kt
 package com.stingsoftware.pasika.di
 
 import android.content.Context
 import com.stingsoftware.pasika.data.AppDatabase
+import com.stingsoftware.pasika.data.TaskDao
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,15 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideApiaryRepository(db: AppDatabase): ApiaryRepository {
-        return ApiaryRepository(db.apiaryDao(), db.hiveDao(), db.inspectionDao())
+    fun provideTaskDao(db: AppDatabase): TaskDao {
+        return db.taskDao()
+    }
+
+    // This is the single, correct function for providing the repository.
+    // The outdated one has been removed.
+    @Singleton
+    @Provides
+    fun provideApiaryRepository(db: AppDatabase, taskDao: TaskDao): ApiaryRepository {
+        return ApiaryRepository(db.apiaryDao(), db.hiveDao(), db.inspectionDao(), taskDao)
     }
 }

@@ -1,23 +1,38 @@
-// app/src/main/java/com/stingsoftware/pasika/data/AppDatabase.kt
 package com.stingsoftware.pasika.data
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Apiary::class, Hive::class, Inspection::class], version = 3, exportSchema = false)
-@TypeConverters(Converters::class) // Add this for Room to handle Enums
+@Database(entities = [Apiary::class, Hive::class, Inspection::class, Task::class], version = 4, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun apiaryDao(): ApiaryDao
     abstract fun hiveDao(): HiveDao
     abstract fun inspectionDao(): InspectionDao
+    abstract fun taskDao(): TaskDao // Add TaskDao abstract function
 
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+
+        // Migration from version 3 to 4 to add the tasks table
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `tasks` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `title` TEXT NOT NULL,
+                        `description` TEXT,
+                        `dueDate` INTEGER,
+                        `isCompleted` INTEGER NOT NULL,
+                        `reminderEnabled` INTEGER NOT NULL
+                    )
+                """.trimIndent())
+            }
+        }
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -26,9 +41,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pasika_database"
                 )
-                    // In a production app, you must implement proper migrations
-                    // instead of falling back to destructive migration.
-                    // .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_3_4) // Add the new migration
                     .build()
                 INSTANCE = instance
                 instance
