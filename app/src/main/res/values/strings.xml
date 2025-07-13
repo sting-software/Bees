@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Pasika</string>
+    <string name="app_name">Bees</string>
     <string name="save_button">Save</string>
     <string name="delete_button">Delete</string>
     <string name="cancel_button">Cancel</string>
@@ -222,4 +222,5 @@
 
     <string name="mark_as_complete_label">Mark as Complete</string>
     <string name="toast_mixed_selection_warning">Cannot change status for a mixed selection of tasks.</string>
+    <string name="no_tasks_yet">No tasks yet. Tap \'+\' to add one!</string>
 </resources>

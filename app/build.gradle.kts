@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.stingsoftware.pasika"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.stingsoftware.pasika"
@@ -39,6 +39,13 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+    kapt {
+        correctErrorTypes = true
+        arguments {
+            arg("dagger.fastInit", "enabled")
+            arg("dagger.hilt.android.internal.disableAndroidSuperclassValidation", "true")
+        }
     }
 }
 

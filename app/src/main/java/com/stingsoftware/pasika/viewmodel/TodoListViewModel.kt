@@ -51,6 +51,11 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
+    // NEW: Function to re-insert a task for the UNDO action
+    fun insertTask(task: Task) = viewModelScope.launch {
+        repository.insertTask(task)
+    }
+
     fun deleteTasks(tasks: List<Task>) {
         viewModelScope.launch {
             tasks.forEach { repository.deleteTask(it) }
@@ -69,10 +74,12 @@ class TodoListViewModel @Inject constructor(
                     val taskIds = tasks.map { it.id }
                     repository.markTasksAsIncomplete(taskIds)
                 }
+
                 allIncomplete -> {
                     val taskIds = tasks.map { it.id }
                     repository.markTasksAsCompleted(taskIds)
                 }
+
                 else -> {
                     _toastMessage.postValue("Cannot change status for a mixed selection of tasks.")
                 }

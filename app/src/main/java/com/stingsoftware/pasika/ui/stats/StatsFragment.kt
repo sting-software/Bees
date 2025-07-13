@@ -1,11 +1,11 @@
 package com.stingsoftware.pasika.ui.stats
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -58,42 +58,54 @@ class StatsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        // FIX: Collect the StateFlow in a lifecycle-aware coroutine
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 statsViewModel.selectedStatsType.collect { type ->
+                    // FIX: Reference the correct view ID for the overall stats card
                     if (type == StatsType.OVERALL) {
-                        binding.groupOverallStats.visibility = View.VISIBLE
+                        binding.cardOverallStats.visibility = View.VISIBLE
                         binding.statsChart.visibility = View.GONE
-                        binding.textViewStatsEmptyState.visibility = View.GONE
+                        binding.emptyStateContainer.visibility = View.GONE
                     } else {
-                        binding.groupOverallStats.visibility = View.GONE
+                        binding.cardOverallStats.visibility = View.GONE
                     }
                 }
             }
         }
 
         statsViewModel.totalApiariesCount.observe(viewLifecycleOwner) { count ->
-            binding.cardTotalApiaries.visibility = if (count > 0) View.VISIBLE else View.GONE
-            // Further UI updates for overall stats...
+            binding.textViewTotalApiariesValue.text = count.toString()
         }
-        statsViewModel.totalHivesCount.observe(viewLifecycleOwner) { count ->
-            binding.cardTotalHives.visibility = if (count != null && count > 0) View.VISIBLE else View.GONE
-            // Further UI updates for overall stats...
+        statsViewModel.totalHivesCount.observe(viewLifecycleOwner) { totalHives ->
+            binding.textViewTotalHivesValue.text = (totalHives ?: 0).toString()
+            updateAverageHives()
         }
 
         statsViewModel.groupedStats.observe(viewLifecycleOwner) { stats ->
             if (statsViewModel.selectedStatsType.value != StatsType.OVERALL) {
                 if (stats.isNullOrEmpty()) {
                     binding.statsChart.visibility = View.GONE
-                    binding.textViewStatsEmptyState.visibility = View.VISIBLE
+                    binding.emptyStateContainer.visibility = View.VISIBLE
+                    binding.emptyStateContainer.findViewById<TextView>(R.id.text_view_empty_message).text = getString(R.string.stats_no_data)
                 } else {
                     binding.statsChart.visibility = View.VISIBLE
-                    binding.textViewStatsEmptyState.visibility = View.GONE
+                    binding.emptyStateContainer.visibility = View.GONE
                     updateChart(stats)
                 }
             }
         }
+    }
+
+    private fun updateAverageHives() {
+        val totalApiaries = statsViewModel.totalApiariesCount.value ?: 0
+        val totalHives = statsViewModel.totalHivesCount.value ?: 0
+
+        val average = if (totalApiaries > 0) {
+            totalHives.toFloat() / totalApiaries
+        } else {
+            0f
+        }
+        binding.textViewAvgHivesValue.text = String.format(Locale.getDefault(), "%.1f", average)
     }
 
     private fun setupChart() {

@@ -15,9 +15,7 @@ import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.stingsoftware.pasika.databinding.ActivityMainBinding
@@ -28,12 +26,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // This tells the app it will handle drawing behind the system bars
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -46,29 +44,53 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Add todoListFragment to the set of top-level destinations
-        appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment, R.id.statsFragment, R.id.todoListFragment),
-            drawerLayout
-        )
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
-        binding.bottomNavigation.setupWithNavController(navController)
-
+        // Setup the drawer toggle (hamburger icon) to be permanently displayed
         toggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.open, R.string.close)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        // Manually update the toolbar title when the destination changes
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
+            var title = destination.label.toString()
+            if (arguments != null) {
+                val regex = "\\{(.*?)\\}".toRegex()
+                title = regex.replace(title) {
+                    val argName = it.groupValues[1]
+                    arguments.get(argName)?.toString() ?: ""
+                }
+            }
+            supportActionBar?.title = title
+        }
+
+        // Handle bottom navigation clicks
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            if (item.itemId == R.id.homeFragment) {
+                // Pop back to the start destination of the graph
+                navController.popBackStack(navController.graph.startDestinationId, false)
+                return@setOnItemSelectedListener true
+            }
+            NavigationUI.onNavDestinationSelected(item, navController)
+            true
+        }
+
+        // Keep the bottom nav selection in sync with the current destination
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.bottomNavigation.menu.findItem(destination.id)?.isChecked = true
+        }
 
         setupDrawerContent(binding.navigationView)
         applyWindowInsets()
     }
 
     private fun applyWindowInsets() {
+        // This listener applies padding to the toolbar to push it below the status bar
         ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(top = insets.top)
             windowInsets
         }
 
+        // This listener applies padding to the navigation drawer's header for the same reason
         ViewCompat.setOnApplyWindowInsetsListener(binding.navigationView) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(top = insets.top)
@@ -117,7 +139,11 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
+    // This method now only handles the hamburger icon click to open/close the drawer
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

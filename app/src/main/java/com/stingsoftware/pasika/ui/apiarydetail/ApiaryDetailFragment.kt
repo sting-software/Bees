@@ -185,21 +185,14 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
             override fun onPrepareMenu(menu: Menu) {
                 val inMultiSelectMode = hiveAdapter.isMultiSelectMode()
 
-                // --- FIX: Correct visibility logic ---
-                // Actions visible ONLY when NOT in multi-select mode
                 menu.findItem(R.id.action_search_hives)?.isVisible = !inMultiSelectMode
-
-                // Actions visible ONLY when in multi-select mode
+                menu.findItem(R.id.action_export_apiary)?.isVisible = true
                 menu.findItem(R.id.action_select_all_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_move_selected_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_edit_selected_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_delete_selected_hives)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_cancel_selection)?.isVisible = inMultiSelectMode
 
-                // Export action is ALWAYS visible
-                menu.findItem(R.id.action_export_apiary)?.isVisible = true
-
-                // Hide FAB and other UI elements in multi-select mode
                 binding.fabAddHive.visibility = if (inMultiSelectMode) View.GONE else View.VISIBLE
                 binding.imageButtonEditApiary.visibility = if (inMultiSelectMode) View.GONE else View.VISIBLE
 

@@ -30,13 +30,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class InspectionListFragment : Fragment() {
-
     private val args: InspectionListFragmentArgs by navArgs()
     private val inspectionListViewModel: InspectionListViewModel by viewModels()
-
     private var _binding: FragmentInspectionListBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var inspectionAdapter: InspectionAdapter
 
     override fun onCreateView(
@@ -51,13 +48,15 @@ class InspectionListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.title = "Inspections for Hive #${args.hiveNumber}"
+
         setupMenu()
 
         inspectionAdapter = InspectionAdapter { inspection ->
-            val action = InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
-                hiveId = args.hiveId,
-                inspectionId = inspection.id
-            )
+            val action =
+                InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
+                    hiveId = args.hiveId,
+                    inspectionId = inspection.id
+                )
             findNavController().navigate(action)
         }
         binding.recyclerViewInspections.adapter = inspectionAdapter
@@ -67,24 +66,31 @@ class InspectionListFragment : Fragment() {
         inspectionListViewModel.inspectionsForHive.observe(viewLifecycleOwner) { inspections ->
             inspections?.let {
                 inspectionAdapter.submitList(it)
-                binding.textViewEmptyStateInspections.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE
-                binding.recyclerViewInspections.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
+                binding.textViewEmptyStateInspections.visibility =
+                    if (it.isEmpty()) View.VISIBLE else View.GONE
+                binding.recyclerViewInspections.visibility =
+                    if (it.isEmpty()) View.GONE else View.VISIBLE
             }
         }
 
         inspectionListViewModel.exportStatus.observe(viewLifecycleOwner) { success ->
             success?.let {
-                val message = if (it) "Successfully exported to Downloads folder." else "Export failed. No inspections to export."
+                val message = if (it) {
+                    "Successfully exported to Downloads folder."
+                } else {
+                    "Export failed. No inspections to export."
+                }
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                 inspectionListViewModel.onExportStatusHandled()
             }
         }
 
         binding.fabAddInspection.setOnClickListener {
-            val action = InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
-                hiveId = args.hiveId,
-                inspectionId = -1L
-            )
+            val action =
+                InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
+                    hiveId = args.hiveId,
+                    inspectionId = -1L
+                )
             findNavController().navigate(action)
         }
     }
@@ -99,24 +105,31 @@ class InspectionListFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_export_csv -> {
-                        showExportOptionsDialog() // Show dialog instead of direct export
+                        showExportOptionsDialog()
                         true
                     }
+
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    // New dialog to let the user choose the export format
     private fun showExportOptionsDialog() {
         val options = arrayOf("Export as CSV", "Export as PDF")
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.export_format_title))
             .setItems(options) { dialog, which ->
                 when (which) {
-                    0 -> inspectionListViewModel.exportInspectionsToCsv(requireContext(), args.hiveNumber)
-                    1 -> inspectionListViewModel.exportInspectionsToPdf(requireContext(), args.hiveNumber)
+                    0 -> inspectionListViewModel.exportInspectionsToCsv(
+                        requireContext(),
+                        args.hiveNumber
+                    )
+
+                    1 -> inspectionListViewModel.exportInspectionsToPdf(
+                        requireContext(),
+                        args.hiveNumber
+                    )
                 }
                 dialog.dismiss()
             }
@@ -124,12 +137,17 @@ class InspectionListFragment : Fragment() {
     }
 
     private fun setupInspectionSwipeToDelete() {
-        // This method's implementation remains unchanged
-        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val itemTouchHelperCallback = object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             private val background = ColorDrawable(Color.RED)
-            private val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
+            private val deleteIcon =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean = false
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
@@ -139,15 +157,30 @@ class InspectionListFragment : Fragment() {
                 }
             }
 
-            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerViewInspections)
     }
 
     private fun showDeleteInspectionConfirmationDialog(inspection: Inspection) {
-        // This method's implementation remains unchanged
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete Inspection")
             .setMessage("Are you sure you want to delete this inspection record?")

@@ -31,8 +31,9 @@
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textColor="?android:attr/textColorPrimary"
             app:layout_constraintStart_toEndOf="@id/checkbox_completed"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/text_view_due_date"
             app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
             tools:text="Check Hive #5 for Varroa" />
 
         <TextView
@@ -53,7 +54,6 @@
             android:id="@+id/text_view_due_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             android:textAppearance="?attr/textAppearanceCaption"
@@ -61,9 +61,10 @@
             android:visibility="gone"
             app:drawableStartCompat="@drawable/ic_alarm"
             app:drawableTint="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="@id/text_view_task_title"
-            app:layout_constraintTop_toBottomOf="@id/text_view_task_description"
-            tools:text="Due: 15/07/2025 14:00"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_view_task_title"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_task_title"
+            tools:text="15/07 14:00"
             tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -57,6 +57,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                     binding.autoCompleteTextViewApiaryType.setText(typeName, false)
                     selectedDateMillis = it.lastInspectionDate
                     updateDateEditText(it.lastInspectionDate)
+                    binding.editTextNotes.setText(it.notes)
                 }
             }
         } else {
@@ -90,6 +91,9 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 is Resource.Success -> {
                     val message = if (isNewApiary) "Apiary and hives added!" else "Apiary updated!"
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    if (!isNewApiary) {
+                        findNavController().popBackStack()
+                    }
                 }
                 is Resource.Error -> {
                     Toast.makeText(requireContext(), "Error: ${status.message}", Toast.LENGTH_LONG).show()
@@ -113,6 +117,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
     }
 
     private fun setupInitialState(isNewApiary: Boolean) {
+        binding.cardHiveCreation.visibility = if (isNewApiary) View.VISIBLE else View.GONE
         if (isNewApiary) {
             binding.checkboxAutoNumberApiaryHives.visibility = View.VISIBLE
             binding.textInputLayoutStartingHiveNumberApiary.visibility = View.GONE
@@ -120,12 +125,6 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
             binding.textInputLayoutNumberOfHives.visibility = View.VISIBLE
             binding.editTextNumberOfHives.isEnabled = true
             binding.editTextNumberOfHives.setText("1")
-        } else {
-            binding.checkboxAutoNumberApiaryHives.visibility = View.GONE
-            binding.textInputLayoutStartingHiveNumberApiary.visibility = View.GONE
-            binding.textInputLayoutEndingHiveNumberApiary.visibility = View.GONE
-            binding.textInputLayoutNumberOfHives.visibility = View.GONE
-            binding.editTextNumberOfHives.isEnabled = false
         }
     }
 
@@ -135,19 +134,15 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
             val endNum = binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
 
             if (startNum != null && endNum != null) {
-                // --- FIX: Validate the range and show/hide an error message ---
                 if (endNum >= startNum) {
                     val count = endNum - startNum + 1
                     binding.editTextNumberOfHives.setText(count.toString())
-                    // Clear error if the range becomes valid
                     binding.textInputLayoutEndingHiveNumberApiary.error = null
                 } else {
-                    // Show error if the range is invalid
                     binding.textInputLayoutEndingHiveNumberApiary.error = getString(R.string.error_invalid_range)
                     binding.editTextNumberOfHives.setText("")
                 }
             } else {
-                // Clear error if one of the fields is empty
                 binding.textInputLayoutEndingHiveNumberApiary.error = null
                 binding.editTextNumberOfHives.setText("")
             }
@@ -167,18 +162,19 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         var endingHiveNumber: Int? = null
         var numberOfHives: Int = 0
 
-        if (autoNumberHives) {
-            startingHiveNumber = binding.editTextStartingHiveNumberApiary.text.toString().toIntOrNull()
-            endingHiveNumber = binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
+        if (isNewApiary) {
+            if (autoNumberHives) {
+                startingHiveNumber = binding.editTextStartingHiveNumberApiary.text.toString().toIntOrNull()
+                endingHiveNumber = binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
 
-            // --- FIX: Add validation check before attempting to save ---
-            if (startingHiveNumber == null || endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
-                Toast.makeText(requireContext(), "Please enter a valid hive number range.", Toast.LENGTH_SHORT).show()
-                return // Stop the save operation
+                if (startingHiveNumber == null || endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
+                    Toast.makeText(requireContext(), "Please enter a valid hive number range.", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                numberOfHives = endingHiveNumber - startingHiveNumber + 1
+            } else {
+                numberOfHives = binding.editTextNumberOfHives.text.toString().toIntOrNull() ?: 0
             }
-            numberOfHives = endingHiveNumber - startingHiveNumber + 1
-        } else {
-            numberOfHives = binding.editTextNumberOfHives.text.toString().toIntOrNull() ?: 0
         }
 
         val apiary = Apiary(
