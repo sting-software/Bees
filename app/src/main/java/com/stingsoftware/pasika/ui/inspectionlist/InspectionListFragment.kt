@@ -47,7 +47,7 @@ class InspectionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.title = "Inspections for Hive #${args.hiveNumber}"
+        activity?.title = getString(R.string.inspections_for_hive, args.hiveNumber)
 
         setupMenu()
 
@@ -76,9 +76,9 @@ class InspectionListFragment : Fragment() {
         inspectionListViewModel.exportStatus.observe(viewLifecycleOwner) { success ->
             success?.let {
                 val message = if (it) {
-                    "Successfully exported to Downloads folder."
+                    getString(R.string.successfully_exported_to_downloads_folder)
                 } else {
-                    "Export failed. No inspections to export."
+                    getString(R.string.export_failed_no_inspections_to_export)
                 }
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                 inspectionListViewModel.onExportStatusHandled()
@@ -116,7 +116,7 @@ class InspectionListFragment : Fragment() {
     }
 
     private fun showExportOptionsDialog() {
-        val options = arrayOf("Export as CSV", "Export as PDF")
+        val options = arrayOf(getString(R.string.export_as_csv), getString(R.string.export_as_pdf))
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.export_format_title))
             .setItems(options) { dialog, which ->
@@ -182,13 +182,14 @@ class InspectionListFragment : Fragment() {
 
     private fun showDeleteInspectionConfirmationDialog(inspection: Inspection) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Inspection")
-            .setMessage("Are you sure you want to delete this inspection record?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.delete_inspection))
+            .setMessage(getString(R.string.are_you_sure_you_want_to_delete_this_inspection_record))
+            .setPositiveButton(getString(R.string.delete_string)) { _, _ ->
                 inspectionListViewModel.deleteInspection(inspection)
-                Toast.makeText(requireContext(), "Inspection deleted.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.inspection_deleted), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(getString(R.string.cancel_once)) { _, _ ->
                 inspectionAdapter.currentList.indexOf(inspection).takeIf { it != -1 }?.let {
                     inspectionAdapter.notifyItemChanged(it)
                 }

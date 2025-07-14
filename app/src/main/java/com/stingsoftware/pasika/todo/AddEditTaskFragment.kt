@@ -37,7 +37,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (!isGranted) {
-                Toast.makeText(requireContext(), "Notification permission denied. Reminders will not work.", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.notification_permission_denied_reminders_will_not_work), Toast.LENGTH_LONG).show()
                 binding.switchReminder.isChecked = false
             }
         }
@@ -82,7 +83,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         // FIX: Use safe calls to handle nullable Editable
         val title = binding.editTextTaskTitle.text?.toString()?.trim()
         if (title.isNullOrBlank()) {
-            Toast.makeText(requireContext(), "Title cannot be empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.title_cannot_be_empty), Toast.LENGTH_SHORT).show()
             return
         }
 

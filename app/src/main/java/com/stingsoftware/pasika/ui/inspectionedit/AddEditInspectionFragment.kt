@@ -47,7 +47,9 @@ class AddEditInspectionFragment : Fragment() {
         val inspectionId = args.inspectionId
         val isNewInspection = inspectionId == -1L
 
-        activity?.title = if (isNewInspection) "Add New Inspection" else "Edit Inspection"
+        activity?.title = if (isNewInspection) getString(R.string.add_new_inspection_string) else getString(
+            R.string.edit_inspection
+        )
 
         setupDatePickers()
         setupConditionalViews()
@@ -58,7 +60,8 @@ class AddEditInspectionFragment : Fragment() {
                 inspection?.let {
                     populateInspectionData(it)
                 } ?: run {
-                    Toast.makeText(requireContext(), "Inspection not found!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.inspection_not_found), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 }
             }
@@ -70,10 +73,12 @@ class AddEditInspectionFragment : Fragment() {
         addEditInspectionViewModel.saveCompleted.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess != null) {
                 if (isSuccess) {
-                    Toast.makeText(requireContext(), "Inspection saved successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.inspection_saved_successfully), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 } else {
-                    Toast.makeText(requireContext(), "Failed to save inspection. Please try again.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.failed_to_save_inspection_please_try_again), Toast.LENGTH_LONG).show()
                 }
                 addEditInspectionViewModel.resetSaveCompleted()
             }

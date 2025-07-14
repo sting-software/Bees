@@ -1,17 +1,9 @@
 package com.stingsoftware.pasika.repository
 
+import android.content.Context
 import androidx.room.Transaction
-import com.stingsoftware.pasika.data.Apiary
-import com.stingsoftware.pasika.data.ApiaryDao
-import com.stingsoftware.pasika.data.ApiaryExportData
-import com.stingsoftware.pasika.data.Hive
-import com.stingsoftware.pasika.data.HiveDao
-import com.stingsoftware.pasika.data.HiveExportData
-import com.stingsoftware.pasika.data.Inspection
-import com.stingsoftware.pasika.data.InspectionDao
-import com.stingsoftware.pasika.data.StatsByBreed
-import com.stingsoftware.pasika.data.Task
-import com.stingsoftware.pasika.data.TaskDao
+import com.stingsoftware.pasika.R
+import com.stingsoftware.pasika.data.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -22,12 +14,11 @@ class ApiaryRepository @Inject constructor(
     private val apiaryDao: ApiaryDao,
     private val hiveDao: HiveDao,
     private val inspectionDao: InspectionDao,
-    private val taskDao: TaskDao // Add TaskDao to the constructor
+    private val taskDao: TaskDao,
+    private val context: Context // Inject the context
 ) {
 
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()
-    val totalApiariesCount: Flow<Int> = apiaryDao.getTotalApiariesCount()
-    val totalHivesCount: Flow<Int?> = apiaryDao.getTotalHivesCount()
 
     // Apiary operations
     suspend fun insertApiary(apiary: Apiary): Long {
@@ -78,16 +69,19 @@ class ApiaryRepository @Inject constructor(
     }
 
     suspend fun moveHives(hiveIds: List<Long>, sourceApiaryId: Long, destinationApiaryId: Long) {
-        val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name ?: "Unknown Apiary"
-        val destinationApiaryName = apiaryDao.getApiaryById(destinationApiaryId)?.name ?: "Unknown Apiary"
-        val note = "Hive moved from '$sourceApiaryName' to '$destinationApiaryName'."
+        val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name ?: context.getString(R.string.unknown_apiary)
+        val destinationApiaryName = apiaryDao.getApiaryById(destinationApiaryId)?.name ?: context.getString(
+            R.string.unknown_apiary_string
+        )
+        val note =
+            context.getString(R.string.hive_moved_from_to, sourceApiaryName, destinationApiaryName)
 
         hiveIds.forEach { hiveId ->
             val moveRecord = Inspection(
                 hiveId = hiveId,
                 inspectionDate = System.currentTimeMillis(),
                 notes = note,
-                managementActionsTaken = "Hive Relocation"
+                managementActionsTaken = context.getString(R.string.hive_relocation)
             )
             inspectionDao.insert(moveRecord)
         }
@@ -118,15 +112,6 @@ class ApiaryRepository @Inject constructor(
         return inspectionDao.getInspectionsForHive(hiveId)
     }
 
-    suspend fun getInspectionCountForHive(hiveId: Long): Int {
-        return inspectionDao.getInspectionCountForHive(hiveId)
-    }
-
-    // Stats operations
-    fun getStatsByBreed(): Flow<List<StatsByBreed>> {
-        return hiveDao.getStatsByBreed()
-    }
-
     // Export/Import operations
     suspend fun getApiaryExportData(apiaryId: Long): ApiaryExportData? {
         val apiary = apiaryDao.getApiaryById(apiaryId) ?: return null
@@ -145,7 +130,10 @@ class ApiaryRepository @Inject constructor(
 
     @Transaction
     suspend fun importApiaryData(data: ApiaryExportData) {
-        val importedApiary = data.apiary.copy(id = 0, name = "${data.apiary.name} (Imported)")
+        val importedApiary = data.apiary.copy(id = 0, name = context.getString(
+            R.string.imported,
+            data.apiary.name
+        ))
         val newApiaryId = apiaryDao.insert(importedApiary)
 
         data.hivesWithInspections.forEach { hiveData ->

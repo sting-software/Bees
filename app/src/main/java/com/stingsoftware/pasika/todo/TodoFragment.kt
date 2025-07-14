@@ -1,8 +1,10 @@
-package com.stingsoftware.pasika.ui.todo
+package com.stingsoftware.pasika.todo
 
 import android.os.Bundle
-import android.view.*
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
@@ -50,7 +52,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
             onTaskClicked = { task ->
                 val action = TodoListFragmentDirections.actionTodoListFragmentToAddEditTaskFragment(
                     task.id,
-                    "Edit Task"
+                    getString(R.string.edit_task)
                 )
                 findNavController().navigate(action)
             },
@@ -114,7 +116,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
                         } else {
                             Toast.makeText(
                                 requireContext(),
-                                "No tasks selected.",
+                                getString(R.string.no_tasks_selected),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -153,7 +155,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
         binding.fabAddTask.setOnClickListener {
             val action = TodoListFragmentDirections.actionTodoListFragmentToAddEditTaskFragment(
                 -1L,
-                "Add Task"
+                getString(R.string.add_task)
             )
             findNavController().navigate(action)
         }
@@ -177,8 +179,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
                 viewModel.deleteTask(task)
 
                 // FIX: Correctly undo the delete by re-inserting the task
-                Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO") { viewModel.insertTask(task) }
+                Snackbar.make(requireView(), getString(R.string.task_deleted), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.undo_string)) { viewModel.insertTask(task) }
                     .show()
             }
         }).attachToRecyclerView(binding.recyclerViewTasks)
@@ -209,21 +211,25 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
     private fun updateToolbarTitleForSelection(count: Int) {
         if (todoAdapter.isMultiSelectMode()) {
             activity?.title =
-                if (count > 0) getString(R.string.selected_count_format, count) else "Select Tasks"
+                if (count > 0) getString(R.string.selected_count_format, count) else getString(R.string.select_tasks)
         } else {
-            activity?.title = "To-Do List"
+            activity?.title = getString(R.string.to_do_list)
         }
     }
 
     private fun showBulkDeleteConfirmationDialog(tasksToDelete: List<Task>) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Selected Tasks")
-            .setMessage("Are you sure you want to delete ${tasksToDelete.size} selected tasks?")
+            .setTitle(getString(R.string.delete_selected_tasks))
+            .setMessage(
+                getString(
+                    R.string.are_you_sure_you_want_to_delete_selected_tasks,
+                    tasksToDelete.size
+                ))
             .setPositiveButton(R.string.delete_button) { _, _ ->
                 viewModel.deleteTasks(tasksToDelete)
                 Toast.makeText(
                     requireContext(),
-                    "${tasksToDelete.size} tasks deleted.",
+                    getString(R.string.tasks_deleted, tasksToDelete.size),
                     Toast.LENGTH_SHORT
                 ).show()
                 setMultiSelectMode(false)

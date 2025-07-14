@@ -1,4 +1,4 @@
-package com.stingsoftware.pasika.ui.bulkedit
+package com.stingsoftware.pasika.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.ApiaryType
 import com.stingsoftware.pasika.databinding.FragmentBulkEditApiaryBinding
@@ -20,7 +19,6 @@ import java.util.*
 @AndroidEntryPoint
 class BulkEditApiaryFragment : Fragment() {
 
-    private val args: BulkEditApiaryFragmentArgs by navArgs()
     private val viewModel: BulkEditApiaryViewModel by viewModels()
 
     private var _binding: FragmentBulkEditApiaryBinding? = null
@@ -33,7 +31,7 @@ class BulkEditApiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.title = "Bulk Edit Apiaries"
+        activity?.title = getString(R.string.bulk_edit_apiaries)
 
         setupDropdown()
 
@@ -43,10 +41,12 @@ class BulkEditApiaryFragment : Fragment() {
 
         viewModel.updateStatus.observe(viewLifecycleOwner) { success ->
             if (success) {
-                Toast.makeText(requireContext(), "Apiaries updated successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.apiaries_updated_successfully), Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
-                Toast.makeText(requireContext(), "Failed to update apiaries", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.failed_to_update_apiaries), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -57,7 +57,8 @@ class BulkEditApiaryFragment : Fragment() {
             val notes = binding.editTextNotes.text.toString().trim().ifEmpty { null }
 
             if (location == null && type == null && notes == null) {
-                Toast.makeText(requireContext(), "At least one field must be filled to update.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.at_least_one_field_must_be_filled_to_update), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

@@ -22,12 +22,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/statsFragment"
-        android:name="com.stingsoftware.pasika.ui.stats.StatsFragment"
-        android:label="Statistics"
-        tools:layout="@layout/fragment_stats" />
-
-    <fragment
         android:id="@+id/addEditApiaryFragment"
         android:name="com.stingsoftware.pasika.ui.addedit.AddEditApiaryFragment"
         android:label="{title}"
@@ -138,7 +132,7 @@
 
     <fragment
         android:id="@+id/bulkEditApiaryFragment"
-        android:name="com.stingsoftware.pasika.ui.bulkedit.BulkEditApiaryFragment"
+        android:name="com.stingsoftware.pasika.ui.BulkEditApiaryFragment"
         android:label="Bulk Edit Apiaries"
         tools:layout="@layout/fragment_bulk_edit_apiary">
         <argument
@@ -148,7 +142,7 @@
 
     <fragment
         android:id="@+id/todoListFragment"
-        android:name="com.stingsoftware.pasika.ui.todo.TodoListFragment"
+        android:name="com.stingsoftware.pasika.todo.TodoListFragment"
         android:label="To-Do List"
         tools:layout="@layout/fragment_todo_list">
         <action

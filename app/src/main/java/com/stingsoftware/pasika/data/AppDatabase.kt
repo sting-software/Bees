@@ -19,8 +19,8 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
         private val MIGRATION_3_4 = object : Migration(3, 4) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("""
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
                     CREATE TABLE IF NOT EXISTS `tasks` (
                         `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         `title` TEXT NOT NULL,
@@ -35,9 +35,9 @@ abstract class AppDatabase : RoomDatabase() {
 
         // FIX: This migration now correctly creates the necessary indexes
         private val MIGRATION_4_5 = object : Migration(4, 5) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("CREATE INDEX `index_hives_apiaryId` ON `hives` (`apiaryId`)")
-                database.execSQL("CREATE INDEX `index_inspections_hiveId` ON `inspections` (`hiveId`)")
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE INDEX `index_hives_apiaryId` ON `hives` (`apiaryId`)")
+                db.execSQL("CREATE INDEX `index_inspections_hiveId` ON `inspections` (`hiveId`)")
             }
         }
 

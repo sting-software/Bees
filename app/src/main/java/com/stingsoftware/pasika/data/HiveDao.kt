@@ -1,16 +1,10 @@
 package com.stingsoftware.pasika.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HiveDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(hive: Hive): Long
 
@@ -34,17 +28,4 @@ interface HiveDao {
 
     @Query("UPDATE hives SET apiaryId = :newApiaryId WHERE id IN (:hiveIds)")
     suspend fun moveHives(hiveIds: List<Long>, newApiaryId: Long)
-
-    // This function was missing and has been restored
-    @Query("""
-        SELECT breed,
-               COUNT(id) as hiveCount,
-               SUM(framesTotal) as totalFrames,
-               AVG(defensivenessRating) as avgDefensiveness
-        FROM hives
-        WHERE breed IS NOT NULL AND breed != ''
-        GROUP BY breed
-        ORDER BY hiveCount DESC
-    """)
-    fun getStatsByBreed(): Flow<List<StatsByBreed>>
 }

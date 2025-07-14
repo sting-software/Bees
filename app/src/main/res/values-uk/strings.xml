@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Бджоли</string>
+    <string name="save_button">Зберегти</string>
+    <string name="delete_button">Видалити</string>
+    <string name="cancel_button">Скасувати</string>
+    <string name="notes_hint">Нотатки</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="undo">Скасувати</string>
+    <string name="search_label">Пошук</string>
+    <string name="select_all_label">Вибрати все</string>
+    <string name="edit_selected_label">Редагувати</string>
+    <string name="delete_selected_label">Видалити</string>
+    <string name="cancel_selection_label">Скасувати вибір</string>
+    <string name="selected_count_format">Вибрано: %d</string>
+
+    <string name="apiaries_empty_state">Пасіки ще не додано. Натисніть \'+\', щоб додати!</string>
+    <string name="add_new_apiary_content_description">Додати нову пасіку</string>
+    <string name="delete_apiary_confirmation_title">Видалити пасіку?</string>
+    <string name="delete_apiary_confirmation_message">Ви впевнені, що хочете видалити цю пасіку та всі її вулики?</string>
+    <string name="apiary_deleted_message">Пасіку видалено.</string>
+    <string name="delete_selected_apiaries_title">Видалити вибрані пасіки</string>
+    <string name="delete_selected_apiaries_message">Ви впевнені, що хочете видалити %d вибраних пасік? Усі пов\'язані вулики також будуть видалені.</string>
+    <string name="no_apiaries_selected_for_deletion">Не вибрано пасік для видалення.</string>
+
+    <string name="hives_count">Вуликів: %d</string>
+    <string name="no_hives_yet">Вулики ще не додано. Натисніть \'+\', щоб додати!</string>
+    <string name="apiary_not_found_message">Пасіку не знайдено!</string>
+    <string name="edit_apiary_content_description">Редагувати пасіку</string>
+    <string name="add_new_hive_content_description">Додати новий вулик</string>
+
+    <string name="add_new_apiary">Додати нову пасіку</string>
+    <string name="edit_apiary">Редагувати пасіку</string>
+    <string name="apiary_name_hint">Назва пасіки</string>
+    <string name="apiary_location_hint">Розташування</string>
+    <string name="apiary_type_hint">Тип пасіки</string>
+    <string name="apiary_name_required">Назва пасіки не може бути порожньою</string>
+    <string name="location_required">Розташування не може бути порожнім</string>
+    <string name="apiary_type_required">Тип пасіки не може бути порожнім</string>
+    <string name="number_of_hives_required">Кількість вуликів має бути додатним числом</string>
+    <string name="last_inspection_date_hint">Дата останнього огляду</string>
+    <string name="auto_number_apiary_hives_checkbox">Автоматично нумерувати вулики на цій пасіці</string>
+    <string name="apiary_hives_added_message">Пасіку та вулики додано!</string>
+    <string name="apiary_updated_message">Пасіку успішно оновлено!</string>
+    <string name="save_apiary_failed_message">Не вдалося зберегти пасіку. Будь ласка, спробуйте ще раз.</string>
+    <string name="update_apiary_date_title">Оновити дату пасіки?</string>
+    <string name="update_apiary_date_message">Ви хочете встановити дату останнього огляду пасіки на дату цього вулика?</string>
+    <string-array name="apiary_types">
+        <item>Стаціонарна</item>
+        <item>Кочова</item>
+    </string-array>
+
+    <string name="hive_number_format">Вулик №%s</string>
+    <string name="hive_number_unknown">Вулик ##</string>
+    <string name="hive_type_format">Тип: %s</string>
+    <string name="frame_type_format">Рамки: %s</string>
+    <string name="breed_format">Порода/гібрид: %s</string>
+    <string name="last_inspection_format">Останній огляд: %s</string>
+    <string name="last_inspection_none">Останній огляд: немає</string>
+
+    <string name="add_multiple_hives">Додати кілька вуликів</string>
+    <string name="automatic_numbering">Автоматична нумерація</string>
+    <string name="from_label">Від</string>
+    <string name="to_label">До</string>
+    <string name="hive_number_hint">Номер вулика</string>
+    <string name="hives_added_message">Додано %d вулик(ів)!</string>
+    <string name="invalid_from_number">Номер "Від" недійсний.</string>
+    <string name="invalid_to_number">Номер "До" недійсний.</string>
+    <string name="hive_characteristics_title">Характеристики вулика</string>
+    <string name="spinner_material_prompt">Матеріал</string>
+    <string-array name="material_choices">
+        <item>Дерево</item>
+        <item>ППУ</item>
+        <item>ППС</item>
+        <item>Інше</item>
+    </string-array>
+    <string name="spinner_hive_type_prompt">Тип вулика</string>
+    <string-array name="hive_types">
+        <item>6-рамковий</item>
+        <item>8-рамковий</item>
+        <item>10-рамковий</item>
+        <item>12-рамковий</item>
+        <item>Лежак</item>
+        <item>Нуклеус</item>
+        <item>Інше</item>
+    </string-array>
+    <string name="spinner_frame_type_prompt">Тип рамки</string>
+    <string-array name="frame_types">
+        <item>300</item>
+        <item>230</item>
+        <item>435</item>
+        <item>145</item>
+        <item>Інше</item>
+    </string-array>
+    <string name="spinner_breed_prompt">Порода</string>
+    <string-array name="breed_choices">
+        <item>Бакфаст</item>
+        <item>Карніка</item>
+        <item>Карпатка</item>
+        <item>Степова</item>
+        <item>Італійська</item>
+        <item>Місцевий гібрид</item>
+        <item>Інше</item>
+    </string-array>
+    <string name="frames_title">Рамки</string>
+    <string name="frames_total">Всього:</string>
+    <string name="frames_eggs">Яйця</string>
+    <string name="frames_open_brood">Відкритий розплід</string>
+    <string name="frames_capped_brood">Закритий розплід</string>
+    <string name="frames_feed">Корм</string>
+    <string name="queen_section_title">Матка</string>
+    <string name="queen_tag_color_prompt">Колір мітки</string>
+    <string-array name="queen_tag_colors">
+        <item>Білий</item>
+        <item>Жовтий</item>
+        <item>Червоний</item>
+        <item>Зелений</item>
+        <item>Синій</item>
+        <item>Інший</item>
+    </string-array>
+    <string name="queen_number_hint">Номер мітки</string>
+    <string name="queen_year_hint">Рік</string>
+    <string name="queen_line_hint">Лінія</string>
+    <string name="queen_cells_hint">Маточники</string>
+    <string name="isolation_from_date_hint">Ізоляція з</string>
+    <string name="isolation_to_date_hint">Ізоляція до</string>
+    <string name="defensiveness_rating_title">Рейтинг агресивності</string>
+    <string name="defensiveness_rating_1">1</string>
+    <string name="defensiveness_rating_2">2</string>
+    <string name="defensiveness_rating_3">3</string>
+    <string name="defensiveness_rating_4">4</string>
+    <string name="given_taken_title">Дано/Взято</string>
+    <string name="given_taken_built_combs">Сушнина</string>
+    <string name="given_taken_foundation">Вощина</string>
+    <string name="given_taken_brood">Розплід</string>
+    <string name="given_taken_bees_kg">Бджоли, кг</string>
+    <string name="given_taken_honey_kg">Мед, кг</string>
+    <string name="given_taken_sugar_kg">Цукор, кг</string>
+    <string name="treatment_title">Лікування</string>
+    <string name="treatment_hint">Деталі лікування</string>
+
+    <string name="bulk_edit_hives">Масове редагування вуликів</string>
+    <string name="bulk_edit_hives_count">Редагування %d вибраних вуликів</string>
+    <string name="bulk_edit_quantity_mismatch_warning">Розрахована кількість (%d) має відповідати кількості вибраних вуликів (%d).</string>
+    <string name="bulk_edit_invalid_range_warning">Будь ласка, введіть дійсний діапазон номерів.</string>
+    <string name="no_hives_selected_for_editing">Не вибрано вуликів для редагування.</string>
+    <string name="no_hives_selected_for_deletion">Не вибрано вуликів для видалення.</string>
+    <string name="swipe_delete_multi_select_warning">Не можна видаляти свайпом у режимі множинного вибору. Використовуйте кнопку видалення.</string>
+    <string name="delete_hive_dialog_title">Видалити вулик</string>
+    <string name="delete_hive_dialog_message">Ви впевнені, що хочете видалити вулик %s?</string>
+    <string name="delete_selected_hives_title">Видалити вибрані вулики</string>
+    <string name="delete_selected_hives_message">Ви впевнені, що хочете видалити %d вибраних вуликів?</string>
+    <string name="hives_deleted_message_plural">Видалено %d вуликів.</string>
+
+    <string name="no_inspections_yet">Огляди ще не додано. Натисніть \'+\', щоб додати!</string>
+    <string name="inspection_date_hint">Дата огляду</string>
+    <string name="queen_cells_present">Наявність маточників</string>
+    <string name="queen_cells_count_hint">Кількість маточників</string>
+    <string name="detailed_frames_title">Детальний підрахунок рамок</string>
+    <string name="frames_eggs_count_hint">Яйця</string>
+    <string name="frames_open_brood_count_hint">Відкритий розплід</string>
+    <string name="frames_capped_brood_count_hint">Закритий розплід</string>
+    <string name="frames_honey_count_hint">Мед</string>
+    <string name="frames_pollen_count_hint">Перга</string>
+    <string name="honey_stores_estimate_hint">Медові</string>
+    <string name="pollen_stores_estimate_hint">Пергові</string>
+    <string name="health_treatment_title">Здоров\'я та лікування</string>
+    <string name="pests_diseases_observed_hint">Виявлені шкідники/хвороби</string>
+    <string name="treatment_applied_hint">Застосоване лікування</string>
+    <string name="temperament_rating_title">Лагідність</string>
+    <string name="management_actions_taken_hint">Вжиті заходи</string>
+    <string name="inspection_date_format">Огляд: %s</string>
+    <string name="queen_cells_present_with_count">Маточники: Так (%d)</string>
+    <string name="queen_cells_present_no_count">Маточники: Так</string>
+    <string name="eggs_short_with_count">Яйця(%d)</string>
+    <string name="open_brood_short_with_count">Відкритий(%d)</string>
+    <string name="capped_brood_short_with_count">Закритий(%d)</string>
+    <string name="brood_status_format">Розплід: %s</string>
+    <string name="honey_stores_format">Мед: %d рамок</string>
+    <string name="pests_diseases_format">Шкідники: %s</string>
+    <string name="treatment_applied_format">Лікування: %s</string>
+    <string name="temperament_rating_format">Лагідність: %d</string>
+    <string name="management_actions_format">Заходи: %s</string>
+    <string name="notes_format">Нотатки: %s</string>
+
+    <string name="settings_title">Налаштування</string>
+    <string name="settings_category_display">Дисплей</string>
+    <string name="settings_theme_title">Темна тема</string>
+    <string name="settings_theme_summary_on">Увімкнено</string>
+    <string name="settings_theme_summary_off">Вимкнено</string>
+    <string name="settings_category_app">Додаток</string>
+    <string name="settings_exit_title">Вийти з додатку</string>
+    <string name="settings_exit_summary">Закрити додаток</string>
+    <string name="settings_exit_dialog_title">Вийти з додатку</string>
+    <string name="settings_exit_dialog_message">Ви впевнені, що хочете вийти з додатку?</string>
+
+    <string name="select_apiaries_title">Вибрати пасіки</string>
+
+    <string name="export_to_csv">Експорт у CSV</string>
+    <string name="export_to_pdf">Експорт у PDF</string>
+    <string name="export_format_title">Виберіть формат експорту</string>
+
+    <string name="move_selected_label">Перемістити</string>
+
+    <string name="statistic_type_hint">Тип статистики</string>
+    <string name="stats_no_data">Немає даних для відображення.</string>
+    <string name="error_invalid_range">Кінцевий номер має бути більшим або дорівнювати початковому.</string>
+
+    <string name="bulk_edit_apiaries_count">Редагування %d вибраних пасік</string>
+
+    <string name="export_apiary_label">Експорт пасіки</string>
+    <string name="import_apiary_label">Імпорт пасіки</string>
+
+    <string name="open">Відкрити</string>
+    <string name="close">Закрити</string>
+
+    <string name="mark_as_complete_label">Відмітити як виконане</string>
+    <string name="toast_mixed_selection_warning">Неможливо змінити статус для змішаного вибору завдань.</string>
+    <string name="no_tasks_yet">Завдань ще немає. Натисніть \'+\', щоб додати!</string>
+
+    <string name="due_date_format">Термін: %s</string>
+    <string name="empty_state_icon">Іконка порожнього стану</string>
+    <string name="apiary_details">Деталі пасіки</string>
+    <string name="initial_hives_for_new_apiaries">Вулики</string>
+    <string name="number_of_hives">Кількість вуликів</string>
+    <string name="quantity">Кількість</string>
+    <string name="hive_characteristics">Характеристики вулика</string>
+    <string name="other_material">Інший матеріал</string>
+    <string name="hive_type">Тип вулика</string>
+    <string name="other_hive_type">Інший тип вулика</string>
+    <string name="other_frame_type">Інший тип рамки</string>
+    <string name="other_breed">Інша порода</string>
+    <string name="other_color">Інший колір</string>
+    <string name="last_inspection_date_optional">Дата останнього огляду (необов\'язково)</string>
+    <string name="save_hive">Зберегти</string>
+    <string name="cancel">Скасувати</string>
+    <string name="task_title">Назва завдання</string>
+    <string name="description_optional">Опис</string>
+    <string name="due_date_amp_time_optional"><![CDATA[Термін виконання та час (необов\'язково)]]></string>
+    <string name="set_reminder">Встановити нагадування</string>
+    <string name="edit_apiary_string">Редагувати пасіку</string>
+    <string name="add_new_hive">Додати новий вулик</string>
+    <string name="no_hives_added_yet_tap_to_add_one">Вулики ще не додано. Натисніть \'+\', щоб додати!</string>
+    <string name="only_filled_fields_will_be_updated_leave_fields_blank_to_keep_existing_values">Будуть оновлені лише заповнені поля. Залиште поля порожніми, щоб зберегти існуючі значення.</string>
+    <string name="bulk_edit_hives_string">Масове редагування вуликів</string>
+    <string name="hive_type_string">Тип вулика</string>
+    <string name="frame_type">Тип рамки</string>
+    <string name="number_of_frames">Кількість рамок</string>
+    <string name="automatically_number_selected_hives">Автоматично нумерувати вибрані вулики</string>
+    <string name="starting_hive_number">Початковий номер вулика</string>
+    <string name="ending_hive_number">Кінцевий номер вулика</string>
+    <string name="breed">Порода</string>
+    <string name="last_inspection_date_optional_string">Дата останнього огляду (необов\'язково)</string>
+    <string name="notes_optional">Нотатки (необов\'язково)</string>
+    <string name="apply_changes">Застосувати зміни</string>
+    <string name="cancel_string">Скасувати</string>
+    <string name="add_new_apiary_string">Додати нову пасіку</string>
+    <string name="no_apiaries_added_yet_tap_to_add_one">Пасіки ще не додано. Натисніть \'+\', щоб додати!</string>
+    <string name="add_new_inspection">Додати новий огляд</string>
+    <string name="dark_theme">Темна тема</string>
+    <string name="exit_app">Вийти з додатку</string>
+    <string name="statistic_type">Тип статистики</string>
+    <string name="total_apiaries">Всього пасік</string>
+    <string name="total_hives">Всього вуликів</string>
+    <string name="avg_hives">Середня к-сть вуликів</string>
+    <string name="add_new_task">Додати нове завдання</string>
+    <string name="edit_apiary_string_2">Редагувати пасіку</string>
+    <string name="edit_hive_string">Редагувати вулик</string>
+    <string name="home">Головна</string>
+    <string name="stats">Статистика</string>
+    <string name="to_do">Завдання</string>
+    <string name="application">Додаток</string>
+    <string name="language_title">Мова</string>
+    <string name="language_dialog_title">Вибрати мову</string>
+    <string name="move_hive_s_to">Перенести %1$d вулик(ів) до…</string>
+    <string name="starting_number_must_be_a_positive_number">Початковий номер має бути додатним числом</string>
+    <string name="edit_hive">Редагувати вулик</string>
+
+    <string name="hive_not_found">Вулик не знайдено!</string>
+    <string name="add_new_hive_string">Додати новий вулик</string>
+    <string name="hive_updated_successfully">Вулик успішно оновлено!</string>
+    <string name="failed_to_save_hive_s_please_try_again">Не вдалося зберегти вулик(и). Будь ласка, спробуйте ще раз.</string>
+    <string name="other">Інше</string>
+    <string name="other_1">Інше</string>
+    <string name="other_2">Інше</string>
+    <string name="other_3">Інше</string>
+    <string name="other_4">Інше</string>
+    <string name="other_5">Інше</string>
+    <string name="other_6">Інше</string>
+    <string name="other_7">Інше</string>
+    <string name="other_8">Інше</string>
+    <string name="other_9">Інше</string>
+    <string name="other_10">Інше</string>
+    <string name="quantity_must_be_a_positive_number">Кількість повинна бути додатним числом</string>
+    <string name="apiary_date_updated">Дата пасіки оновлена!</string>
+    <string name="apiaries">пасіки</string>
+    <string name="unknown_apiary">Невідома пасіка</string>
+    <string name="unknown_apiary_string">Невідома пасіка</string>
+    <string name="hive_moved_from_to">Вулик переміщено з \'%1$s\' до \'%2$s\'.</string>
+    <string name="hive_relocation">Переміщення вулика</string>
+    <string name="imported">%1$s (Імпортовано)</string>
+    <string name="task_reminder">Нагадування про завдання</string>
+    <string name="task_reminders">Нагадування про завдання</string>
+    <string name="channel_for_pasika_task_reminders">Канал для нагадувань про завдання Pasika</string>
+    <string name="notification_permission_denied_reminders_will_not_work">Дозвіл на сповіщення відхилено. Нагадування не працюватимуть.</string>
+    <string name="title_cannot_be_empty">Назва не може бути порожньою</string>
+    <string name="edit_task">Редагувати завдання</string>
+    <string name="no_tasks_selected">Завдання не вибрано.</string>
+    <string name="add_task">Додати завдання</string>
+    <string name="task_deleted">Завдання видалено</string>
+    <string name="undo_string">СКАСУВАТИ</string>
+    <string name="select_tasks">Вибрати завдання</string>
+    <string name="to_do_list">Список завдань</string>
+    <string name="delete_selected_tasks">Видалити вибрані завдання</string>
+    <string name="are_you_sure_you_want_to_delete_selected_tasks">Ви впевнені, що хочете видалити %1$d вибраних завдань?</string>
+    <string name="tasks_deleted">Видалено %1$d завдань.</string>
+    <string name="edit_apiary_again">Редагувати пасіку</string>
+    <string name="add_new_apiary_again">Додати нову пасіку</string>
+    <string name="apiary_and_hives_added">Пасіку та вулики додано!</string>
+    <string name="apiary_updated">Пасіку оновлено!</string>
+    <string name="error">Помилка: %1$s</string>
+    <string name="please_enter_a_valid_hive_number_range">Будь ласка, введіть дійсний діапазон номерів вуликів.</string>
+    <string name="selected">Вибрано: %1$d</string>
+    <string name="apiary_not_found">Пасіку не знайдено!</string>
+    <string name="hives_moved_successfully">Вулики успішно переміщено.</string>
+    <string name="failed_to_move_hives">Не вдалося перемістити вулики.</string>
+    <string name="apiary_exported_successfully_to_downloads_pasika">Пасіку успішно експортовано до папки Downloads/Pasika.</string>
+    <string name="export_failed">Експорт не вдався.</string>
+    <string name="no_hives_selected_for_editing_strings">Не вибрано вуликів для редагування.</string>
+    <string name="no_hives_selected_for_deletion_string">Не вибрано вуликів для видалення.</string>
+    <string name="no_hives_selected_to_move">Не вибрано вуликів для переміщення.</string>
+    <string name="no_other_apiaries_to_move_to">Немає інших пасік для переміщення.</string>
+    <string name="move_hive_s_to_string">Перемістити %1$d вулик(ів) до...</string>
+    <string name="cannot_swipe_to_delete_in_multi_select_mode">Неможливо видалити свайпом у режимі множинного вибору.</string>
+    <string name="delete_hive">Видалити вулик</string>
+    <string name="are_you_sure_you_want_to_delete_hive">Ви впевнені, що хочете видалити вулик %1$s?</string>
+    <string name="delete">Видалити</string>
+    <string name="cancel_again">Скасувати</string>
+    <string name="delete_selected_hives">Видалити вибрані вулики</string>
+    <string name="are_you_sure_you_want_to_delete_selected_hives">Ви впевнені, що хочете видалити %1$d вибраних вуликів?</string>
+    <string name="delete_again">Видалити</string>
+    <string name="hives_deleted">Видалено %1$d вуликів.</string>
+    <string name="cancel_once_again">Скасувати</string>
+    <string name="hives_updated_successfully">Вулики успішно оновлено!</string>
+    <string name="no_hives_selected_for_bulk_editing">Не вибрано вуликів для масового редагування.</string>
+    <string name="bulk_edit_hives_again">Масове редагування вуликів</string>
+    <string name="apiary_imported_successfully">Пасіку успішно імпортовано.</string>
+    <string name="import_failed_invalid_file_or_format">Імпорт не вдався. Недійсний файл або формат.</string>
+    <string name="no_apiaries_selected">Пасіки не вибрано.</string>
+    <string name="no_apiaries_selected_string">Пасіки не вибрано.</string>
+    <string name="select_apiaries">Вибрати пасіки</string>
+    <string name="apiaries_deleted">Видалено %1$d пасік.</string>
+    <string name="add_new_inspection_string">Додати новий огляд</string>
+    <string name="edit_inspection">Редагувати огляд</string>
+    <string name="inspection_not_found">Огляд не знайдено!</string>
+    <string name="inspection_saved_successfully">Огляд успішно збережено!</string>
+    <string name="failed_to_save_inspection_please_try_again">Не вдалося зберегти огляд. Будь ласка, спробуйте ще раз.</string>
+    <string name="inspections_for_hive">Огляди для вулика №%1$s</string>
+    <string name="successfully_exported_to_downloads_folder">Успішно експортовано до папки Downloads.</string>
+    <string name="export_failed_no_inspections_to_export">Експорт не вдався. Немає оглядів для експорту.</string>
+    <string name="export_as_csv">Експортувати як CSV</string>
+    <string name="export_as_pdf">Експортувати як PDF</string>
+    <string name="delete_inspection">Видалити огляд</string>
+    <string name="are_you_sure_you_want_to_delete_this_inspection_record">Ви впевнені, що хочете видалити цей запис огляду?</string>
+    <string name="delete_string">Видалити</string>
+    <string name="inspection_deleted">Огляд видалено.</string>
+    <string name="cancel_once">Скасувати</string>
+    <string name="settings">Налаштування</string>
+    <string name="exit_application">Вийти з додатку</string>
+    <string name="are_you_sure_you_want_to_exit_the_application">Ви впевнені, що хочете вийти з додатку?</string>
+    <string name="exit">Вийти</string>
+    <string name="cancel_what">Скасувати</string>
+    <string name="bulk_edit_apiaries">Масове редагування пасік</string>
+    <string name="apiaries_updated_successfully">Пасіки успішно оновлено</string>
+    <string name="failed_to_update_apiaries">Не вдалося оновити пасіки</string>
+    <string name="at_least_one_field_must_be_filled_to_update">Для оновлення потрібно заповнити хоча б одне поле.</string>
+    <string name="exit_application_string">Вийти з додатку</string>
+    <string name="are_you_sure_you_want_to_exit">Ви впевнені, що хочете вийти?</string>
+    <string name="exit_string">Вийти</string>
+    <string name="cancel_enough">Скасувати</string>
+    <string name="an_unknown_error_occurred">Сталася невідома помилка.</string>
+    <string name="apiary_name_cannot_be_empty">Назва пасіки не може бути порожньою.</string>
+    <string name="location_cannot_be_empty">Розташування не може бути порожнім.</string>
+    <string name="cannot_change_status_for_a_mixed_selection_of_tasks">Неможливо змінити статус для змішаного вибору завдань.</string>
+</resources>

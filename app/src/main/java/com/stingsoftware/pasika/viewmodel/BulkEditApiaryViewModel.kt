@@ -51,7 +51,7 @@ class BulkEditApiaryViewModel @Inject constructor(
                     repository.updateApiary(updatedApiary)
                 }
                 _updateStatus.value = true
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _updateStatus.value = false
             }
         }

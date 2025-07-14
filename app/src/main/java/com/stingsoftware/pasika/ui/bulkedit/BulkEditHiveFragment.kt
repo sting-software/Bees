@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.databinding.FragmentBulkEditHiveBinding
@@ -26,8 +25,6 @@ import java.util.Locale
 
 @AndroidEntryPoint
 class BulkEditHiveFragment : Fragment() {
-
-    private val args: BulkEditHiveFragmentArgs by navArgs()
 
     // ViewModel is now injected by Hilt
     private val bulkEditHiveViewModel: BulkEditHiveViewModel by viewModels()
@@ -53,7 +50,7 @@ class BulkEditHiveFragment : Fragment() {
 
         autoNumberingWarningTextView = view.findViewById(R.id.text_view_auto_numbering_warning)
 
-        activity?.title = "Bulk Edit Hives"
+        activity?.title = getString(R.string.bulk_edit_hives_again)
 
         val hiveTypes = resources.getStringArray(R.array.hive_types)
         val hiveTypeAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, hiveTypes)
@@ -65,7 +62,8 @@ class BulkEditHiveFragment : Fragment() {
 
         bulkEditHiveViewModel.selectedHives.observe(viewLifecycleOwner) { hives ->
             if (hives.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), "No hives selected for bulk editing.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.no_hives_selected_for_bulk_editing), Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
                 return@observe
             }
@@ -209,7 +207,8 @@ class BulkEditHiveFragment : Fragment() {
             endingHiveNumber = binding.editTextEndingHiveNumberBulk.text?.toString()?.trim()?.toIntOrNull()
 
             if (startingHiveNumber == null || startingHiveNumber <= 0) {
-                binding.textInputLayoutStartingHiveNumberBulk.error = "Starting number must be a positive number"
+                binding.textInputLayoutStartingHiveNumberBulk.error =
+                    getString(R.string.starting_number_must_be_a_positive_number)
                 return
             } else {
                 binding.textInputLayoutStartingHiveNumberBulk.error = null
@@ -224,11 +223,11 @@ class BulkEditHiveFragment : Fragment() {
             lastInspectionDate = selectedDateMillis,
             notes = notes,
             autoNumber = autoNumber,
-            startingHiveNumber = startingHiveNumber,
-            endingHiveNumber = endingHiveNumber
+            startingHiveNumber = startingHiveNumber
         )
 
-        Toast.makeText(requireContext(), "Hives updated successfully!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(),
+            getString(R.string.hives_updated_successfully), Toast.LENGTH_SHORT).show()
         findNavController().popBackStack()
     }
 

@@ -1,21 +1,26 @@
 package com.stingsoftware.pasika.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Apiary
-import com.stingsoftware.pasika.data.ApiaryType
 import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import com.stingsoftware.pasika.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddEditApiaryViewModel @Inject constructor(private val repository: ApiaryRepository) : ViewModel() {
+class AddEditApiaryViewModel @Inject constructor(
+    private val repository: ApiaryRepository,
+    @ApplicationContext private val context: Context // Inject the application context
+) : ViewModel() {
 
     private val _saveStatus = MutableLiveData<Resource<Apiary>>()
     val saveStatus: LiveData<Resource<Apiary>> = _saveStatus
@@ -41,11 +46,11 @@ class AddEditApiaryViewModel @Inject constructor(private val repository: ApiaryR
         _saveStatus.postValue(Resource.Loading())
 
         if (apiary.name.isBlank()) {
-            _saveStatus.postValue(Resource.Error("Apiary Name cannot be empty."))
+            _saveStatus.postValue(Resource.Error(context.getString(R.string.apiary_name_cannot_be_empty)))
             return@launch
         }
         if (apiary.location.isBlank()) {
-            _saveStatus.postValue(Resource.Error("Location cannot be empty."))
+            _saveStatus.postValue(Resource.Error(context.getString(R.string.location_cannot_be_empty)))
             return@launch
         }
 
@@ -60,7 +65,7 @@ class AddEditApiaryViewModel @Inject constructor(private val repository: ApiaryR
                     }
                 } else if (!autoNumberHives && apiary.numberOfHives > 0) {
                     // Manual quantity logic
-                    for (i in 0 until apiary.numberOfHives) {
+                    repeat(apiary.numberOfHives) {
                         repository.insertHive(createEmptyHive(newApiaryId, null))
                     }
                 }
@@ -73,7 +78,11 @@ class AddEditApiaryViewModel @Inject constructor(private val repository: ApiaryR
             }
             _saveStatus.postValue(Resource.Success(apiary))
         } catch (e: Exception) {
-            _saveStatus.postValue(Resource.Error(e.message ?: "An unknown error occurred."))
+            _saveStatus.postValue(
+                Resource.Error(
+                    e.message ?: context.getString(R.string.an_unknown_error_occurred)
+                )
+            )
         }
     }
 
@@ -81,15 +90,37 @@ class AddEditApiaryViewModel @Inject constructor(private val repository: ApiaryR
         return Hive(
             apiaryId = apiaryId,
             hiveNumber = hiveNumber,
-            hiveType = null, hiveTypeOther = null, frameType = null, frameTypeOther = null,
-            material = null, materialOther = null, breed = null, breedOther = null,
-            lastInspectionDate = null, notes = null, queenTagColor = null, queenTagColorOther = null,
-            queenNumber = null, queenYear = null, queenLine = null, queenCells = null,
-            isolationFromDate = null, isolationToDate = null, defensivenessRating = null,
-            framesTotal = null, framesEggs = null, framesOpenBrood = null,
-            framesCappedBrood = null, framesFeed = null, givenBuiltCombs = null,
-            givenFoundation = null, givenBrood = null, givenBeesKg = null,
-            givenHoneyKg = null, givenSugarKg = null, treatment = null
+            hiveType = null,
+            hiveTypeOther = null,
+            frameType = null,
+            frameTypeOther = null,
+            material = null,
+            materialOther = null,
+            breed = null,
+            breedOther = null,
+            lastInspectionDate = null,
+            notes = null,
+            queenTagColor = null,
+            queenTagColorOther = null,
+            queenNumber = null,
+            queenYear = null,
+            queenLine = null,
+            queenCells = null,
+            isolationFromDate = null,
+            isolationToDate = null,
+            defensivenessRating = null,
+            framesTotal = null,
+            framesEggs = null,
+            framesOpenBrood = null,
+            framesCappedBrood = null,
+            framesFeed = null,
+            givenBuiltCombs = null,
+            givenFoundation = null,
+            givenBrood = null,
+            givenBeesKg = null,
+            givenHoneyKg = null,
+            givenSugarKg = null,
+            treatment = null
         )
     }
 }

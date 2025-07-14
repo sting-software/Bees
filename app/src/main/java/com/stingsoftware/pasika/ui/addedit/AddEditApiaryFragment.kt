@@ -38,7 +38,10 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAddEditApiaryBinding.bind(view)
 
-        val apiaryTypes = ApiaryType.entries.map { it.name.lowercase(Locale.getDefault()).replaceFirstChar { char -> char.titlecase(Locale.getDefault()) } }
+        val apiaryTypes = ApiaryType.entries.map {
+            it.name.lowercase(Locale.getDefault())
+                .replaceFirstChar { char -> char.titlecase(Locale.getDefault()) }
+        }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, apiaryTypes)
         binding.autoCompleteTextViewApiaryType.setAdapter(adapter)
 
@@ -48,12 +51,13 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         setupInitialState(isNewApiary)
 
         if (!isNewApiary) {
-            activity?.title = "Edit Apiary"
+            activity?.title = getString(R.string.edit_apiary_again)
             addEditApiaryViewModel.getApiary(apiaryId).observe(viewLifecycleOwner) { apiary ->
                 apiary?.let {
                     binding.editTextApiaryName.setText(it.name)
                     binding.editTextApiaryLocation.setText(it.location)
-                    val typeName = it.type.name.lowercase(Locale.getDefault()).replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString() }
+                    val typeName = it.type.name.lowercase(Locale.getDefault())
+                        .replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString() }
                     binding.autoCompleteTextViewApiaryType.setText(typeName, false)
                     selectedDateMillis = it.lastInspectionDate
                     updateDateEditText(it.lastInspectionDate)
@@ -61,13 +65,16 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 }
             }
         } else {
-            activity?.title = "Add New Apiary"
+            activity?.title = getString(R.string.add_new_apiary_again)
         }
 
         binding.checkboxAutoNumberApiaryHives.setOnCheckedChangeListener { _, isChecked ->
-            binding.textInputLayoutStartingHiveNumberApiary.visibility = if (isChecked) View.VISIBLE else View.GONE
-            binding.textInputLayoutEndingHiveNumberApiary.visibility = if (isChecked) View.VISIBLE else View.GONE
-            binding.textInputLayoutNumberOfHives.visibility = if (isChecked) View.GONE else View.VISIBLE
+            binding.textInputLayoutStartingHiveNumberApiary.visibility =
+                if (isChecked) View.VISIBLE else View.GONE
+            binding.textInputLayoutEndingHiveNumberApiary.visibility =
+                if (isChecked) View.VISIBLE else View.GONE
+            binding.textInputLayoutNumberOfHives.visibility =
+                if (isChecked) View.GONE else View.VISIBLE
             binding.editTextNumberOfHives.isEnabled = !isChecked
             updateCalculatedHiveCount()
         }
@@ -87,17 +94,25 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
 
         addEditApiaryViewModel.saveStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
-                is Resource.Loading -> { /* Show loading indicator */ }
+                is Resource.Loading -> { /* Show loading indicator */
+                }
+
                 is Resource.Success -> {
-                    val message = if (isNewApiary) "Apiary and hives added!" else "Apiary updated!"
+                    val message = if (isNewApiary) getString(R.string.apiary_and_hives_added) else getString(
+                        R.string.apiary_updated
+                    )
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     if (!isNewApiary) {
                         findNavController().popBackStack()
                     }
                 }
+
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(), "Error: ${status.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.error, status.message), Toast.LENGTH_LONG)
+                        .show()
                 }
+
                 else -> {}
             }
         }
@@ -105,7 +120,11 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         addEditApiaryViewModel.navigateToDetail.observe(viewLifecycleOwner) { newApiaryId ->
             newApiaryId?.let {
                 if (isAdded && findNavController().currentDestination?.id == R.id.addEditApiaryFragment) {
-                    val action = AddEditApiaryFragmentDirections.actionAddEditApiaryFragmentToApiaryDetailFragment(it, binding.editTextApiaryName.text.toString())
+                    val action =
+                        AddEditApiaryFragmentDirections.actionAddEditApiaryFragmentToApiaryDetailFragment(
+                            it,
+                            binding.editTextApiaryName.text.toString()
+                        )
                     findNavController().navigate(action)
                     addEditApiaryViewModel.navigationCompleted()
                 }
@@ -139,7 +158,8 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                     binding.editTextNumberOfHives.setText(count.toString())
                     binding.textInputLayoutEndingHiveNumberApiary.error = null
                 } else {
-                    binding.textInputLayoutEndingHiveNumberApiary.error = getString(R.string.error_invalid_range)
+                    binding.textInputLayoutEndingHiveNumberApiary.error =
+                        getString(R.string.error_invalid_range)
                     binding.editTextNumberOfHives.setText("")
                 }
             } else {
@@ -152,10 +172,15 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
     private fun saveApiary(apiaryId: Long, isNewApiary: Boolean) {
         val name = binding.editTextApiaryName.text.toString().trim()
         val location = binding.editTextApiaryLocation.text.toString().trim()
-        val apiaryTypeString = binding.autoCompleteTextViewApiaryType.text.toString().uppercase(Locale.getDefault())
+        val apiaryTypeString =
+            binding.autoCompleteTextViewApiaryType.text.toString().uppercase(Locale.getDefault())
         val notes = binding.editTextNotes.text.toString().trim().ifEmpty { null }
 
-        val apiaryType = try { enumValueOf<ApiaryType>(apiaryTypeString) } catch (e: Exception) { ApiaryType.STATIONARY }
+        val apiaryType = try {
+            enumValueOf<ApiaryType>(apiaryTypeString)
+        } catch (_: Exception) {
+            ApiaryType.STATIONARY
+        }
 
         val autoNumberHives = binding.checkboxAutoNumberApiaryHives.isChecked
         var startingHiveNumber: Int? = null
@@ -164,11 +189,17 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
 
         if (isNewApiary) {
             if (autoNumberHives) {
-                startingHiveNumber = binding.editTextStartingHiveNumberApiary.text.toString().toIntOrNull()
-                endingHiveNumber = binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
+                startingHiveNumber =
+                    binding.editTextStartingHiveNumberApiary.text.toString().toIntOrNull()
+                endingHiveNumber =
+                    binding.editTextEndingHiveNumberApiary.text.toString().toIntOrNull()
 
                 if (startingHiveNumber == null || endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
-                    Toast.makeText(requireContext(), "Please enter a valid hive number range.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.please_enter_a_valid_hive_number_range),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return
                 }
                 numberOfHives = endingHiveNumber - startingHiveNumber + 1
@@ -199,17 +230,29 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
     private fun showDatePickerDialog() {
         val calendar = Calendar.getInstance()
         selectedDateMillis?.let { calendar.timeInMillis = it }
-        val datePickerDialog = DatePickerDialog(requireContext(), { _, year, month, day ->
-            val newCalendar = Calendar.getInstance().apply { set(year, month, day) }
-            selectedDateMillis = newCalendar.timeInMillis
-            updateDateEditText(selectedDateMillis)
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, day ->
+                val newCalendar = Calendar.getInstance().apply { set(year, month, day) }
+                selectedDateMillis = newCalendar.timeInMillis
+                updateDateEditText(selectedDateMillis)
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
         datePickerDialog.show()
     }
 
     private fun updateDateEditText(dateMillis: Long?) {
         val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        binding.editTextLastInspectionDate.setText(if (dateMillis != null) formatter.format(Date(dateMillis)) else "")
+        binding.editTextLastInspectionDate.setText(
+            if (dateMillis != null) formatter.format(
+                Date(
+                    dateMillis
+                )
+            ) else ""
+        )
     }
 
     override fun onDestroyView() {

@@ -20,13 +20,14 @@ class TaskNotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val taskId = intent.getLongExtra(EXTRA_TASK_ID, -1)
-        val title = intent.getStringExtra(EXTRA_TASK_TITLE) ?: "Task Reminder"
+        val title = intent.getStringExtra(EXTRA_TASK_TITLE) ?: context.getString(R.string.task_reminder)
         val description = intent.getStringExtra(EXTRA_TASK_DESC)
 
         if (taskId == -1L) return
 
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        createNotificationChannel(notificationManager)
+        // Pass the context to the channel creation method
+        createNotificationChannel(context, notificationManager)
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_hexagon) // Your app icon
@@ -39,14 +40,15 @@ class TaskNotificationReceiver : BroadcastReceiver() {
         notificationManager.notify(taskId.toInt(), notification)
     }
 
-    private fun createNotificationChannel(notificationManager: NotificationManager) {
+    // The context is now passed as a parameter
+    private fun createNotificationChannel(context: Context, notificationManager: NotificationManager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                "Task Reminders",
+                context.getString(R.string.task_reminders),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = "Channel for Pasika task reminders"
+                description = context.getString(R.string.channel_for_pasika_task_reminders)
             }
             notificationManager.createNotificationChannel(channel)
         }

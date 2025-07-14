@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,7 +30,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.title = "Settings"
+        activity?.title = getString(R.string.settings)
 
         val sharedPrefs = requireActivity().getSharedPreferences("app_settings", Context.MODE_PRIVATE)
 
@@ -68,12 +69,12 @@ class SettingsFragment : Fragment() {
 
     private fun showExitConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Exit Application")
-            .setMessage("Are you sure you want to exit the application?")
-            .setPositiveButton("Exit") { _, _ ->
+            .setTitle(getString(R.string.exit_application))
+            .setMessage(getString(R.string.are_you_sure_you_want_to_exit_the_application))
+            .setPositiveButton(getString(R.string.exit)) { _, _ ->
                 requireActivity().finishAffinity()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel_what), null)
             .show()
     }
 

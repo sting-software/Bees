@@ -16,7 +16,7 @@ data class Apiary(
     val name: String,
     val location: String,
     val numberOfHives: Int,
-    val type: ApiaryType, // Changed from String to ApiaryType
+    val type: ApiaryType,
     val lastInspectionDate: Long? = null,
     val notes: String? = null
 )

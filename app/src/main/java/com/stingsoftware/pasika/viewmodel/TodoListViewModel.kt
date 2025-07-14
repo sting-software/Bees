@@ -1,9 +1,12 @@
 package com.stingsoftware.pasika.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.*
+import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Task
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -13,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoListViewModel @Inject constructor(
-    private val repository: ApiaryRepository
+    private val repository: ApiaryRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow<String?>(null)
@@ -51,7 +55,6 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
-    // NEW: Function to re-insert a task for the UNDO action
     fun insertTask(task: Task) = viewModelScope.launch {
         repository.insertTask(task)
     }
@@ -81,7 +84,7 @@ class TodoListViewModel @Inject constructor(
                 }
 
                 else -> {
-                    _toastMessage.postValue("Cannot change status for a mixed selection of tasks.")
+                    _toastMessage.postValue(context.getString(R.string.cannot_change_status_for_a_mixed_selection_of_tasks))
                 }
             }
         }

@@ -108,7 +108,9 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
         homeViewModel.importStatus.observe(viewLifecycleOwner) { success ->
             success?.let {
-                val message = if (it) "Apiary imported successfully." else "Import failed. Invalid file or format."
+                val message = if (it) getString(R.string.apiary_imported_successfully) else getString(
+                    R.string.import_failed_invalid_file_or_format
+                )
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                 homeViewModel.onImportStatusHandled()
             }
@@ -173,7 +175,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
                             findNavController().navigate(action)
                             setMultiSelectMode(false)
                         } else {
-                            Toast.makeText(requireContext(), "No apiaries selected.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),
+                                getString(R.string.no_apiaries_selected), Toast.LENGTH_SHORT).show()
                         }
                     }
                     R.id.action_delete_selected_apiaries -> {
@@ -181,7 +184,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
                         if (selectedApiaries.isNotEmpty()) {
                             showBulkDeleteConfirmationDialog(selectedApiaries)
                         } else {
-                            Toast.makeText(requireContext(), "No apiaries selected.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),
+                                getString(R.string.no_apiaries_selected_string), Toast.LENGTH_SHORT).show()
                         }
                     }
                     R.id.action_cancel_selection -> setMultiSelectMode(false)
@@ -199,7 +203,9 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun updateToolbarTitleForSelection(count: Int) {
         if (apiaryAdapter.isMultiSelectMode()) {
-            activity?.title = if (count > 0) getString(R.string.selected_count_format, count) else "Select Apiaries"
+            activity?.title = if (count > 0) getString(R.string.selected_count_format, count) else getString(
+                R.string.select_apiaries
+            )
         } else {
             activity?.title = getString(R.string.app_name)
         }
@@ -211,7 +217,8 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             .setMessage(getString(R.string.delete_selected_apiaries_message, apiariesToDelete.size))
             .setPositiveButton(R.string.delete_button) { _, _ ->
                 apiariesToDelete.forEach { homeViewModel.deleteApiary(it) }
-                Toast.makeText(requireContext(), "${apiariesToDelete.size} apiaries deleted.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.apiaries_deleted, apiariesToDelete.size), Toast.LENGTH_SHORT).show()
                 setMultiSelectMode(false)
             }
             .setNegativeButton(R.string.cancel_button, null)

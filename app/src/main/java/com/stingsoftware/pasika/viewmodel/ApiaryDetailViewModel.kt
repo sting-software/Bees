@@ -111,7 +111,7 @@ class ApiaryDetailViewModel @Inject constructor(
             try {
                 repository.moveHives(hiveIds, apiaryId, destinationApiaryId)
                 _moveStatus.postValue(true)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _moveStatus.postValue(false)
             }
         }

@@ -1,5 +1,6 @@
 package com.stingsoftware.pasika.ui.apiarydetail
 
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -81,7 +82,7 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
             },
             onSelectionChange = { count ->
                 if (count > 0) {
-                    activity?.title = "$count Selected"
+                    activity?.title = getString(R.string.selected, count)
                 } else {
                     activity?.title = ""
                 }
@@ -96,7 +97,8 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                 binding.textViewApiaryLocationDetail.text = it.location
                 binding.textViewApiaryTypeDetail.text = it.type.name.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() }
             } ?: run {
-                Toast.makeText(requireContext(), "Apiary not found!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.apiary_not_found), Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }
         }
@@ -117,7 +119,7 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
 
         apiaryDetailViewModel.moveStatus.observe(viewLifecycleOwner) { success ->
             success?.let {
-                val message = if (it) "Hives moved successfully." else "Failed to move hives."
+                val message = if (it) getString(R.string.hives_moved_successfully) else getString(R.string.failed_to_move_hives)
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 if (it) {
                     setMultiSelectMode(false)
@@ -128,7 +130,9 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
 
         apiaryDetailViewModel.exportStatus.observe(viewLifecycleOwner) { success ->
             success?.let {
-                val message = if (it) "Apiary exported successfully to Downloads/Pasika." else "Export failed."
+                val message = if (it) getString(R.string.apiary_exported_successfully_to_downloads_pasika) else getString(
+                    R.string.export_failed
+                )
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                 apiaryDetailViewModel.onExportStatusHandled()
             }
@@ -222,7 +226,8 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                             findNavController().navigate(action)
                             setMultiSelectMode(false)
                         } else {
-                            Toast.makeText(requireContext(), "No hives selected for editing.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),
+                                getString(R.string.no_hives_selected_for_editing_strings), Toast.LENGTH_SHORT).show()
                         }
                         true
                     }
@@ -231,7 +236,8 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                         if (selectedHives.isNotEmpty()) {
                             showBulkDeleteConfirmationDialog(selectedHives)
                         } else {
-                            Toast.makeText(requireContext(), "No hives selected for deletion.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),
+                                getString(R.string.no_hives_selected_for_deletion_string), Toast.LENGTH_SHORT).show()
                         }
                         true
                     }
@@ -248,21 +254,23 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun showMoveHivesDialog() {
         val selectedHives = hiveAdapter.getSelectedItems()
         if (selectedHives.isEmpty()) {
-            Toast.makeText(requireContext(), "No hives selected to move.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(),
+                getString(R.string.no_hives_selected_to_move), Toast.LENGTH_SHORT).show()
             return
         }
 
         apiaryDetailViewModel.allApiaries.observe(viewLifecycleOwner) { allApiaries ->
             val destinationApiaries = allApiaries.filter { it.id != args.apiaryId }
             if (destinationApiaries.isEmpty()) {
-                Toast.makeText(requireContext(), "No other apiaries to move to.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.no_other_apiaries_to_move_to), Toast.LENGTH_SHORT).show()
                 return@observe
             }
 
             val apiaryNames = destinationApiaries.map { it.name }.toTypedArray()
 
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Move ${selectedHives.size} Hive(s) To...")
+                .setTitle(getString(R.string.move_hive_s_to_string, selectedHives.size))
                 .setItems(apiaryNames) { dialog, which ->
                     val destination = destinationApiaries[which]
                     val selectedIds = selectedHives.map { it.id }
@@ -293,7 +301,8 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (hiveAdapter.isMultiSelectMode()) {
                     hiveAdapter.notifyItemChanged(viewHolder.adapterPosition)
-                    Toast.makeText(requireContext(), "Cannot swipe to delete in multi-select mode.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(),
+                        getString(R.string.cannot_swipe_to_delete_in_multi_select_mode), Toast.LENGTH_SHORT).show()
                     return
                 }
                 val position = viewHolder.adapterPosition
@@ -303,18 +312,49 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                 }
             }
 
+            override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
+                // --- FIX: This block restores the swipe-to-delete visual effect ---
+                val itemView = viewHolder.itemView
+                deleteIcon?.let {
+                    val iconMargin = (itemView.height - it.intrinsicHeight) / 2
+                    val iconTop = itemView.top + (itemView.height - it.intrinsicHeight) / 2
+                    val iconBottom = iconTop + it.intrinsicHeight
+
+                    if (dX > 0) { // Swiping right
+                        val iconLeft = itemView.left + iconMargin
+                        val iconRight = itemView.left + iconMargin + it.intrinsicWidth
+                        it.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                        background.setBounds(itemView.left, itemView.top, itemView.left + dX.toInt(), itemView.bottom)
+                    } else if (dX < 0) { // Swiping left
+                        val iconLeft = itemView.right - iconMargin - it.intrinsicWidth
+                        val iconRight = itemView.right - iconMargin
+                        it.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                        background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
+                    } else { // No swipe
+                        background.setBounds(0, 0, 0, 0)
+                    }
+                    background.draw(c)
+                    it.draw(c)
+                }
+            }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerViewHives)
     }
 
     private fun showDeleteHiveConfirmationDialog(hive: Hive) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Hive")
-            .setMessage("Are you sure you want to delete Hive ${hive.hiveNumber ?: "N/A"}?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.delete_hive))
+            .setMessage(
+                getString(
+                    R.string.are_you_sure_you_want_to_delete_hive,
+                    hive.hiveNumber ?: "N/A"
+                ))
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 apiaryDetailViewModel.deleteHive(hive)
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(getString(R.string.cancel_again)) { _, _ ->
                 hiveAdapter.currentList.indexOf(hive).takeIf { it != -1 }?.let {
                     hiveAdapter.notifyItemChanged(it)
                 }
@@ -324,14 +364,19 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun showBulkDeleteConfirmationDialog(hivesToDelete: List<Hive>) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Selected Hives")
-            .setMessage("Are you sure you want to delete ${hivesToDelete.size} selected hives?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.delete_selected_hives))
+            .setMessage(
+                getString(
+                    R.string.are_you_sure_you_want_to_delete_selected_hives,
+                    hivesToDelete.size
+                ))
+            .setPositiveButton(getString(R.string.delete_again)) { _, _ ->
                 hivesToDelete.forEach { apiaryDetailViewModel.deleteHive(it) }
-                Toast.makeText(requireContext(), "${hivesToDelete.size} hives deleted.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(),
+                    getString(R.string.hives_deleted, hivesToDelete.size), Toast.LENGTH_SHORT).show()
                 setMultiSelectMode(false)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel_once_again), null)
             .show()
     }
 

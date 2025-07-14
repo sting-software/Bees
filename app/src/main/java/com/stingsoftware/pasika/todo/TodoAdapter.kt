@@ -1,4 +1,4 @@
-package com.stingsoftware.pasika.ui.todo
+package com.stingsoftware.pasika.todo
 
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Task
 import com.stingsoftware.pasika.databinding.ItemTodoBinding
@@ -95,7 +96,7 @@ class TodoAdapter(
                 } else {
                     ContextCompat.getColor(itemView.context, R.color.colorSurface)
                 }
-                (itemView as com.google.android.material.card.MaterialCardView).setCardBackgroundColor(cardColor)
+                (itemView as MaterialCardView).setCardBackgroundColor(cardColor)
             }
         }
     }

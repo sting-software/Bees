@@ -27,11 +27,13 @@ object AppModule {
         return db.taskDao()
     }
 
-    // This is the single, correct function for providing the repository.
-    // The outdated one has been removed.
     @Singleton
     @Provides
-    fun provideApiaryRepository(db: AppDatabase, taskDao: TaskDao): ApiaryRepository {
-        return ApiaryRepository(db.apiaryDao(), db.hiveDao(), db.inspectionDao(), taskDao)
+    fun provideApiaryRepository(
+        db: AppDatabase,
+        taskDao: TaskDao,
+        @ApplicationContext context: Context // Provide the application context
+    ): ApiaryRepository {
+        return ApiaryRepository(db.apiaryDao(), db.hiveDao(), db.inspectionDao(), taskDao, context)
     }
 }
