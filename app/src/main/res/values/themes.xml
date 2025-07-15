@@ -34,4 +34,8 @@
 
     <!-- The main theme for your application, inheriting from the base. -->
     <style name="Theme.Pasika" parent="Base.Theme.Pasika" />
+
+    <style name="BottomNav.Custom" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconSize">@dimen/bottom_nav_icon_size</item>
+    </style>
 </resources>

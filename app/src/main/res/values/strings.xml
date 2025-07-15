@@ -330,5 +330,7 @@
     <string name="error_import_failed">Import failed. Invalid file or format.</string>
 
     <string name="title_hives">Hives</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
 </resources>

@@ -33,8 +33,8 @@
     <string name="label_quantity">Кількість</string>
     <string name="label_due_date_format">Термін: %s</string>
 
-    <string name="hint_notes_optional">Нотатки (необов\'язково)</string>
-    <string name="hint_description_optional">Опис (необов\'язково)</string>
+    <string name="hint_notes_optional">Нотатки</string>
+    <string name="hint_description_optional">Опис</string>
 
     <string name="dialog_yes">Так</string>
     <string name="dialog_no">Ні</string>
@@ -110,8 +110,8 @@
     <string name="label_frame_type">Тип рамки</string>
     <string name="label_number_of_frames">Кількість рамок</string>
 
-    <string name="hint_hive_number_optional">Номер вулика (необов\'язково)</string>
-    <string name="hint_last_inspection_date_optional">Дата останнього огляду (необов\'язково)</string>
+    <string name="hint_hive_number_optional">Номер вулика</string>
+    <string name="hint_last_inspection_date_optional">Дата останнього огляду</string>
     <string name="hint_other_material">Інший матеріал</string>
     <string name="hint_other_hive_type">Інший тип вулика</string>
     <string name="hint_other_frame_type">Інший тип рамки</string>
@@ -207,7 +207,7 @@
     <string name="label_frames_open_brood">Відкритий розплід</string>
     <string name="label_frames_capped_brood">Закритий розплід</string>
     <string name="label_frames_feed">Корм</string>
-    <string name="label_given_taken_built_combs">Відбудовано стільників</string>
+    <string name="label_given_taken_built_combs">Сушнина</string>
     <string name="label_given_taken_foundation">Вощина</string>
     <string name="label_given_taken_brood">Розплід</string>
     <string name="label_given_taken_bees_kg">Бджоли, кг</string>
@@ -220,18 +220,18 @@
     <string name="hint_frames_open_brood">Відкритий розплід</string>
     <string name="hint_frames_capped_brood">Закритий розплід</string>
     <string name="hint_frames_honey">Мед</string>
-    <string name="hint_frames_pollen">Пилок</string>
+    <string name="hint_frames_pollen">Перга</string>
     <string name="hint_honey_stores_frames">Запаси меду (рамок)</string>
     <string name="hint_pollen_stores_frames">Запаси пилку (рамок)</string>
     <string name="hint_pests_diseases">Помічені шкідники/хвороби</string>
-    <string name="hint_treatment_applied">Застосована обробка</string>
+    <string name="hint_treatment_applied">Деталі обробки</string>
     <string name="hint_management_actions">Вжиті заходи</string>
     <string name="hint_queen_tag_number">Номер мітки</string>
     <string name="hint_queen_year">Рік</string>
     <string name="hint_queen_line">Лінія</string>
     <string name="hint_queen_cells">Маточники</string>
-    <string name="hint_isolation_from_date">Ізоляція з дати</string>
-    <string name="hint_isolation_to_date">Ізоляція до дати</string>
+    <string name="hint_isolation_from_date">Ізольовано з </string>
+    <string name="hint_isolation_to_date">До</string>
     <string name="hint_treatment_details">Деталі обробки</string>
 
     <string name="empty_state_no_inspections">Ще немає оглядів. Натисніть \'+\', щоб додати!</string>
@@ -282,7 +282,7 @@
 
     <string name="label_mark_as_complete">Позначити як виконане</string>
     <string name="hint_task_title">Назва завдання</string>
-    <string name="hint_due_date_time_optional"><![CDATA[Термін виконання (необов\'язково)]]></string>
+    <string name="hint_due_date_time_optional"><![CDATA[Термін виконання]]></string>
     <string name="checkbox_set_reminder">Встановити нагадування</string>
 
     <string name="empty_state_no_tasks">Ще немає завдань. Натисніть \'+\', щоб додати!</string>
@@ -330,5 +330,7 @@
     <string name="error_import_failed">Імпорт не вдався. Недійсний файл або формат.</string>
 
     <string name="title_hives">Вулики</string>
+    <string name="drawer_open">Відкрити панель навігації</string>
+    <string name="drawer_close">Закрити панель навігації</string>
 
 </resources>

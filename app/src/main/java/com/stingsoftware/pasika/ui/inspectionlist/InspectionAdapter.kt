@@ -39,7 +39,9 @@ class InspectionAdapter(
         fun bind(inspection: Inspection) {
             // Format and display inspection date
             val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) // Include time for inspections
-            binding.textViewInspectionDate.text = itemView.context.getString(R.string.hint_inspection_date, formatter.format(Date(inspection.inspectionDate)))
+            val dateLabel = itemView.context.getString(R.string.hint_inspection_date)
+            val formattedDate = formatter.format(Date(inspection.inspectionDate))
+            binding.textViewInspectionDate.text = "$dateLabel: $formattedDate"
 
             // Queen Cells Present & Count
             if (inspection.queenCellsPresent == true) {

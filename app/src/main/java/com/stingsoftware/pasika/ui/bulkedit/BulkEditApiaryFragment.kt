@@ -1,4 +1,4 @@
-package com.stingsoftware.pasika.ui
+package com.stingsoftware.pasika.ui.bulkedit
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,7 +14,7 @@ import com.stingsoftware.pasika.data.ApiaryType
 import com.stingsoftware.pasika.databinding.FragmentBulkEditApiaryBinding
 import com.stingsoftware.pasika.viewmodel.BulkEditApiaryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.Locale
 
 @AndroidEntryPoint
 class BulkEditApiaryFragment : Fragment() {
@@ -71,7 +71,8 @@ class BulkEditApiaryFragment : Fragment() {
     }
 
     private fun setupDropdown() {
-        val apiaryTypes = ApiaryType.entries.map { it.name.lowercase(Locale.getDefault()).replaceFirstChar { char -> char.titlecase(Locale.getDefault()) } }
+        val apiaryTypes = ApiaryType.entries.map { it.name.lowercase(Locale.getDefault()).replaceFirstChar { char -> char.titlecase(
+            Locale.getDefault()) } }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, apiaryTypes)
         binding.autoCompleteTextViewApiaryType.setAdapter(adapter)
     }

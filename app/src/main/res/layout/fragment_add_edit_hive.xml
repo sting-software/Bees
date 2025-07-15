@@ -1033,8 +1033,8 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:text="@string/action_save"
-            app:layout_constraintStart_toEndOf="@id/button_cancel_hive"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_cancel_hive"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes" />
 
         <com.google.android.material.button.MaterialButton
@@ -1045,8 +1045,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:text="@string/action_cancel"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_save_hive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/button_save_hive"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

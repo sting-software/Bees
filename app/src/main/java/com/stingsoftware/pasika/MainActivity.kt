@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.os.LocaleListCompat // <-- IMPORT ADDED
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -20,7 +21,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.stingsoftware.pasika.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -45,33 +45,20 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment, R.id.todoListFragment),
-            drawerLayout
-        )
-        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
-
         toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
             binding.toolbar,
-            R.string.action_open,
-            R.string.action_close
+            R.string.drawer_open,
+            R.string.drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        navController.addOnDestinationChangedListener { _, destination, arguments ->
-            var title = destination.label.toString()
-            if (arguments != null) {
-                val regex = "\\{(.*?)\\}".toRegex()
-                title = regex.replace(title) {
-                    val argName = it.groupValues[1]
-                    arguments.get(argName)?.toString() ?: ""
-                }
-            }
-            supportActionBar?.title = title
-        }
+        val topLevelDestinations = navController.graph.map { it.id }.toSet()
+        appBarConfiguration = AppBarConfiguration(topLevelDestinations, drawerLayout)
+        NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
+
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             if (item.itemId == R.id.homeFragment) {
@@ -154,15 +141,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // THIS FUNCTION IS NOW FIXED
     private fun showLanguageSelectionDialog() {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.title_language_dialog))
             .setItems(arrayOf("English", "Українська")) { _, which ->
                 val selectedLanguage = if (which == 0) "en" else "uk"
-                setLocale(selectedLanguage)
+
+                val appLocale = LocaleListCompat.forLanguageTags(selectedLanguage)
+                AppCompatDelegate.setApplicationLocales(appLocale)
+
                 val sharedPrefs = getSharedPreferences("app_settings", MODE_PRIVATE)
                 with(sharedPrefs.edit()) {
-                    putString("language", selectedLanguage)
+                    putString("language_code", selectedLanguage) // Use correct key
                     apply()
                 }
                 recreate()
@@ -184,13 +175,4 @@ class MainActivity : AppCompatActivity() {
             appBarConfiguration
         ) || super.onSupportNavigateUp()
     }
-
-    private fun setLocale(language: String) {
-        val locale = Locale(language)
-        Locale.setDefault(locale)
-        val config = resources.configuration
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
-    }
 }
-
