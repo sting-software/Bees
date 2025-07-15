@@ -20,7 +20,7 @@ class TaskNotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val taskId = intent.getLongExtra(EXTRA_TASK_ID, -1)
-        val title = intent.getStringExtra(EXTRA_TASK_TITLE) ?: context.getString(R.string.task_reminder)
+        val title = intent.getStringExtra(EXTRA_TASK_TITLE) ?: context.getString(R.string.title_task_reminder)
         val description = intent.getStringExtra(EXTRA_TASK_DESC)
 
         if (taskId == -1L) return
@@ -45,10 +45,10 @@ class TaskNotificationReceiver : BroadcastReceiver() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
-                context.getString(R.string.task_reminders),
+                context.getString(R.string.title_task_reminder),
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = context.getString(R.string.channel_for_pasika_task_reminders)
+                description = context.getString(R.string.notification_channel_description)
             }
             notificationManager.createNotificationChannel(channel)
         }

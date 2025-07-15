@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -29,16 +28,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/apiary_details"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/title_apiary_details"
+                    android:textAppearance="?attr/textAppearanceHeadline6" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_apiary_name"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/apiary_name_hint">
+                    android:hint="@string/hint_apiary_name">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_apiary_name"
@@ -53,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/apiary_location_hint">
+                    android:hint="@string/hint_apiary_location">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_apiary_location"
@@ -68,7 +67,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/apiary_type_hint">
+                    android:hint="@string/label_apiary_type">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_text_view_apiary_type"
                         android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/last_inspection_date_hint"
+                    android:hint="@string/hint_last_inspection_date_optional"
                     app:endIconDrawable="@drawable/ic_calendar"
                     app:endIconMode="custom">
                     <com.google.android.material.textfield.TextInputEditText
@@ -100,14 +100,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/notes_hint">
+                    android:hint="@string/hint_notes_optional">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_notes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="top"
                         android:inputType="textMultiLine"
-                        android:minLines="3"
-                        android:gravity="top" />
+                        android:minLines="3" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -131,15 +131,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/initial_hives_for_new_apiaries"
-                    android:textAppearance="?attr/textAppearanceHeadline6"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/title_hives"
+                    android:textAppearance="?attr/textAppearanceHeadline6" />
 
                 <CheckBox
                     android:id="@+id/checkbox_auto_number_apiary_hives"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/auto_number_apiary_hives_checkbox" />
+                    android:text="@string/checkbox_auto_number_hives" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_starting_hive_number_apiary"
@@ -147,7 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/from_label"
+                    android:hint="@string/label_from"
                     android:visibility="gone">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_starting_hive_number_apiary"
@@ -162,7 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/to_label"
+                    android:hint="@string/label_to"
                     android:visibility="gone">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_ending_hive_number_apiary"
@@ -177,13 +177,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/number_of_hives">
+                    android:hint="@string/label_number_of_hives">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_number_of_hives"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:text="1" />
+                        android:text="1"
+                        tools:ignore="HardcodedText" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -193,24 +194,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_cancel"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"
-                android:text="@string/cancel_button" />
+                android:layout_weight="1"
+                android:text="@string/action_cancel" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_save_apiary"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="8dp"
-                android:text="@string/save_button" />
+                android:layout_weight="1"
+                android:text="@string/action_save" />
         </LinearLayout>
 
     </LinearLayout>

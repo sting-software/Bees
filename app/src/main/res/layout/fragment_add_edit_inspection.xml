@@ -12,55 +12,48 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Inspection Date -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_inspection_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/inspection_date_hint"
-            app:endIconDrawable="@drawable/ic_calendar"
-            app:endIconMode="custom"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_inspection_date"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:endIconDrawable="@drawable/ic_calendar"
+            app:endIconMode="custom">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_inspection_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
                 android:clickable="true"
+                android:focusable="false"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Queen & Brood Status Section -->
-        <!-- Removed: text_view_queen_brood_status_title -->
 
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkbox_queen_cells_present"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/queen_cells_present"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_date"
+            android:text="@string/checkbox_queen_cells_present"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_date" />
 
-        <!-- Queen Cells Count (Conditional Visibility) -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_queen_cells_count"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/queen_cells_count_hint"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="24dp"
-            app:layout_constraintTop_toBottomOf="@id/checkbox_queen_cells_present"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            android:hint="@string/hint_queen_cells_count"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:visibility="gone">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkbox_queen_cells_present">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_queen_cells_count"
                 android:layout_width="match_parent"
@@ -68,30 +61,28 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Detailed Frame Counts Section -->
         <TextView
             android:id="@+id/text_view_detailed_frames_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/detailed_frames_title"
+            android:layout_marginTop="24dp"
+            android:text="@string/title_detailed_frames"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textColor="?android:attr/textColorPrimary"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_cells_count"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_cells_count" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_frames_eggs_count"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/frames_eggs_count_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_detailed_frames_title"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_frames_eggs"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_detailed_frames_title">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_frames_eggs_count"
                 android:layout_width="match_parent"
@@ -101,15 +92,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_frames_open_brood_count"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/frames_open_brood_count_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_eggs_count"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_frames_open_brood"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_eggs_count">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_frames_open_brood_count"
                 android:layout_width="match_parent"
@@ -119,15 +109,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_frames_capped_brood_count"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/frames_capped_brood_count_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_open_brood_count"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_frames_capped_brood"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_open_brood_count">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_frames_capped_brood_count"
                 android:layout_width="match_parent"
@@ -137,15 +126,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_frames_honey_count"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/frames_honey_count_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_capped_brood_count"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_frames_honey"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_capped_brood_count">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_frames_honey_count"
                 android:layout_width="match_parent"
@@ -155,15 +143,14 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_frames_pollen_count"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/frames_pollen_count_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_honey_count"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_frames_pollen"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_honey_count">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_frames_pollen_count"
                 android:layout_width="match_parent"
@@ -171,177 +158,164 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Health & Treatment Section -->
         <TextView
             android:id="@+id/text_view_health_treatment_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/health_treatment_title"
+            android:layout_marginTop="24dp"
+            android:text="@string/title_health_and_treatment"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textColor="?android:attr/textColorPrimary"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_pollen_count"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_frames_pollen_count" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_pests_diseases_observed"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/pests_diseases_observed_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_health_treatment_title"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_pests_diseases"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_health_treatment_title">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_pests_diseases_observed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minLines="2"
-                android:gravity="top" />
+                android:minLines="2" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_treatment_applied"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/treatment_applied_hint"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_pests_diseases_observed"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_treatment_applied"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_pests_diseases_observed">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_treatment_applied"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minLines="2"
-                android:gravity="top" />
+                android:minLines="2" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Temperament Rating Section -->
         <TextView
             android:id="@+id/text_view_temperament_rating_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/temperament_rating_title"
+            android:layout_marginTop="24dp"
+            android:text="@string/title_temperament_rating"
             android:textAppearance="?attr/textAppearanceSubtitle1"
             android:textColor="?android:attr/textColorPrimary"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_treatment_applied"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_treatment_applied" />
 
         <RadioGroup
             android:id="@+id/radio_group_temperament"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_temperament_rating_title"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
+            app:layout_constraintTop_toBottomOf="@id/text_view_temperament_rating_title">
             <RadioButton
                 android:id="@+id/radio_temperament_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/temperament_rating_1" />
-
+                android:text="@string/rating_1" />
             <RadioButton
                 android:id="@+id/radio_temperament_2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/temperament_rating_2" />
-
+                android:text="@string/rating_2" />
             <RadioButton
                 android:id="@+id/radio_temperament_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/temperament_rating_3" />
-
+                android:text="@string/rating_3" />
             <RadioButton
                 android:id="@+id/radio_temperament_4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/temperament_rating_4" />
+                android:text="@string/rating_4" />
         </RadioGroup>
 
-        <!-- Management Actions Taken -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_management_actions_taken"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/management_actions_taken_hint"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/radio_group_temperament"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_management_actions"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radio_group_temperament">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_management_actions_taken"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minLines="2"
-                android:gravity="top" />
+                android:minLines="2" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- General Notes -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_inspection_notes"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/notes_hint"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_management_actions_taken"
-            app:layout_constraintStart_toStartOf="parent"
+            android:hint="@string/hint_notes_optional"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_management_actions_taken">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_inspection_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="top"
                 android:inputType="textMultiLine"
-                android:minLines="3"
-                android:gravity="top" />
+                android:minLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Save and Cancel Buttons -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_save_inspection"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/save_button"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_notes"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/action_save"
             app:layout_constraintEnd_toStartOf="@id/button_cancel_inspection"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_notes" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_cancel_inspection"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/cancel_button"
-            android:layout_marginTop="32dp"
             android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_notes"
-            app:layout_constraintStart_toEndOf="@id/button_save_inspection"
+            android:layout_marginTop="32dp"
+            android:text="@string/action_cancel"
             app:layout_constraintEnd_toEndOf="parent"
-            style="@style/Widget.MaterialComponents.Button.TextButton" />
+            app:layout_constraintStart_toEndOf="@id/button_save_inspection"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_inspection_notes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -46,11 +46,11 @@ class AddEditApiaryViewModel @Inject constructor(
         _saveStatus.postValue(Resource.Loading())
 
         if (apiary.name.isBlank()) {
-            _saveStatus.postValue(Resource.Error(context.getString(R.string.apiary_name_cannot_be_empty)))
+            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty)))
             return@launch
         }
         if (apiary.location.isBlank()) {
-            _saveStatus.postValue(Resource.Error(context.getString(R.string.location_cannot_be_empty)))
+            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty)))
             return@launch
         }
 
@@ -80,7 +80,7 @@ class AddEditApiaryViewModel @Inject constructor(
         } catch (e: Exception) {
             _saveStatus.postValue(
                 Resource.Error(
-                    e.message ?: context.getString(R.string.an_unknown_error_occurred)
+                    e.message ?: context.getString(R.string.error_unknown)
                 )
             )
         }

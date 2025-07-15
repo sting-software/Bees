@@ -4,22 +4,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_dark_mode"
-            android:title="@string/settings_theme_title"
+            android:title="@string/setting_theme"
             android:icon="@drawable/ic_dark_mode"
             app:actionLayout="@layout/drawer_switch_item" />
 
-        <!-- NEW: Language selection item -->
         <item
             android:id="@+id/drawer_language"
-            android:title="@string/language_title"
+            android:title="@string/title_language"
             android:icon="@drawable/ic_language" />
     </group>
 
-    <item android:title="Application">
+    <item android:title="@string/category_application">
         <menu>
             <item
                 android:id="@+id/drawer_exit_app"
-                android:title="@string/settings_exit_title"
+                android:title="@string/title_exit_app"
                 android:icon="@drawable/ic_exit_to_app" />
         </menu>
     </item>

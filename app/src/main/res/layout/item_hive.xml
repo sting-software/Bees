@@ -19,11 +19,10 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- CheckBox for multi-selection -->
         <CheckBox
             android:id="@+id/checkbox_hive_select"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +30,6 @@
             android:layout_marginEnd="8dp"
             tools:visibility="visible" />
 
-        <!-- Hive Number -->
         <TextView
             android:id="@+id/text_view_hive_number"
             android:layout_width="0dp"
@@ -43,7 +41,6 @@
             app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
             tools:text="Hive #45" />
 
-        <!-- Hive Type -->
         <TextView
             android:id="@+id/text_view_hive_type"
             android:layout_width="0dp"
@@ -56,7 +53,6 @@
             app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
             tools:text="Type: Langstroth" />
 
-        <!-- Frame Type -->
         <TextView
             android:id="@+id/text_view_frame_type"
             android:layout_width="0dp"
@@ -69,7 +65,6 @@
             app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
             tools:text="Frames: Deep" />
 
-        <!-- Breed -->
         <TextView
             android:id="@+id/text_view_breed"
             android:layout_width="0dp"
@@ -82,7 +77,6 @@
             app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
             tools:text="Breed: Carniolan" />
 
-        <!-- Last Inspection Date -->
         <TextView
             android:id="@+id/text_view_last_inspection_date"
             android:layout_width="0dp"
@@ -95,7 +89,6 @@
             app:layout_constraintEnd_toStartOf="@id/image_button_edit_hive"
             tools:text="Last Inspection: 15/06/2025" />
 
-        <!-- Edit Button -->
         <ImageButton
             android:id="@+id/image_button_edit_hive"
             android:layout_width="48dp"
@@ -105,7 +98,7 @@
             app:tint="?attr/colorAccent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/edit_hive_string" />
+            android:contentDescription="@string/action_edit" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

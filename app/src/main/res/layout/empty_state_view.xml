@@ -10,10 +10,11 @@
 
     <ImageView
         android:id="@+id/image_view_empty_icon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="500dp"
+        android:layout_height="250dp"
         android:alpha="0.3"
-        android:contentDescription="@string/empty_state_icon"
+        android:contentDescription="@string/empty_state_icon_description"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_hexagon"
         app:tint="?attr/colorOnSurface" />
 
@@ -21,9 +22,12 @@
         android:id="@+id/text_view_empty_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="0dp"
+        android:textAlignment="center"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="?android:attr/textColorSecondary"
+        android:textSize="20sp"
         tools:text="No items here yet." />
 
 </LinearLayout>

@@ -83,7 +83,7 @@ class TodoAdapter(
 
                 if (task.dueDate != null) {
                     val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                    textViewDueDate.text = itemView.context.getString(R.string.due_date_format, sdf.format(Date(task.dueDate)))
+                    textViewDueDate.text = itemView.context.getString(R.string.hint_due_date_time_optional, sdf.format(Date(task.dueDate)))
                     textViewDueDate.visibility = View.VISIBLE
                 } else {
                     textViewDueDate.visibility = View.GONE

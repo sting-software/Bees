@@ -52,7 +52,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
             onTaskClicked = { task ->
                 val action = TodoListFragmentDirections.actionTodoListFragmentToAddEditTaskFragment(
                     task.id,
-                    getString(R.string.edit_task)
+                    getString(R.string.title_edit_task)
                 )
                 findNavController().navigate(action)
             },
@@ -116,7 +116,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
                         } else {
                             Toast.makeText(
                                 requireContext(),
-                                getString(R.string.no_tasks_selected),
+                                getString(R.string.error_no_tasks_selected),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -140,7 +140,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
             val isEmpty = tasks.isEmpty()
             binding.emptyStateView.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
             binding.recyclerViewTasks.visibility = if (isEmpty) View.GONE else View.VISIBLE
-            binding.emptyStateView.textViewEmptyMessage.text = getString(R.string.no_tasks_yet)
+            binding.emptyStateView.textViewEmptyMessage.text = getString(R.string.empty_state_no_tasks)
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
@@ -155,7 +155,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
         binding.fabAddTask.setOnClickListener {
             val action = TodoListFragmentDirections.actionTodoListFragmentToAddEditTaskFragment(
                 -1L,
-                getString(R.string.add_task)
+                getString(R.string.action_add_task)
             )
             findNavController().navigate(action)
         }
@@ -179,8 +179,8 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
                 viewModel.deleteTask(task)
 
                 // FIX: Correctly undo the delete by re-inserting the task
-                Snackbar.make(requireView(), getString(R.string.task_deleted), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.undo_string)) { viewModel.insertTask(task) }
+                Snackbar.make(requireView(), getString(R.string.message_task_deleted), Snackbar.LENGTH_LONG)
+                    .setAction(getString(R.string.action_undo)) { viewModel.insertTask(task) }
                     .show()
             }
         }).attachToRecyclerView(binding.recyclerViewTasks)
@@ -211,30 +211,32 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
     private fun updateToolbarTitleForSelection(count: Int) {
         if (todoAdapter.isMultiSelectMode()) {
             activity?.title =
-                if (count > 0) getString(R.string.selected_count_format, count) else getString(R.string.select_tasks)
+                if (count > 0) getString(R.string.selected_count_format, count) else getString(R.string.title_select_tasks)
         } else {
-            activity?.title = getString(R.string.to_do_list)
+            activity?.title = getString(R.string.to_do)
         }
     }
 
     private fun showBulkDeleteConfirmationDialog(tasksToDelete: List<Task>) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.delete_selected_tasks))
+            .setTitle(getString(R.string.dialog_title_delete_selected_items))
             .setMessage(
                 getString(
-                    R.string.are_you_sure_you_want_to_delete_selected_tasks,
-                    tasksToDelete.size
-                ))
-            .setPositiveButton(R.string.delete_button) { _, _ ->
+                    R.string.dialog_message_delete_selected_items,
+                    tasksToDelete.size,
+                    tasksToDelete.joinToString(", ") { it.title }
+                )
+            )
+            .setPositiveButton(R.string.action_delete) { _, _ ->
                 viewModel.deleteTasks(tasksToDelete)
                 Toast.makeText(
                     requireContext(),
-                    getString(R.string.tasks_deleted, tasksToDelete.size),
+                    getString(R.string.message_tasks_deleted, tasksToDelete.size),
                     Toast.LENGTH_SHORT
                 ).show()
                 setMultiSelectMode(false)
             }
-            .setNegativeButton(R.string.cancel_button, null)
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
 

@@ -84,7 +84,7 @@ class TodoListViewModel @Inject constructor(
                 }
 
                 else -> {
-                    _toastMessage.postValue(context.getString(R.string.cannot_change_status_for_a_mixed_selection_of_tasks))
+                    _toastMessage.postValue(context.getString(R.string.error_mixed_task_selection))
                 }
             }
         }

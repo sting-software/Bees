@@ -48,7 +48,8 @@ class BulkEditHiveViewModel @Inject constructor(
         lastInspectionDate: Long?,
         notes: String?,
         autoNumber: Boolean,
-        startingHiveNumber: Int?
+        startingHiveNumber: Int?,
+        endingHiveNumber: Int?
     ) = viewModelScope.launch {
         _selectedHives.value?.let { hives ->
             val sortedHives = hives.sortedBy { it.id }

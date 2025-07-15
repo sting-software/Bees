@@ -51,7 +51,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         setupInitialState(isNewApiary)
 
         if (!isNewApiary) {
-            activity?.title = getString(R.string.edit_apiary_again)
+            activity?.title = getString(R.string.title_edit_apiary)
             addEditApiaryViewModel.getApiary(apiaryId).observe(viewLifecycleOwner) { apiary ->
                 apiary?.let {
                     binding.editTextApiaryName.setText(it.name)
@@ -65,7 +65,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 }
             }
         } else {
-            activity?.title = getString(R.string.add_new_apiary_again)
+            activity?.title = getString(R.string.title_add_apiary)
         }
 
         binding.checkboxAutoNumberApiaryHives.setOnCheckedChangeListener { _, isChecked ->
@@ -98,8 +98,8 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 }
 
                 is Resource.Success -> {
-                    val message = if (isNewApiary) getString(R.string.apiary_and_hives_added) else getString(
-                        R.string.apiary_updated
+                    val message = if (isNewApiary) getString(R.string.message_apiary_and_hives_added) else getString(
+                        R.string.message_apiary_updated
                     )
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     if (!isNewApiary) {
@@ -109,7 +109,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
 
                 is Resource.Error -> {
                     Toast.makeText(requireContext(),
-                        getString(R.string.error, status.message), Toast.LENGTH_LONG)
+                        getString(R.string.error_with_message, status.message), Toast.LENGTH_LONG)
                         .show()
                 }
 
@@ -159,7 +159,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                     binding.textInputLayoutEndingHiveNumberApiary.error = null
                 } else {
                     binding.textInputLayoutEndingHiveNumberApiary.error =
-                        getString(R.string.error_invalid_range)
+                        getString(R.string.error_invalid_number_range)
                     binding.editTextNumberOfHives.setText("")
                 }
             } else {
@@ -197,7 +197,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 if (startingHiveNumber == null || endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
                     Toast.makeText(
                         requireContext(),
-                        getString(R.string.please_enter_a_valid_hive_number_range),
+                        getString(R.string.error_invalid_number_range),
                         Toast.LENGTH_SHORT
                     ).show()
                     return

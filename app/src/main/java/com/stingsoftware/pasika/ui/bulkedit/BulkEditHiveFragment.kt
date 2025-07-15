@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.databinding.FragmentBulkEditHiveBinding
@@ -26,7 +27,7 @@ import java.util.Locale
 @AndroidEntryPoint
 class BulkEditHiveFragment : Fragment() {
 
-    // ViewModel is now injected by Hilt
+    private val args: BulkEditHiveFragmentArgs by navArgs()
     private val bulkEditHiveViewModel: BulkEditHiveViewModel by viewModels()
 
     private var _binding: FragmentBulkEditHiveBinding? = null
@@ -50,7 +51,7 @@ class BulkEditHiveFragment : Fragment() {
 
         autoNumberingWarningTextView = view.findViewById(R.id.text_view_auto_numbering_warning)
 
-        activity?.title = getString(R.string.bulk_edit_hives_again)
+        activity?.title = getString(R.string.title_bulk_edit_hives)
 
         val hiveTypes = resources.getStringArray(R.array.hive_types)
         val hiveTypeAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, hiveTypes)
@@ -62,8 +63,7 @@ class BulkEditHiveFragment : Fragment() {
 
         bulkEditHiveViewModel.selectedHives.observe(viewLifecycleOwner) { hives ->
             if (hives.isNullOrEmpty()) {
-                Toast.makeText(requireContext(),
-                    getString(R.string.no_hives_selected_for_bulk_editing), Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_no_hives_selected_for_editing), Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
                 return@observe
             }
@@ -143,7 +143,7 @@ class BulkEditHiveFragment : Fragment() {
                 val calculatedCount = endingHiveNumber - startingHiveNumber + 1
                 if (calculatedCount != numberOfSelectedHives) {
                     autoNumberingWarningTextView.text =
-                        getString(R.string.bulk_edit_quantity_mismatch_warning, calculatedCount, numberOfSelectedHives)
+                        getString(R.string.error_bulk_edit_quantity_mismatch, calculatedCount, numberOfSelectedHives)
                     autoNumberingWarningTextView.visibility = View.VISIBLE
                     binding.buttonSaveBulkEdit.isEnabled = false
                 } else {
@@ -151,7 +151,7 @@ class BulkEditHiveFragment : Fragment() {
                     binding.buttonSaveBulkEdit.isEnabled = true
                 }
             } else {
-                autoNumberingWarningTextView.text = getString(R.string.bulk_edit_invalid_range_warning)
+                autoNumberingWarningTextView.text = getString(R.string.error_invalid_number_range)
                 autoNumberingWarningTextView.visibility = View.VISIBLE
                 binding.buttonSaveBulkEdit.isEnabled = false
             }
@@ -207,8 +207,7 @@ class BulkEditHiveFragment : Fragment() {
             endingHiveNumber = binding.editTextEndingHiveNumberBulk.text?.toString()?.trim()?.toIntOrNull()
 
             if (startingHiveNumber == null || startingHiveNumber <= 0) {
-                binding.textInputLayoutStartingHiveNumberBulk.error =
-                    getString(R.string.starting_number_must_be_a_positive_number)
+                binding.textInputLayoutStartingHiveNumberBulk.error = getString(R.string.error_invalid_number_range)
                 return
             } else {
                 binding.textInputLayoutStartingHiveNumberBulk.error = null
@@ -223,11 +222,11 @@ class BulkEditHiveFragment : Fragment() {
             lastInspectionDate = selectedDateMillis,
             notes = notes,
             autoNumber = autoNumber,
-            startingHiveNumber = startingHiveNumber
+            startingHiveNumber = startingHiveNumber,
+            endingHiveNumber = endingHiveNumber
         )
 
-        Toast.makeText(requireContext(),
-            getString(R.string.hives_updated_successfully), Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), getString(R.string.message_hives_updated), Toast.LENGTH_SHORT).show()
         findNavController().popBackStack()
     }
 

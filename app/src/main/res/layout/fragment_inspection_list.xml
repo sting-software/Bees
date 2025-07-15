@@ -8,7 +8,6 @@
     tools:context=".ui.inspectionlist.InspectionListFragment"
     android:padding="16dp">
 
-    <!-- RecyclerView to display the list of inspections -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_inspections"
         android:layout_width="0dp"
@@ -22,7 +21,6 @@
         android:padding="8dp"
         android:clipToPadding="false" />
 
-    <!-- Floating Action Button for adding a new inspection -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_inspection"
         android:layout_width="wrap_content"
@@ -32,16 +30,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@android:color/white"
-        android:contentDescription="@string/add_new_inspection" />
+        android:contentDescription="@string/title_add_inspection" />
 
-    <!-- Placeholder for empty state -->
-    <TextView
-        android:id="@+id/text_view_empty_state_inspections"
+    <include
+        android:id="@+id/empty_state_view"
+        layout="@layout/empty_state_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_inspections_yet"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

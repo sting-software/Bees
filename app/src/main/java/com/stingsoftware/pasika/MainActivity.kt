@@ -1,6 +1,5 @@
 package com.stingsoftware.pasika
 
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.MenuItem
@@ -21,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.stingsoftware.pasika.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -51,7 +51,13 @@ class MainActivity : AppCompatActivity() {
         )
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
 
-        toggle = ActionBarDrawerToggle(this, drawerLayout, binding.toolbar, R.string.open, R.string.close)
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            binding.toolbar,
+            R.string.action_open,
+            R.string.action_close
+        )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -84,6 +90,15 @@ class MainActivity : AppCompatActivity() {
         applyWindowInsets()
     }
 
+    private fun showExitConfirmationDialog() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(getString(R.string.title_exit_app))
+            .setMessage(getString(R.string.dialog_message_exit_app))
+            .setPositiveButton(getString(R.string.action_exit)) { _, _ -> finishAffinity() }
+            .setNegativeButton(getString(R.string.action_cancel), null)
+            .show()
+    }
+
     private fun applyWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.appBarLayout) { view, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -99,8 +114,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDrawerContent(navigationView: NavigationView) {
-        val darkModeSwitch = navigationView.menu.findItem(R.id.drawer_dark_mode).actionView as SwitchCompat
-        val sharedPrefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val darkModeSwitch =
+            navigationView.menu.findItem(R.id.drawer_dark_mode).actionView as SwitchCompat
+        val sharedPrefs = getSharedPreferences("app_settings", MODE_PRIVATE)
 
         val currentNightMode = AppCompatDelegate.getDefaultNightMode()
         darkModeSwitch.isChecked = when (currentNightMode) {
@@ -110,7 +126,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            val newMode = if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+            val newMode =
+                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
             AppCompatDelegate.setDefaultNightMode(newMode)
             with(sharedPrefs.edit()) {
                 putInt("theme_mode", newMode)
@@ -120,22 +137,37 @@ class MainActivity : AppCompatActivity() {
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.drawer_language -> {
+                    showLanguageSelectionDialog()
+                    drawerLayout.closeDrawers()
+                    true
+                }
+
                 R.id.drawer_exit_app -> {
                     showExitConfirmationDialog()
                     drawerLayout.closeDrawers()
                     true
                 }
+
                 else -> false
             }
         }
     }
 
-    private fun showExitConfirmationDialog() {
+    private fun showLanguageSelectionDialog() {
         MaterialAlertDialogBuilder(this)
-            .setTitle(getString(R.string.exit_application_string))
-            .setMessage(getString(R.string.are_you_sure_you_want_to_exit))
-            .setPositiveButton(getString(R.string.exit_string)) { _, _ -> finishAffinity() }
-            .setNegativeButton(getString(R.string.cancel_button), null)
+            .setTitle(getString(R.string.title_language_dialog))
+            .setItems(arrayOf("English", "Українська")) { _, which ->
+                val selectedLanguage = if (which == 0) "en" else "uk"
+                setLocale(selectedLanguage)
+                val sharedPrefs = getSharedPreferences("app_settings", MODE_PRIVATE)
+                with(sharedPrefs.edit()) {
+                    putString("language", selectedLanguage)
+                    apply()
+                }
+                recreate()
+            }
+            .setNegativeButton(R.string.action_cancel, null)
             .show()
     }
 
@@ -147,6 +179,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
+        return NavigationUI.navigateUp(
+            navController,
+            appBarConfiguration
+        ) || super.onSupportNavigateUp()
+    }
+
+    private fun setLocale(language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
     }
 }
+

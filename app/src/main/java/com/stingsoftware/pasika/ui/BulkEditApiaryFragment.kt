@@ -31,7 +31,7 @@ class BulkEditApiaryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.title = getString(R.string.bulk_edit_apiaries)
+        activity?.title = getString(R.string.title_bulk_edit_apiaries)
 
         setupDropdown()
 
@@ -42,11 +42,11 @@ class BulkEditApiaryFragment : Fragment() {
         viewModel.updateStatus.observe(viewLifecycleOwner) { success ->
             if (success) {
                 Toast.makeText(requireContext(),
-                    getString(R.string.apiaries_updated_successfully), Toast.LENGTH_SHORT).show()
+                    getString(R.string.message_apiaries_updated), Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(requireContext(),
-                    getString(R.string.failed_to_update_apiaries), Toast.LENGTH_SHORT).show()
+                    getString(R.string.error_update_apiaries_failed), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -58,7 +58,7 @@ class BulkEditApiaryFragment : Fragment() {
 
             if (location == null && type == null && notes == null) {
                 Toast.makeText(requireContext(),
-                    getString(R.string.at_least_one_field_must_be_filled_to_update), Toast.LENGTH_SHORT).show()
+                    getString(R.string.error_bulk_edit_apiaries_at_least_one_field), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

@@ -38,7 +38,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (!isGranted) {
                 Toast.makeText(requireContext(),
-                    getString(R.string.notification_permission_denied_reminders_will_not_work), Toast.LENGTH_LONG).show()
+                    getString(R.string.notification_permission_denied), Toast.LENGTH_LONG).show()
                 binding.switchReminder.isChecked = false
             }
         }
@@ -84,7 +84,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         val title = binding.editTextTaskTitle.text?.toString()?.trim()
         if (title.isNullOrBlank()) {
             Toast.makeText(requireContext(),
-                getString(R.string.title_cannot_be_empty), Toast.LENGTH_SHORT).show()
+                getString(R.string.error_field_cannot_be_empty), Toast.LENGTH_SHORT).show()
             return
         }
 

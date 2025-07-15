@@ -2,26 +2,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Standard Actions (Visible when NOT in multi-select) -->
     <item
         android:id="@+id/action_import_apiary"
-        android:title="@string/import_apiary_label"
+        android:title="@string/action_import_apiary"
         android:icon="@drawable/ic_import"
         android:orderInCategory="10"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_search_apiaries"
-        android:title="@string/search_label"
+        android:title="@string/label_search"
         android:icon="@drawable/ic_search"
         android:orderInCategory="20"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
-    <!-- Multi-Select Actions (Visible ONLY in multi-select) -->
     <item
         android:id="@+id/action_select_all_apiaries"
-        android:title="@string/select_all_label"
+        android:title="@string/label_select_all"
         android:icon="@drawable/ic_select_all"
         android:orderInCategory="100"
         android:visible="false"
@@ -29,7 +27,7 @@
 
     <item
         android:id="@+id/action_edit_selected_apiaries"
-        android:title="@string/edit_selected_label"
+        android:title="@string/label_edit_selected"
         android:icon="@drawable/ic_edit"
         android:orderInCategory="110"
         android:visible="false"
@@ -37,7 +35,7 @@
 
     <item
         android:id="@+id/action_delete_selected_apiaries"
-        android:title="@string/delete_selected_label"
+        android:title="@string/label_delete_selected"
         android:icon="@drawable/ic_delete"
         android:orderInCategory="120"
         android:visible="false"
@@ -45,7 +43,7 @@
 
     <item
         android:id="@+id/action_cancel_selection"
-        android:title="@string/cancel_selection_label"
+        android:title="@string/label_cancel_selection"
         android:icon="@drawable/ic_cancel"
         android:orderInCategory="130"
         android:visible="false"

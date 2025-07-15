@@ -15,7 +15,7 @@ class ApiaryRepository @Inject constructor(
     private val hiveDao: HiveDao,
     private val inspectionDao: InspectionDao,
     private val taskDao: TaskDao,
-    private val context: Context // Inject the context
+    private val context: Context
 ) {
 
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()
@@ -71,17 +71,17 @@ class ApiaryRepository @Inject constructor(
     suspend fun moveHives(hiveIds: List<Long>, sourceApiaryId: Long, destinationApiaryId: Long) {
         val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name ?: context.getString(R.string.unknown_apiary)
         val destinationApiaryName = apiaryDao.getApiaryById(destinationApiaryId)?.name ?: context.getString(
-            R.string.unknown_apiary_string
+            R.string.unknown_apiary
         )
         val note =
-            context.getString(R.string.hive_moved_from_to, sourceApiaryName, destinationApiaryName)
+            context.getString(R.string.message_hive_moved_from_to, sourceApiaryName, destinationApiaryName)
 
         hiveIds.forEach { hiveId ->
             val moveRecord = Inspection(
                 hiveId = hiveId,
                 inspectionDate = System.currentTimeMillis(),
                 notes = note,
-                managementActionsTaken = context.getString(R.string.hive_relocation)
+                managementActionsTaken = context.getString(R.string.title_hive_relocation)
             )
             inspectionDao.insert(moveRecord)
         }
@@ -131,7 +131,7 @@ class ApiaryRepository @Inject constructor(
     @Transaction
     suspend fun importApiaryData(data: ApiaryExportData) {
         val importedApiary = data.apiary.copy(id = 0, name = context.getString(
-            R.string.imported,
+            R.string.imported_label_format,
             data.apiary.name
         ))
         val newApiaryId = apiaryDao.insert(importedApiary)

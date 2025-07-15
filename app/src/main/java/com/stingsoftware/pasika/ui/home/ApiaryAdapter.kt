@@ -25,7 +25,7 @@ class ApiaryAdapter(
         fun bind(apiary: Apiary) {
             binding.textViewApiaryName.text = apiary.name
             binding.textViewApiaryLocation.text = apiary.location
-            binding.textViewNumberOfHives.text = itemView.context.getString(R.string.hives_count, apiary.numberOfHives)
+            binding.textViewNumberOfHives.text = itemView.context.getString(R.string.label_hives_count, apiary.numberOfHives)
 
             binding.root.setOnClickListener {
                 if (isMultiSelectMode) {

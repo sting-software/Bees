@@ -69,12 +69,12 @@ class SettingsFragment : Fragment() {
 
     private fun showExitConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.exit_application))
-            .setMessage(getString(R.string.are_you_sure_you_want_to_exit_the_application))
-            .setPositiveButton(getString(R.string.exit)) { _, _ ->
+            .setTitle(getString(R.string.title_exit_app))
+            .setMessage(getString(R.string.dialog_message_exit_app))
+            .setPositiveButton(getString(R.string.action_exit)) { _, _ ->
                 requireActivity().finishAffinity()
             }
-            .setNegativeButton(getString(R.string.cancel_what), null)
+            .setNegativeButton(getString(R.string.action_cancel), null)
             .show()
     }
 

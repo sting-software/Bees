@@ -47,8 +47,8 @@ class AddEditInspectionFragment : Fragment() {
         val inspectionId = args.inspectionId
         val isNewInspection = inspectionId == -1L
 
-        activity?.title = if (isNewInspection) getString(R.string.add_new_inspection_string) else getString(
-            R.string.edit_inspection
+        activity?.title = if (isNewInspection) getString(R.string.title_add_inspection) else getString(
+            R.string.title_edit_inspection
         )
 
         setupDatePickers()
@@ -61,7 +61,7 @@ class AddEditInspectionFragment : Fragment() {
                     populateInspectionData(it)
                 } ?: run {
                     Toast.makeText(requireContext(),
-                        getString(R.string.inspection_not_found), Toast.LENGTH_SHORT).show()
+                        getString(R.string.error_inspection_not_found), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 }
             }
@@ -74,11 +74,11 @@ class AddEditInspectionFragment : Fragment() {
             if (isSuccess != null) {
                 if (isSuccess) {
                     Toast.makeText(requireContext(),
-                        getString(R.string.inspection_saved_successfully), Toast.LENGTH_SHORT).show()
+                        getString(R.string.message_inspection_saved), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 } else {
                     Toast.makeText(requireContext(),
-                        getString(R.string.failed_to_save_inspection_please_try_again), Toast.LENGTH_LONG).show()
+                        getString(R.string.error_save_inspection_failed), Toast.LENGTH_LONG).show()
                 }
                 addEditInspectionViewModel.resetSaveCompleted()
             }

@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- RecyclerView to display the list of apiaries - now constrained to parent top -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_apiaries"
         android:layout_width="0dp"
@@ -21,7 +20,6 @@
         android:padding="8dp"
         android:clipToPadding="false" />
 
-    <!-- Floating Action Button for adding a new apiary -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_apiary"
         android:layout_width="wrap_content"
@@ -31,16 +29,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@android:color/white"
-        android:contentDescription="@string/add_new_apiary_string" />
+        android:contentDescription="@string/content_description_add_apiary" />
 
-    <!-- Placeholder for empty state -->
-    <TextView
-        android:id="@+id/text_view_empty_state"
+    <include
+        android:id="@+id/empty_state_view"
+        layout="@layout/empty_state_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_apiaries_added_yet_tap_to_add_one"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

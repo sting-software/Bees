@@ -62,19 +62,19 @@ class AddEditHiveFragment : Fragment() {
         setupSaveCancelButtons(apiaryId, hiveId, isNewHive)
 
         if (!isNewHive) {
-            activity?.title = getString(R.string.edit_hive)
+            activity?.title = getString(R.string.title_edit_hive)
             addEditHiveViewModel.getHive(hiveId).observe(viewLifecycleOwner) { hive ->
                 hive?.let {
                     populateHiveData(it)
                     updateFramesTotal()
                 } ?: run {
                     Toast.makeText(requireContext(),
-                        getString(R.string.hive_not_found), Toast.LENGTH_SHORT).show()
+                        getString(R.string.error_hive_not_found), Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 }
             }
         } else {
-            activity?.title = getString(R.string.add_new_hive_string)
+            activity?.title = getString(R.string.title_add_hive)
             updateFramesTotal()
         }
 
@@ -87,11 +87,11 @@ class AddEditHiveFragment : Fragment() {
                         } else {
                             1
                         }
-                        Toast.makeText(requireContext(), getString(R.string.hives_added_message, messageQuantity), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.message_hives_added, messageQuantity), Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
                     } else {
                         Toast.makeText(requireContext(),
-                            getString(R.string.hive_updated_successfully), Toast.LENGTH_SHORT).show()
+                            getString(R.string.message_hives_updated), Toast.LENGTH_SHORT).show()
                         selectedHiveLastInspectionDateMillis?.let { newHiveDate ->
                             if (isAdded) {
                                 // The call to the now-included function
@@ -105,7 +105,7 @@ class AddEditHiveFragment : Fragment() {
                     }
                 } else {
                     Toast.makeText(requireContext(),
-                        getString(R.string.failed_to_save_hive_s_please_try_again), Toast.LENGTH_LONG).show()
+                        getString(R.string.error_save_hive_failed), Toast.LENGTH_LONG).show()
                 }
                 addEditHiveViewModel.resetSaveCompleted()
             }
@@ -321,28 +321,28 @@ class AddEditHiveFragment : Fragment() {
     private fun populateHiveData(hive: Hive) {
         binding.editTextHiveNumber.setText(hive.hiveNumber)
         binding.autoCompleteTextViewMaterial.setText(hive.material, false)
-        if (hive.material.equals(getString(R.string.other_1), ignoreCase = true) && !hive.materialOther.isNullOrEmpty()) {
+        if (hive.material.equals(getString(R.string.other), ignoreCase = true) && !hive.materialOther.isNullOrEmpty()) {
             binding.textInputLayoutMaterialOther.visibility = View.VISIBLE
             binding.editTextMaterialOther.setText(hive.materialOther)
         } else {
             binding.textInputLayoutMaterialOther.visibility = View.GONE
         }
         binding.autoCompleteTextViewHiveType.setText(hive.hiveType, false)
-        if (hive.hiveType.equals(getString(R.string.other_2), ignoreCase = true) && !hive.hiveTypeOther.isNullOrEmpty()) {
+        if (hive.hiveType.equals(getString(R.string.other), ignoreCase = true) && !hive.hiveTypeOther.isNullOrEmpty()) {
             binding.textInputLayoutHiveTypeOther.visibility = View.VISIBLE
             binding.editTextHiveTypeOther.setText(hive.hiveTypeOther)
         } else {
             binding.textInputLayoutHiveTypeOther.visibility = View.GONE
         }
         binding.autoCompleteTextViewFrameType.setText(hive.frameType, false)
-        if (hive.frameType.equals(getString(R.string.other_3), ignoreCase = true) && !hive.frameTypeOther.isNullOrEmpty()) {
+        if (hive.frameType.equals(getString(R.string.other), ignoreCase = true) && !hive.frameTypeOther.isNullOrEmpty()) {
             binding.textInputLayoutFrameTypeOther.visibility = View.VISIBLE
             binding.editTextFrameTypeOther.setText(hive.frameTypeOther)
         } else {
             binding.textInputLayoutFrameTypeOther.visibility = View.GONE
         }
         binding.autoCompleteTextViewBreed.setText(hive.breed, false)
-        if (hive.breed.equals(getString(R.string.other_4), ignoreCase = true) && !hive.breedOther.isNullOrEmpty()) {
+        if (hive.breed.equals(getString(R.string.other), ignoreCase = true) && !hive.breedOther.isNullOrEmpty()) {
             binding.textInputLayoutBreedOther.visibility = View.VISIBLE
             binding.editTextBreedOther.setText(hive.breedOther)
         } else {
@@ -353,7 +353,7 @@ class AddEditHiveFragment : Fragment() {
         binding.editTextFramesCappedBrood.setText(hive.framesCappedBrood?.toString())
         binding.editTextFramesFeed.setText(hive.framesFeed?.toString())
         binding.autoCompleteTextViewQueenTagColor.setText(hive.queenTagColor, false)
-        if (hive.queenTagColor.equals(getString(R.string.other_5), ignoreCase = true) && !hive.queenTagColorOther.isNullOrEmpty()) {
+        if (hive.queenTagColor.equals(getString(R.string.other), ignoreCase = true) && !hive.queenTagColorOther.isNullOrEmpty()) {
             binding.textInputLayoutQueenTagColorOther.visibility = View.VISIBLE
             binding.editTextQueenTagColorOther.setText(hive.queenTagColorOther)
         } else {
@@ -410,16 +410,16 @@ class AddEditHiveFragment : Fragment() {
     private fun saveHive(apiaryId: Long, hiveId: Long, isNewHive: Boolean) {
         val material = binding.autoCompleteTextViewMaterial.text.toString().trim().ifEmpty { null }
         val materialOther = binding.editTextMaterialOther.text.toString().trim().ifEmpty { null }
-        val finalMaterial = if (material.equals(getString(R.string.other_6), ignoreCase = true)) materialOther else material
+        val finalMaterial = if (material.equals(getString(R.string.hint_other_material), ignoreCase = true)) materialOther else material
         val hiveType = binding.autoCompleteTextViewHiveType.text.toString().trim().ifEmpty { null }
         val hiveTypeOther = binding.editTextHiveTypeOther.text.toString().trim().ifEmpty { null }
-        val finalHiveType = if (hiveType.equals(getString(R.string.other_7), ignoreCase = true)) hiveTypeOther else hiveType
+        val finalHiveType = if (hiveType.equals(getString(R.string.hint_other_hive_type), ignoreCase = true)) hiveTypeOther else hiveType
         val frameType = binding.autoCompleteTextViewFrameType.text.toString().trim().ifEmpty { null }
         val frameTypeOther = binding.editTextFrameTypeOther.text.toString().trim().ifEmpty { null }
-        val finalFrameType = if (frameType.equals(getString(R.string.other_8), ignoreCase = true)) frameTypeOther else frameType
+        val finalFrameType = if (frameType.equals(getString(R.string.hint_other_frame_type), ignoreCase = true)) frameTypeOther else frameType
         val breed = binding.autoCompleteTextViewBreed.text.toString().trim().ifEmpty { null }
         val breedOther = binding.editTextBreedOther.text.toString().trim().ifEmpty { null }
-        val finalBreed = if (breed.equals(getString(R.string.other_9), ignoreCase = true)) breedOther else breed
+        val finalBreed = if (breed.equals(getString(R.string.hint_other_breed), ignoreCase = true)) breedOther else breed
         val framesTotal = binding.textViewFramesTotalValue.text.toString().toIntOrNull()
         val framesEggs = binding.editTextFramesEggs.text.toString().trim().toIntOrNull()
         val framesOpenBrood = binding.editTextFramesOpenBrood.text.toString().trim().toIntOrNull()
@@ -427,7 +427,7 @@ class AddEditHiveFragment : Fragment() {
         val framesFeed = binding.editTextFramesFeed.text.toString().trim().toIntOrNull()
         val queenTagColor = binding.autoCompleteTextViewQueenTagColor.text.toString().trim().ifEmpty { null }
         val queenTagColorOther = binding.editTextQueenTagColorOther.text.toString().trim().ifEmpty { null }
-        val finalQueenTagColor = if (queenTagColor.equals(getString(R.string.other_10), ignoreCase = true)) queenTagColorOther else queenTagColor
+        val finalQueenTagColor = if (queenTagColor.equals(getString(R.string.hint_other_color), ignoreCase = true)) queenTagColorOther else queenTagColor
         val queenNumber = binding.editTextQueenNumber.text.toString().trim().ifEmpty { null }
         val queenYear = binding.editTextQueenYear.text.toString().trim().ifEmpty { null }
         val queenLine = binding.editTextQueenLine.text.toString().trim().ifEmpty { null }
@@ -461,13 +461,13 @@ class AddEditHiveFragment : Fragment() {
                 startingHiveNumber = startNumStr.toIntOrNull()
                 endingHiveNumber = endNumStr.toIntOrNull()
                 if (startingHiveNumber == null || startingHiveNumber <= 0) {
-                    binding.textInputLayoutFromHiveNumber.error = getString(R.string.invalid_from_number)
+                    binding.textInputLayoutFromHiveNumber.error = getString(R.string.error_invalid_number_range)
                     return
                 } else {
                     binding.textInputLayoutFromHiveNumber.error = null
                 }
                 if (endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
-                    binding.textInputLayoutToHiveNumber.error = getString(R.string.invalid_to_number)
+                    binding.textInputLayoutToHiveNumber.error = getString(R.string.error_invalid_number_range)
                     return
                 } else {
                     binding.textInputLayoutToHiveNumber.error = null
@@ -478,7 +478,7 @@ class AddEditHiveFragment : Fragment() {
                 quantity = quantityStr.toIntOrNull()
                 if (quantity == null || quantity <= 0) {
                     binding.textInputLayoutQuantity.error =
-                        getString(R.string.quantity_must_be_a_positive_number)
+                        getString(R.string.error_must_be_positive_number)
                     return
                 } else {
                     binding.textInputLayoutQuantity.error = null
@@ -522,15 +522,15 @@ class AddEditHiveFragment : Fragment() {
     // The missing function is now included
     private fun showOverwriteApiaryDateDialog(apiaryId: Long, newDateMillis: Long) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.update_apiary_date_title))
-            .setMessage(getString(R.string.update_apiary_date_message))
-            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+            .setTitle(getString(R.string.dialog_title_update_apiary_date))
+            .setMessage(getString(R.string.dialog_message_update_apiary_date))
+            .setPositiveButton(getString(R.string.dialog_yes)) { _, _ ->
                 addEditHiveViewModel.updateApiaryLastInspectionDate(apiaryId, newDateMillis)
                 Toast.makeText(requireContext(),
-                    getString(R.string.apiary_date_updated), Toast.LENGTH_SHORT).show()
+                    getString(R.string.message_apiary_date_updated), Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }
-            .setNegativeButton(getString(R.string.no)) { _, _ ->
+            .setNegativeButton(getString(R.string.dialog_no)) { _, _ ->
                 findNavController().popBackStack()
             }
             .show()

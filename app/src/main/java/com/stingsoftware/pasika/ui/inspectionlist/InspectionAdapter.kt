@@ -39,14 +39,14 @@ class InspectionAdapter(
         fun bind(inspection: Inspection) {
             // Format and display inspection date
             val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()) // Include time for inspections
-            binding.textViewInspectionDate.text = itemView.context.getString(R.string.inspection_date_format, formatter.format(Date(inspection.inspectionDate)))
+            binding.textViewInspectionDate.text = itemView.context.getString(R.string.hint_inspection_date, formatter.format(Date(inspection.inspectionDate)))
 
             // Queen Cells Present & Count
             if (inspection.queenCellsPresent == true) {
                 binding.textViewQueenCellsStatus.visibility = View.VISIBLE
                 val queenCellsText = inspection.queenCellsCount?.let {
-                    itemView.context.getString(R.string.queen_cells_present_with_count, it)
-                } ?: itemView.context.getString(R.string.queen_cells_present_no_count)
+                    itemView.context.getString(R.string.format_queen_cells_present_with_count, it)
+                } ?: itemView.context.getString(R.string.format_queen_cells_present_no_count)
                 binding.textViewQueenCellsStatus.text = queenCellsText
             } else {
                 binding.textViewQueenCellsStatus.visibility = View.GONE
@@ -54,13 +54,13 @@ class InspectionAdapter(
 
             // Brood Status Summary
             val broodStatus = mutableListOf<String>()
-            inspection.framesEggsCount?.let { if (it > 0) broodStatus.add(itemView.context.getString(R.string.eggs_short_with_count, it)) }
-            inspection.framesOpenBroodCount?.let { if (it > 0) broodStatus.add(itemView.context.getString(R.string.open_brood_short_with_count, it)) }
-            inspection.framesCappedBroodCount?.let { if (it > 0) broodStatus.add(itemView.context.getString(R.string.capped_brood_short_with_count, it)) }
+            inspection.framesEggsCount?.let { if (it > 0) broodStatus.add(itemView.context.getString(R.string.format_short_eggs_with_count, it)) }
+            inspection.framesOpenBroodCount?.let { if (it > 0) broodStatus.add(itemView.context.getString(R.string.format_short_open_brood_with_count, it)) }
+            inspection.framesCappedBroodCount?.let { if (it > 0) broodStatus.add(itemView.context.getString(R.string.format_short_capped_brood_with_count, it)) }
 
             if (broodStatus.isNotEmpty()) {
                 binding.textViewBroodStatusSummary.visibility = View.VISIBLE
-                binding.textViewBroodStatusSummary.text = itemView.context.getString(R.string.brood_status_format, broodStatus.joinToString(", "))
+                binding.textViewBroodStatusSummary.text = itemView.context.getString(R.string.format_brood_status, broodStatus.joinToString(", "))
             } else {
                 binding.textViewBroodStatusSummary.visibility = View.GONE
             }
@@ -69,7 +69,7 @@ class InspectionAdapter(
             inspection.honeyStoresEstimateFrames?.let {
                 if (it > 0) {
                     binding.textViewHoneyStores.visibility = View.VISIBLE
-                    binding.textViewHoneyStores.text = itemView.context.getString(R.string.honey_stores_format, it)
+                    binding.textViewHoneyStores.text = itemView.context.getString(R.string.format_honey_stores, it)
                 } else {
                     binding.textViewHoneyStores.visibility = View.GONE
                 }
@@ -81,7 +81,7 @@ class InspectionAdapter(
             inspection.pestsDiseasesObserved?.let {
                 if (it.isNotBlank()) {
                     binding.textViewPestsDiseases.visibility = View.VISIBLE
-                    binding.textViewPestsDiseases.text = itemView.context.getString(R.string.pests_diseases_format, it)
+                    binding.textViewPestsDiseases.text = itemView.context.getString(R.string.format_pests_diseases, it)
                 } else {
                     binding.textViewPestsDiseases.visibility = View.GONE
                 }
@@ -93,7 +93,7 @@ class InspectionAdapter(
             inspection.treatmentApplied?.let {
                 if (it.isNotBlank()) {
                     binding.textViewTreatmentApplied.visibility = View.VISIBLE
-                    binding.textViewTreatmentApplied.text = itemView.context.getString(R.string.treatment_applied_format, it)
+                    binding.textViewTreatmentApplied.text = itemView.context.getString(R.string.format_treatment_applied, it)
                 } else {
                     binding.textViewTreatmentApplied.visibility = View.GONE
                 }
@@ -104,7 +104,7 @@ class InspectionAdapter(
             // Temperament Rating
             inspection.temperamentRating?.let {
                 binding.textViewTemperamentRating.visibility = View.VISIBLE
-                binding.textViewTemperamentRating.text = itemView.context.getString(R.string.temperament_rating_format, it)
+                binding.textViewTemperamentRating.text = itemView.context.getString(R.string.format_temperament_rating, it)
             } ?: run {
                 binding.textViewTemperamentRating.visibility = View.GONE
             }
@@ -113,7 +113,7 @@ class InspectionAdapter(
             inspection.managementActionsTaken?.let {
                 if (it.isNotBlank()) {
                     binding.textViewManagementActions.visibility = View.VISIBLE
-                    binding.textViewManagementActions.text = itemView.context.getString(R.string.management_actions_format, it)
+                    binding.textViewManagementActions.text = itemView.context.getString(R.string.format_management_actions, it)
                 } else {
                     binding.textViewManagementActions.visibility = View.GONE
                 }
@@ -125,7 +125,7 @@ class InspectionAdapter(
             inspection.notes?.let {
                 if (it.isNotBlank()) {
                     binding.textViewInspectionNotes.visibility = View.VISIBLE
-                    binding.textViewInspectionNotes.text = itemView.context.getString(R.string.notes_format, it)
+                    binding.textViewInspectionNotes.text = itemView.context.getString(R.string.format_notes, it)
                 } else {
                     binding.textViewInspectionNotes.visibility = View.GONE
                 }

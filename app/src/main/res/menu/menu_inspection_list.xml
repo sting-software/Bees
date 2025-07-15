@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_export_csv"
-        android:title="@string/export_to_csv"
+        android:title="@string/action_export_to_csv"
         android:icon="@drawable/ic_export"
         app:showAsAction="ifRoom" />
 

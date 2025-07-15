@@ -47,7 +47,7 @@ class InspectionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.title = getString(R.string.inspections_for_hive, args.hiveNumber)
+        activity?.title = getString(R.string.title_inspections_for_hive, args.hiveNumber)
 
         setupMenu()
 
@@ -66,19 +66,19 @@ class InspectionListFragment : Fragment() {
         inspectionListViewModel.inspectionsForHive.observe(viewLifecycleOwner) { inspections ->
             inspections?.let {
                 inspectionAdapter.submitList(it)
-                binding.textViewEmptyStateInspections.visibility =
-                    if (it.isEmpty()) View.VISIBLE else View.GONE
-                binding.recyclerViewInspections.visibility =
-                    if (it.isEmpty()) View.GONE else View.VISIBLE
+                val isEmpty = it.isEmpty()
+                binding.emptyStateView.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.recyclerViewInspections.visibility = if (isEmpty) View.GONE else View.VISIBLE
+                binding.emptyStateView.textViewEmptyMessage.text = getString(R.string.empty_state_no_inspections)
             }
         }
 
         inspectionListViewModel.exportStatus.observe(viewLifecycleOwner) { success ->
             success?.let {
                 val message = if (it) {
-                    getString(R.string.successfully_exported_to_downloads_folder)
+                    getString(R.string.message_export_successful)
                 } else {
-                    getString(R.string.export_failed_no_inspections_to_export)
+                    getString(R.string.error_export_failed_no_inspections)
                 }
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
                 inspectionListViewModel.onExportStatusHandled()
@@ -116,9 +116,9 @@ class InspectionListFragment : Fragment() {
     }
 
     private fun showExportOptionsDialog() {
-        val options = arrayOf(getString(R.string.export_as_csv), getString(R.string.export_as_pdf))
+        val options = arrayOf(getString(R.string.action_export_to_csv), getString(R.string.action_export_to_pdf))
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.export_format_title))
+            .setTitle(getString(R.string.dialog_title_export_format))
             .setItems(options) { dialog, which ->
                 when (which) {
                     0 -> inspectionListViewModel.exportInspectionsToCsv(
@@ -182,14 +182,14 @@ class InspectionListFragment : Fragment() {
 
     private fun showDeleteInspectionConfirmationDialog(inspection: Inspection) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.delete_inspection))
-            .setMessage(getString(R.string.are_you_sure_you_want_to_delete_this_inspection_record))
-            .setPositiveButton(getString(R.string.delete_string)) { _, _ ->
+            .setTitle(getString(R.string.title_delete_inspection))
+            .setMessage(getString(R.string.dialog_message_delete_inspection))
+            .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
                 inspectionListViewModel.deleteInspection(inspection)
                 Toast.makeText(requireContext(),
-                    getString(R.string.inspection_deleted), Toast.LENGTH_SHORT).show()
+                    getString(R.string.message_inspection_deleted), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton(getString(R.string.cancel_once)) { _, _ ->
+            .setNegativeButton(getString(R.string.action_cancel)) { _, _ ->
                 inspectionAdapter.currentList.indexOf(inspection).takeIf { it != -1 }?.let {
                     inspectionAdapter.notifyItemChanged(it)
                 }

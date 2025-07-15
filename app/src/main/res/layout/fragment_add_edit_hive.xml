@@ -36,7 +36,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@string/add_multiple_hives"
+                    android:text="@string/title_add_multiple_hives"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
-                    android:text="@string/automatic_numbering"
+                    android:text="@string/label_automatic_numbering"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/from_label">
+                        android:hint="@string/label_from">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_from_hive_number"
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/to_label">
+                        android:hint="@string/label_to">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_to_hive_number"
@@ -106,7 +106,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/hive_number_hint"
+                    android:hint="@string/hint_hive_number_optional"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -125,7 +125,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/quantity"
+                    android:hint="@string/label_quantity"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -171,7 +171,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/hive_characteristics"
+                    android:text="@string/title_hive_characteristics"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold"
@@ -185,7 +185,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/spinner_material_prompt"
+                    android:hint="@string/spinner_prompt_material"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_view_hive_characteristics_title">
@@ -204,7 +204,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/other_material"
+                    android:hint="@string/hint_other_material"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -223,7 +223,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/hive_type"
+                    android:hint="@string/label_hive_type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_material_other">
@@ -242,7 +242,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/other_hive_type"
+                    android:hint="@string/hint_other_hive_type"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -261,7 +261,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/spinner_frame_type_prompt"
+                    android:hint="@string/spinner_prompt_frame_type"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_type_other">
@@ -279,7 +279,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/other_frame_type"
+                    android:hint="@string/label_frame_type"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -298,7 +298,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/spinner_breed_prompt"
+                    android:hint="@string/spinner_prompt_breed"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_frame_type_other">
@@ -316,7 +316,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/other_breed"
+                    android:hint="@string/hint_other_breed"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -355,7 +355,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/frames_title"
+                    android:text="@string/title_frames"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold"
@@ -381,7 +381,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/frames_eggs">
+                        android:hint="@string/label_frames_eggs">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_eggs"
@@ -398,7 +398,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/frames_open_brood">
+                        android:hint="@string/label_frames_open_brood">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_open_brood"
@@ -427,7 +427,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/frames_capped_brood">
+                        android:hint="@string/label_frames_open_brood">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_capped_brood"
@@ -444,7 +444,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/frames_feed">
+                        android:hint="@string/label_frames_feed">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_feed"
@@ -472,7 +472,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="8dp"
-                        android:text="@string/frames_total"
+                        android:text="@string/label_frames_total"
                         android:textAppearance="?attr/textAppearanceBody1"
                         android:textColor="?android:attr/textColorPrimary"
                         android:textStyle="bold" />
@@ -513,7 +513,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/queen_section_title"
+                    android:text="@string/title_queen_bee"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold"
@@ -527,7 +527,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/queen_tag_color_prompt"
+                    android:hint="@string/spinner_prompt_queen_tag_color"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_view_queen_title">
@@ -545,7 +545,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/other_color"
+                    android:hint="@string/hint_other_color"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -564,7 +564,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/queen_number_hint"
+                    android:hint="@string/hint_queen_tag_number"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_tag_color_other">
@@ -582,7 +582,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/queen_year_hint"
+                    android:hint="@string/hint_queen_year"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_number">
@@ -601,7 +601,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/queen_line_hint"
+                    android:hint="@string/hint_queen_line"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_year">
@@ -619,7 +619,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/queen_cells_hint"
+                    android:hint="@string/hint_queen_cells"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_line">
@@ -638,7 +638,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/isolation_from_date_hint"
+                    android:hint="@string/hint_isolation_from_date"
                     app:endIconDrawable="@drawable/ic_calendar"
                     app:endIconMode="custom"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -661,7 +661,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/isolation_to_date_hint"
+                    android:hint="@string/hint_isolation_to_date"
                     app:endIconDrawable="@drawable/ic_calendar"
                     app:endIconMode="custom"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -703,7 +703,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/defensiveness_rating_title"
+                    android:text="@string/title_defensiveness_rating"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold"
@@ -725,7 +725,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/defensiveness_rating_1"
+                        android:text="@string/rating_1"
                         android:textAppearance="?attr/textAppearanceBody2" />
 
                     <RadioButton
@@ -733,7 +733,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/defensiveness_rating_2"
+                        android:text="@string/rating_2"
                         android:textAppearance="?attr/textAppearanceBody2" />
 
                     <RadioButton
@@ -741,7 +741,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/defensiveness_rating_3"
+                        android:text="@string/rating_3"
                         android:textAppearance="?attr/textAppearanceBody2" />
 
                     <RadioButton
@@ -749,7 +749,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/defensiveness_rating_4"
+                        android:text="@string/rating_4"
                         android:textAppearance="?attr/textAppearanceBody2" />
                 </RadioGroup>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -778,7 +778,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/given_taken_title"
+                    android:text="@string/title_given_taken"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold"
@@ -804,7 +804,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/given_taken_built_combs">
+                        android:hint="@string/label_given_taken_built_combs">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_given_built_combs"
@@ -821,7 +821,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/given_taken_foundation">
+                        android:hint="@string/label_given_taken_foundation">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_given_foundation"
@@ -850,7 +850,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/given_taken_brood">
+                        android:hint="@string/label_given_taken_brood">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_given_brood"
@@ -867,7 +867,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/given_taken_bees_kg">
+                        android:hint="@string/label_given_taken_bees_kg">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_given_bees_kg"
@@ -896,7 +896,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/given_taken_honey_kg">
+                        android:hint="@string/label_given_taken_honey_kg">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_given_honey_kg"
@@ -913,7 +913,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/given_taken_sugar_kg">
+                        android:hint="@string/label_given_taken_sugar_kg">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_given_sugar_kg"
@@ -949,7 +949,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/treatment_title"
+                    android:text="@string/title_treatment"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textColor="?android:attr/textColorPrimary"
                     android:textStyle="bold"
@@ -963,7 +963,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:hint="@string/treatment_hint"
+                    android:hint="@string/hint_treatment_applied"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_view_treatment_title">
@@ -987,7 +987,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="@string/last_inspection_date_optional"
+            android:hint="@string/hint_last_inspection_date_optional"
             app:endIconDrawable="@drawable/ic_calendar"
             app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -1010,7 +1010,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="@string/notes_hint"
+            android:hint="@string/hint_notes_optional"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_last_inspection_date">
@@ -1032,7 +1032,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
-            android:text="@string/save_hive"
+            android:text="@string/action_save"
             app:layout_constraintStart_toEndOf="@id/button_cancel_hive"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes" />
@@ -1044,7 +1044,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
-            android:text="@string/cancel"
+            android:text="@string/action_cancel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/button_save_hive"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes" />
