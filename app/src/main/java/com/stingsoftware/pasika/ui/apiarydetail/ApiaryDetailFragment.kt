@@ -98,8 +98,7 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
         apiaryDetailViewModel.apiary.observe(viewLifecycleOwner) { apiary ->
             apiary?.let {
                 binding.textViewApiaryLocationDetail.text = it.location
-                binding.textViewApiaryTypeDetail.text =
-                    it.type.name.replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase() else char.toString() }
+                binding.textViewApiaryTypeDetail.text = getString(it.type.stringResId)
             } ?: run {
                 Toast.makeText(
                     requireContext(),

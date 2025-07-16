@@ -34,6 +34,7 @@ class HiveAdapter(
 
     // Set to keep track of selected hive IDs
     private val selectedItems = mutableSetOf<Long>()
+
     // Flag to indicate if multi-selection mode is active
     private var isMultiSelectMode = false
 
@@ -43,7 +44,8 @@ class HiveAdapter(
      *
      * @param binding The generated binding object for item_hive.xml.
      */
-    inner class HiveViewHolder(private val binding: ItemHiveBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class HiveViewHolder(private val binding: ItemHiveBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         /**
          * Binds a Hive object's data to the views in the ViewHolder.
@@ -51,21 +53,44 @@ class HiveAdapter(
          * @param hive The Hive object to bind.
          */
         fun bind(hive: Hive) {
-            // Display hive number, or a placeholder if null
             binding.textViewHiveNumber.text = hive.hiveNumber?.let {
                 itemView.context.getString(R.string.hive_number_format, it)
             } ?: itemView.context.getString(R.string.hive_number_unknown)
 
-            binding.textViewHiveType.text = itemView.context.getString(R.string.hive_type_format, hive.hiveType)
-            binding.textViewFrameType.text = itemView.context.getString(R.string.frame_type_format, hive.frameType)
-            binding.textViewBreed.text = itemView.context.getString(R.string.breed_format, hive.breed)
+            if (hive.hiveType.isNullOrBlank()) {
+                binding.textViewHiveType.visibility = View.GONE
+            } else {
+                binding.textViewHiveType.visibility = View.VISIBLE
+                binding.textViewHiveType.text =
+                    itemView.context.getString(R.string.hive_type_format, hive.hiveType)
+            }
+
+            if (hive.frameType.isNullOrBlank()) {
+                binding.textViewFrameType.visibility = View.GONE
+            } else {
+                binding.textViewFrameType.visibility = View.VISIBLE
+                binding.textViewFrameType.text =
+                    itemView.context.getString(R.string.frame_type_format, hive.frameType)
+            }
+
+            if (hive.breed.isNullOrBlank()) {
+                binding.textViewBreed.visibility = View.GONE
+            } else {
+                binding.textViewBreed.visibility = View.VISIBLE
+                binding.textViewBreed.text =
+                    itemView.context.getString(R.string.breed_format, hive.breed)
+            }
 
             // Format and display last inspection date
             hive.lastInspectionDate?.let { dateMillis ->
                 val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                binding.textViewLastInspectionDate.text = itemView.context.getString(R.string.last_inspection_format, formatter.format(Date(dateMillis)))
+                binding.textViewLastInspectionDate.text = itemView.context.getString(
+                    R.string.last_inspection_format,
+                    formatter.format(Date(dateMillis))
+                )
             } ?: run {
-                binding.textViewLastInspectionDate.text = itemView.context.getString(R.string.last_inspection_none)
+                binding.textViewLastInspectionDate.text =
+                    itemView.context.getString(R.string.last_inspection_none)
             }
 
             // Set up click listeners

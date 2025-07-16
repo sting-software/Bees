@@ -333,4 +333,7 @@
     <string name="drawer_open">Відкрити панель навігації</string>
     <string name="drawer_close">Закрити панель навігації</string>
 
+    <string name="apiary_type_stationary">Стаціонарна</string>
+    <string name="apiary_type_migratory">Кочова</string>
+
 </resources>

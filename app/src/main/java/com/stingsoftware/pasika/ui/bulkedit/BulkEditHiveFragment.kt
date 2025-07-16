@@ -54,27 +54,41 @@ class BulkEditHiveFragment : Fragment() {
         activity?.title = getString(R.string.title_bulk_edit_hives)
 
         val hiveTypes = resources.getStringArray(R.array.hive_types)
-        val hiveTypeAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, hiveTypes)
+        val hiveTypeAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, hiveTypes)
         binding.autoCompleteTextViewHiveType.setAdapter(hiveTypeAdapter)
 
         val frameTypes = resources.getStringArray(R.array.frame_types)
-        val frameTypeAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, frameTypes)
+        val frameTypeAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, frameTypes)
         binding.autoCompleteTextViewFrameType.setAdapter(frameTypeAdapter)
+
+        val breedChoices = resources.getStringArray(R.array.breed_choices)
+        val breedAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, breedChoices)
+        binding.editTextBreed.setAdapter(breedAdapter)
 
         bulkEditHiveViewModel.selectedHives.observe(viewLifecycleOwner) { hives ->
             if (hives.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), getString(R.string.error_no_hives_selected_for_editing), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.error_no_hives_selected_for_editing),
+                    Toast.LENGTH_SHORT
+                ).show()
                 findNavController().popBackStack()
                 return@observe
             }
             numberOfSelectedHives = hives.size
-            binding.textViewSelectedHivesCount.text = getString(R.string.bulk_edit_hives_count, numberOfSelectedHives)
+            binding.textViewSelectedHivesCount.text =
+                getString(R.string.bulk_edit_hives_count, numberOfSelectedHives)
             prefillCommonValues(hives)
         }
 
         binding.checkboxAutoNumberHivesBulk.setOnCheckedChangeListener { _, isChecked ->
-            binding.textInputLayoutStartingHiveNumberBulk.visibility = if (isChecked) View.VISIBLE else View.GONE
-            binding.textInputLayoutEndingHiveNumberBulk.visibility = if (isChecked) View.VISIBLE else View.GONE
+            binding.textInputLayoutStartingHiveNumberBulk.visibility =
+                if (isChecked) View.VISIBLE else View.GONE
+            binding.textInputLayoutEndingHiveNumberBulk.visibility =
+                if (isChecked) View.VISIBLE else View.GONE
             autoNumberingWarningTextView.visibility = if (isChecked) View.VISIBLE else View.GONE
             updateCalculatedQuantity()
         }
@@ -120,7 +134,7 @@ class BulkEditHiveFragment : Fragment() {
             binding.editTextNumberOfFrames.setText(firstHive.framesTotal?.toString())
         }
         if (hives.all { it.breed == firstHive.breed }) {
-            binding.editTextBreed.setText(firstHive.breed)
+            binding.editTextBreed.setText(firstHive.breed, false)
         }
         if (hives.all { it.lastInspectionDate == firstHive.lastInspectionDate }) {
             selectedDateMillis = firstHive.lastInspectionDate
@@ -143,7 +157,11 @@ class BulkEditHiveFragment : Fragment() {
                 val calculatedCount = endingHiveNumber - startingHiveNumber + 1
                 if (calculatedCount != numberOfSelectedHives) {
                     autoNumberingWarningTextView.text =
-                        getString(R.string.error_bulk_edit_quantity_mismatch, calculatedCount, numberOfSelectedHives)
+                        getString(
+                            R.string.error_bulk_edit_quantity_mismatch,
+                            calculatedCount,
+                            numberOfSelectedHives
+                        )
                     autoNumberingWarningTextView.visibility = View.VISIBLE
                     binding.buttonSaveBulkEdit.isEnabled = false
                 } else {
@@ -171,13 +189,19 @@ class BulkEditHiveFragment : Fragment() {
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-            val newCalendar = Calendar.getInstance().apply {
-                set(selectedYear, selectedMonth, selectedDayOfMonth)
-            }
-            selectedDateMillis = newCalendar.timeInMillis
-            updateDateEditText(selectedDateMillis)
-        }, year, month, day)
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+                val newCalendar = Calendar.getInstance().apply {
+                    set(selectedYear, selectedMonth, selectedDayOfMonth)
+                }
+                selectedDateMillis = newCalendar.timeInMillis
+                updateDateEditText(selectedDateMillis)
+            },
+            year,
+            month,
+            day
+        )
 
         datePickerDialog.show()
     }
@@ -192,8 +216,10 @@ class BulkEditHiveFragment : Fragment() {
     }
 
     private fun applyBulkEdit() {
-        val hiveType = binding.autoCompleteTextViewHiveType.text?.toString()?.trim()?.ifEmpty { null }
-        val frameType = binding.autoCompleteTextViewFrameType.text?.toString()?.trim()?.ifEmpty { null }
+        val hiveType =
+            binding.autoCompleteTextViewHiveType.text?.toString()?.trim()?.ifEmpty { null }
+        val frameType =
+            binding.autoCompleteTextViewFrameType.text?.toString()?.trim()?.ifEmpty { null }
         val framesTotal = binding.editTextNumberOfFrames.text?.toString()?.trim()?.toIntOrNull()
         val breed = binding.editTextBreed.text?.toString()?.trim()?.ifEmpty { null }
         val notes = binding.editTextHiveNotes.text?.toString()?.trim()?.ifEmpty { null }
@@ -203,11 +229,14 @@ class BulkEditHiveFragment : Fragment() {
         var endingHiveNumber: Int? = null
 
         if (autoNumber) {
-            startingHiveNumber = binding.editTextStartingHiveNumberBulk.text?.toString()?.trim()?.toIntOrNull()
-            endingHiveNumber = binding.editTextEndingHiveNumberBulk.text?.toString()?.trim()?.toIntOrNull()
+            startingHiveNumber =
+                binding.editTextStartingHiveNumberBulk.text?.toString()?.trim()?.toIntOrNull()
+            endingHiveNumber =
+                binding.editTextEndingHiveNumberBulk.text?.toString()?.trim()?.toIntOrNull()
 
             if (startingHiveNumber == null || startingHiveNumber <= 0) {
-                binding.textInputLayoutStartingHiveNumberBulk.error = getString(R.string.error_invalid_number_range)
+                binding.textInputLayoutStartingHiveNumberBulk.error =
+                    getString(R.string.error_invalid_number_range)
                 return
             } else {
                 binding.textInputLayoutStartingHiveNumberBulk.error = null
@@ -226,7 +255,11 @@ class BulkEditHiveFragment : Fragment() {
             endingHiveNumber = endingHiveNumber
         )
 
-        Toast.makeText(requireContext(), getString(R.string.message_hives_updated), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.message_hives_updated),
+            Toast.LENGTH_SHORT
+        ).show()
         findNavController().popBackStack()
     }
 

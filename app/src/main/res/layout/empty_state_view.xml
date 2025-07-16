@@ -10,7 +10,7 @@
 
     <ImageView
         android:id="@+id/image_view_empty_icon"
-        android:layout_width="500dp"
+        android:layout_width="265dp"
         android:layout_height="250dp"
         android:alpha="0.3"
         android:contentDescription="@string/empty_state_icon_description"

@@ -333,4 +333,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
+    <string name="apiary_type_stationary">Stationary</string>
+    <string name="apiary_type_migratory">Migratory</string>
+
 </resources>

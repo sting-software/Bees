@@ -38,10 +38,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAddEditApiaryBinding.bind(view)
 
-        val apiaryTypes = ApiaryType.entries.map {
-            it.name.lowercase(Locale.getDefault())
-                .replaceFirstChar { char -> char.titlecase(Locale.getDefault()) }
-        }
+        val apiaryTypes = ApiaryType.entries.map { getString(it.stringResId) }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, apiaryTypes)
         binding.autoCompleteTextViewApiaryType.setAdapter(adapter)
 
@@ -98,9 +95,10 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 }
 
                 is Resource.Success -> {
-                    val message = if (isNewApiary) getString(R.string.message_apiary_and_hives_added) else getString(
-                        R.string.message_apiary_updated
-                    )
+                    val message =
+                        if (isNewApiary) getString(R.string.message_apiary_and_hives_added) else getString(
+                            R.string.message_apiary_updated
+                        )
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                     if (!isNewApiary) {
                         findNavController().popBackStack()
@@ -108,8 +106,10 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 }
 
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(),
-                        getString(R.string.error_with_message, status.message), Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.error_with_message, status.message), Toast.LENGTH_LONG
+                    )
                         .show()
                 }
 
