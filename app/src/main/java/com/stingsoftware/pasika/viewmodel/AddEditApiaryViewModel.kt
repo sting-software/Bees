@@ -45,12 +45,15 @@ class AddEditApiaryViewModel @Inject constructor(
     ) = viewModelScope.launch {
         _saveStatus.postValue(Resource.Loading())
 
+        // In AddEditApiaryViewModel.kt -> saveOrUpdateApiary()
         if (apiary.name.isBlank()) {
-            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty)))
+            val fieldName = context.getString(R.string.hint_apiary_name)
+            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty, fieldName)))
             return@launch
         }
         if (apiary.location.isBlank()) {
-            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty)))
+            val fieldName = context.getString(R.string.hint_apiary_location)
+            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty, fieldName)))
             return@launch
         }
 
