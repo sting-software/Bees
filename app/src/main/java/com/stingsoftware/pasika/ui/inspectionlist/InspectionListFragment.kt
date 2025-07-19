@@ -1,6 +1,5 @@
 package com.stingsoftware.pasika.ui.inspectionlist
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -11,7 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -63,7 +62,8 @@ class InspectionListFragment : Fragment() {
 
         setupInspectionSwipeToDelete()
 
-        inspectionListViewModel.inspectionsForHive.observe(viewLifecycleOwner) { inspections ->
+        // Observe the unified 'inspections' LiveData from the ViewModel
+        inspectionListViewModel.inspections.observe(viewLifecycleOwner) { inspections ->
             inspections?.let {
                 inspectionAdapter.submitList(it)
                 val isEmpty = it.isEmpty()
@@ -100,6 +100,23 @@ class InspectionListFragment : Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_inspection_list, menu)
+
+                // Initialize SearchView
+                val searchItem = menu.findItem(R.id.action_search_inspection)
+                val searchView = searchItem.actionView as SearchView
+
+                searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        // Not needed for live search
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        // Pass the query to the ViewModel
+                        inspectionListViewModel.onSearchQueryChanged(newText.orEmpty())
+                        return true
+                    }
+                })
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -108,7 +125,8 @@ class InspectionListFragment : Fragment() {
                         showExportOptionsDialog()
                         true
                     }
-
+                    // The search action is handled by the OnQueryTextListener, so no action is needed here
+                    R.id.action_search_inspection -> true
                     else -> false
                 }
             }
@@ -140,8 +158,6 @@ class InspectionListFragment : Fragment() {
         val itemTouchHelperCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             private val background = ColorDrawable(Color.RED)
-            private val deleteIcon =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
 
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -157,25 +173,6 @@ class InspectionListFragment : Fragment() {
                 }
             }
 
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-            }
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerViewInspections)
     }

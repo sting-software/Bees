@@ -57,70 +57,70 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Brood: Eggs (1), Open (2), Capped (3)" />
 
-        <!-- Honey Stores -->
-        <TextView
-            android:id="@+id/text_view_honey_stores"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_brood_status_summary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Honey: 15 frames" />
+<!--        &lt;!&ndash; Honey Stores &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/text_view_honey_stores"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textAppearance="?attr/textAppearanceBody2"-->
+<!--            android:textColor="?android:attr/textColorSecondary"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/text_view_brood_status_summary"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:text="Honey: 15 frames" />-->
 
-        <!-- Pests/Diseases -->
-        <TextView
-            android:id="@+id/text_view_pests_diseases"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_honey_stores"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Pests: Varroa mites" />
+<!--        &lt;!&ndash; Pests/Diseases &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/text_view_pests_diseases"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textAppearance="?attr/textAppearanceBody2"-->
+<!--            android:textColor="?android:attr/textColorSecondary"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/text_view_honey_stores"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:text="Pests: Varroa mites" />-->
 
-        <!-- Treatment Applied -->
-        <TextView
-            android:id="@+id/text_view_treatment_applied"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_pests_diseases"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Treatment: Oxalic Acid" />
+<!--        &lt;!&ndash; Treatment Applied &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/text_view_treatment_applied"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textAppearance="?attr/textAppearanceBody2"-->
+<!--            android:textColor="?android:attr/textColorSecondary"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/text_view_pests_diseases"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:text="Treatment: Oxalic Acid" />-->
 
-        <!-- Temperament Rating -->
-        <TextView
-            android:id="@+id/text_view_temperament_rating"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_treatment_applied"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Temperament: 2" />
+<!--        &lt;!&ndash; Temperament Rating &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/text_view_temperament_rating"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textAppearance="?attr/textAppearanceBody2"-->
+<!--            android:textColor="?android:attr/textColorSecondary"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/text_view_treatment_applied"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:text="Temperament: 2" />-->
 
-        <!-- Management Actions -->
-        <TextView
-            android:id="@+id/text_view_management_actions"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_temperament_rating"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Actions: Added super, Fed syrup" />
+<!--        &lt;!&ndash; Management Actions &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/text_view_management_actions"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textAppearance="?attr/textAppearanceBody2"-->
+<!--            android:textColor="?android:attr/textColorSecondary"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/text_view_temperament_rating"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            tools:text="Actions: Added super, Fed syrup" />-->
 
         <!-- Notes (Optional, show only if present) -->
         <TextView
@@ -130,7 +130,7 @@
             android:textAppearance="?attr/textAppearanceBody2"
             android:textColor="?android:attr/textColorSecondary"
             android:layout_marginTop="4dp"
-            app:layout_constraintTop_toBottomOf="@id/text_view_management_actions"
+            app:layout_constraintTop_toBottomOf="@id/text_view_brood_status_summary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:maxLines="2"

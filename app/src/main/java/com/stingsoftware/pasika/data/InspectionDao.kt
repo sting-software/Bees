@@ -1,5 +1,6 @@
 package com.stingsoftware.pasika.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -34,4 +35,19 @@ interface InspectionDao {
 
     @Query("SELECT COUNT(*) FROM inspections WHERE hiveId = :hiveId")
     suspend fun getInspectionCountForHive(hiveId: Long): Int
+
+    @Query(
+        """
+    SELECT * FROM inspections 
+    WHERE hiveId = :hiveId AND (
+        notes LIKE '%' || :query || '%' OR
+        pestsDiseasesObserved LIKE '%' || :query || '%' OR
+        treatmentApplied LIKE '%' || :query || '%' OR
+        managementActionsTaken LIKE '%' || :query || '%'
+    )
+    ORDER BY inspectionDate DESC
+"""
+    )
+    fun searchInspections(hiveId: Long, query: String): Flow<List<Inspection>>
+
 }

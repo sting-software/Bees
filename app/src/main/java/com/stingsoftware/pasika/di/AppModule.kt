@@ -1,9 +1,11 @@
 package com.stingsoftware.pasika.di
 
 import android.content.Context
+import com.stingsoftware.pasika.data.ApiaryDao
 import com.stingsoftware.pasika.data.AppDatabase
+import com.stingsoftware.pasika.data.HiveDao
+import com.stingsoftware.pasika.data.InspectionDao
 import com.stingsoftware.pasika.data.TaskDao
-import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,17 +25,25 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTaskDao(db: AppDatabase): TaskDao {
-        return db.taskDao()
+    fun provideApiaryDao(db: AppDatabase): ApiaryDao {
+        return db.apiaryDao()
     }
 
     @Singleton
     @Provides
-    fun provideApiaryRepository(
-        db: AppDatabase,
-        taskDao: TaskDao,
-        @ApplicationContext context: Context // Provide the application context
-    ): ApiaryRepository {
-        return ApiaryRepository(db.apiaryDao(), db.hiveDao(), db.inspectionDao(), taskDao, context)
+    fun provideHiveDao(db: AppDatabase): HiveDao {
+        return db.hiveDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideInspectionDao(db: AppDatabase): InspectionDao {
+        return db.inspectionDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTaskDao(db: AppDatabase): TaskDao {
+        return db.taskDao()
     }
 }

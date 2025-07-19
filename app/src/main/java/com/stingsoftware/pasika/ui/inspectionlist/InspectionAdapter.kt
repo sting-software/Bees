@@ -67,61 +67,61 @@ class InspectionAdapter(
                 binding.textViewBroodStatusSummary.visibility = View.GONE
             }
 
-            // Honey Stores (now in frames)
-            inspection.honeyStoresEstimateFrames?.let {
-                if (it > 0) {
-                    binding.textViewHoneyStores.visibility = View.VISIBLE
-                    binding.textViewHoneyStores.text = itemView.context.getString(R.string.format_honey_stores, it)
-                } else {
-                    binding.textViewHoneyStores.visibility = View.GONE
-                }
-            } ?: run {
-                binding.textViewHoneyStores.visibility = View.GONE
-            }
-
-            // Pests/Diseases
-            inspection.pestsDiseasesObserved?.let {
-                if (it.isNotBlank()) {
-                    binding.textViewPestsDiseases.visibility = View.VISIBLE
-                    binding.textViewPestsDiseases.text = itemView.context.getString(R.string.format_pests_diseases, it)
-                } else {
-                    binding.textViewPestsDiseases.visibility = View.GONE
-                }
-            } ?: run {
-                binding.textViewPestsDiseases.visibility = View.GONE
-            }
-
-            // Treatment Applied
-            inspection.treatmentApplied?.let {
-                if (it.isNotBlank()) {
-                    binding.textViewTreatmentApplied.visibility = View.VISIBLE
-                    binding.textViewTreatmentApplied.text = itemView.context.getString(R.string.format_treatment_applied, it)
-                } else {
-                    binding.textViewTreatmentApplied.visibility = View.GONE
-                }
-            } ?: run {
-                binding.textViewTreatmentApplied.visibility = View.GONE
-            }
-
-            // Temperament Rating
-            inspection.temperamentRating?.let {
-                binding.textViewTemperamentRating.visibility = View.VISIBLE
-                binding.textViewTemperamentRating.text = itemView.context.getString(R.string.format_temperament_rating, it)
-            } ?: run {
-                binding.textViewTemperamentRating.visibility = View.GONE
-            }
-
-            // Management Actions
-            inspection.managementActionsTaken?.let {
-                if (it.isNotBlank()) {
-                    binding.textViewManagementActions.visibility = View.VISIBLE
-                    binding.textViewManagementActions.text = itemView.context.getString(R.string.format_management_actions, it)
-                } else {
-                    binding.textViewManagementActions.visibility = View.GONE
-                }
-            } ?: run {
-                binding.textViewManagementActions.visibility = View.GONE
-            }
+//            // Honey Stores (now in frames)
+//            inspection.honeyStoresEstimateFrames?.let {
+//                if (it > 0) {
+//                    binding.textViewHoneyStores.visibility = View.VISIBLE
+//                    binding.textViewHoneyStores.text = itemView.context.getString(R.string.format_honey_stores, it)
+//                } else {
+//                    binding.textViewHoneyStores.visibility = View.GONE
+//                }
+//            } ?: run {
+//                binding.textViewHoneyStores.visibility = View.GONE
+//            }
+//
+//            // Pests/Diseases
+//            inspection.pestsDiseasesObserved?.let {
+//                if (it.isNotBlank()) {
+//                    binding.textViewPestsDiseases.visibility = View.VISIBLE
+//                    binding.textViewPestsDiseases.text = itemView.context.getString(R.string.format_pests_diseases, it)
+//                } else {
+//                    binding.textViewPestsDiseases.visibility = View.GONE
+//                }
+//            } ?: run {
+//                binding.textViewPestsDiseases.visibility = View.GONE
+//            }
+//
+//            // Treatment Applied
+//            inspection.treatmentApplied?.let {
+//                if (it.isNotBlank()) {
+//                    binding.textViewTreatmentApplied.visibility = View.VISIBLE
+//                    binding.textViewTreatmentApplied.text = itemView.context.getString(R.string.format_treatment_applied, it)
+//                } else {
+//                    binding.textViewTreatmentApplied.visibility = View.GONE
+//                }
+//            } ?: run {
+//                binding.textViewTreatmentApplied.visibility = View.GONE
+//            }
+//
+//            // Temperament Rating
+//            inspection.temperamentRating?.let {
+//                binding.textViewTemperamentRating.visibility = View.VISIBLE
+//                binding.textViewTemperamentRating.text = itemView.context.getString(R.string.format_temperament_rating, it)
+//            } ?: run {
+//                binding.textViewTemperamentRating.visibility = View.GONE
+//            }
+//
+//            // Management Actions
+//            inspection.managementActionsTaken?.let {
+//                if (it.isNotBlank()) {
+//                    binding.textViewManagementActions.visibility = View.VISIBLE
+//                    binding.textViewManagementActions.text = itemView.context.getString(R.string.format_management_actions, it)
+//                } else {
+//                    binding.textViewManagementActions.visibility = View.GONE
+//                }
+//            } ?: run {
+//                binding.textViewManagementActions.visibility = View.GONE
+//            }
 
             // Notes
             inspection.notes?.let {

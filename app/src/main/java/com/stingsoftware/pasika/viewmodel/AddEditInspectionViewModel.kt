@@ -21,9 +21,13 @@ class AddEditInspectionViewModel @Inject constructor(private val repository: Api
         emit(repository.getInspectionById(inspectionId))
     }
 
+    /**
+     * Saves a new inspection and updates the hive's last inspection date.
+     */
     fun saveInspection(inspection: Inspection) = viewModelScope.launch {
         try {
-            repository.insertInspection(inspection)
+            // Call the new transactional method in the repository
+            repository.insertInspectionAndUpdateHive(inspection)
             _saveCompleted.value = true
         } catch (e: Exception) {
             _saveCompleted.value = false
@@ -31,6 +35,9 @@ class AddEditInspectionViewModel @Inject constructor(private val repository: Api
         }
     }
 
+    /**
+     * Updates an existing inspection. This does not change the hive's last inspection date.
+     */
     fun updateInspection(inspection: Inspection) = viewModelScope.launch {
         try {
             repository.updateInspection(inspection)

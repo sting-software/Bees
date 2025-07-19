@@ -28,4 +28,7 @@ interface HiveDao {
 
     @Query("UPDATE hives SET apiaryId = :newApiaryId WHERE id IN (:hiveIds)")
     suspend fun moveHives(hiveIds: List<Long>, newApiaryId: Long)
+
+    @Query("UPDATE hives SET lastInspectionDate = :inspectionDate WHERE id = :hiveId")
+    suspend fun updateLastInspectionDate(hiveId: Long, inspectionDate: Long)
 }

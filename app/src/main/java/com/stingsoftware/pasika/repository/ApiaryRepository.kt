@@ -2,25 +2,29 @@ package com.stingsoftware.pasika.repository
 
 import android.content.Context
 import androidx.room.Transaction
+import androidx.room.withTransaction
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Singleton
 class ApiaryRepository @Inject constructor(
+    private val db: AppDatabase,
     private val apiaryDao: ApiaryDao,
     private val hiveDao: HiveDao,
     private val inspectionDao: InspectionDao,
     private val taskDao: TaskDao,
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) {
 
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()
 
-    // Apiary operations
+    // ... (All other functions remain unchanged)
+
     suspend fun insertApiary(apiary: Apiary): Long {
         return apiaryDao.insert(apiary)
     }
@@ -69,12 +73,18 @@ class ApiaryRepository @Inject constructor(
     }
 
     suspend fun moveHives(hiveIds: List<Long>, sourceApiaryId: Long, destinationApiaryId: Long) {
-        val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name ?: context.getString(R.string.unknown_apiary)
-        val destinationApiaryName = apiaryDao.getApiaryById(destinationApiaryId)?.name ?: context.getString(
-            R.string.unknown_apiary
-        )
+        val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name
+            ?: context.getString(R.string.unknown_apiary)
+        val destinationApiaryName =
+            apiaryDao.getApiaryById(destinationApiaryId)?.name ?: context.getString(
+                R.string.unknown_apiary
+            )
         val note =
-            context.getString(R.string.message_hive_moved_from_to, sourceApiaryName, destinationApiaryName)
+            context.getString(
+                R.string.message_hive_moved_from_to,
+                sourceApiaryName,
+                destinationApiaryName
+            )
 
         hiveIds.forEach { hiveId ->
             val moveRecord = Inspection(
@@ -92,8 +102,12 @@ class ApiaryRepository @Inject constructor(
     }
 
     // Inspection operations
-    suspend fun insertInspection(inspection: Inspection): Long {
-        return inspectionDao.insert(inspection)
+    suspend fun insertInspectionAndUpdateHive(inspection: Inspection) {
+        // This will now work because 'db' is available
+        db.withTransaction {
+            inspectionDao.insert(inspection)
+            hiveDao.updateLastInspectionDate(inspection.hiveId, inspection.inspectionDate)
+        }
     }
 
     suspend fun updateInspection(inspection: Inspection): Int {
@@ -110,6 +124,10 @@ class ApiaryRepository @Inject constructor(
 
     fun getInspectionsForHive(hiveId: Long): Flow<List<Inspection>> {
         return inspectionDao.getInspectionsForHive(hiveId)
+    }
+
+    fun searchInspections(hiveId: Long, query: String): Flow<List<Inspection>> {
+        return inspectionDao.searchInspections(hiveId, query)
     }
 
     // Export/Import operations
@@ -130,10 +148,12 @@ class ApiaryRepository @Inject constructor(
 
     @Transaction
     suspend fun importApiaryData(data: ApiaryExportData) {
-        val importedApiary = data.apiary.copy(id = 0, name = context.getString(
-            R.string.imported_label_format,
-            data.apiary.name
-        ))
+        val importedApiary = data.apiary.copy(
+            id = 0, name = context.getString(
+                R.string.imported_label_format,
+                data.apiary.name
+            )
+        )
         val newApiaryId = apiaryDao.insert(importedApiary)
 
         data.hivesWithInspections.forEach { hiveData ->
