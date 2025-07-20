@@ -338,4 +338,11 @@
 
     <string name="pdf_title">Історія оглядів вулика #%1$s</string>
 
+    <string name="pdf_report_date">Дата</string>
+
+    <string name="contact_title">Контакти</string>
+
+    <string name="error_no_email_app">No email app found.</string>
+
+
 </resources>
