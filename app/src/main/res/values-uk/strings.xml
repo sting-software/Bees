@@ -336,4 +336,6 @@
     <string name="apiary_type_stationary">Стаціонарна</string>
     <string name="apiary_type_migratory">Кочова</string>
 
+    <string name="pdf_title">Історія оглядів вулика #%1$s</string>
+
 </resources>

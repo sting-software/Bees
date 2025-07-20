@@ -30,6 +30,7 @@ class InspectionListViewModel @Inject constructor(
             repository.searchInspections(hiveId, query)
         }
     }.asLiveData()
+
     fun onSearchQueryChanged(newQuery: String) {
         searchQuery.value = newQuery
     }
@@ -39,13 +40,47 @@ class InspectionListViewModel @Inject constructor(
     }
 
     fun exportInspectionsToCsv(context: Context, hiveNumber: String) = viewModelScope.launch {
-        // Placeholder for your export logic
-        _exportStatus.value = true
+        // 1. Get the current list of inspections from the LiveData
+        val currentInspections = inspections.value
+        if (currentInspections.isNullOrEmpty()) {
+            _exportStatus.postValue(false) // Nothing to export
+            return@launch
+        }
+
+        // 2. Run the file export on a background thread to keep the UI responsive
+        val success = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            // 3. Call your actual CsvExporter utility
+            com.stingsoftware.pasika.util.CsvExporter.exportInspections(
+                context,
+                hiveNumber,
+                currentInspections
+            )
+        }
+
+        // 4. Post the true/false result back to the UI thread
+        _exportStatus.postValue(success)
     }
 
     fun exportInspectionsToPdf(context: Context, hiveNumber: String) = viewModelScope.launch {
-        // Placeholder for your export logic
-        _exportStatus.value = true
+        // 1. Get the current list of inspections from the LiveData
+        val currentInspections = inspections.value
+        if (currentInspections.isNullOrEmpty()) {
+            _exportStatus.postValue(false) // Nothing to export
+            return@launch
+        }
+
+        // 2. Run the file export on a background thread to keep the UI responsive
+        val success = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            // 3. Call your actual PdfExporter utility
+            com.stingsoftware.pasika.util.PdfExporter.exportInspections(
+                context,
+                hiveNumber,
+                currentInspections
+            )
+        }
+
+        // 4. Post the true/false result back to the UI thread
+        _exportStatus.postValue(success)
     }
 
     fun onExportStatusHandled() {

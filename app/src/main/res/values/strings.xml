@@ -33,7 +33,7 @@
     <string name="label_quantity">Quantity</string>
     <string name="label_due_date_format">Due: %s</string>
 
-    <string name="hint_notes_optional">Notes (Optional)</string>
+    <string name="hint_notes_optional">Notes</string>
     <string name="hint_description_optional">Description (Optional)</string>
 
     <string name="dialog_yes">Yes</string>
@@ -335,5 +335,7 @@
 
     <string name="apiary_type_stationary">Stationary</string>
     <string name="apiary_type_migratory">Migratory</string>
+
+    <string name="pdf_title">Inspection History of the Hive #%1$s</string>
 
 </resources>

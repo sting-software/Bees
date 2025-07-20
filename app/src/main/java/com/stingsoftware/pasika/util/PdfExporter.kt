@@ -10,6 +10,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.text.StaticLayout
 import android.text.TextPaint
+import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Inspection
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -26,7 +27,11 @@ object PdfExporter {
     private const val FONT_SIZE_BODY = 10f
     private const val LINE_SPACING = 4f
 
-    fun exportInspections(context: Context, hiveNumber: String, inspections: List<Inspection>): Boolean {
+    fun exportInspections(
+        context: Context,
+        hiveNumber: String,
+        inspections: List<Inspection>
+    ): Boolean {
         if (inspections.isEmpty()) return false
 
         val document = PdfDocument()
@@ -49,7 +54,7 @@ object PdfExporter {
         }
 
         val sortedInspections = inspections.sortedBy { it.inspectionDate }
-        val dateFormatter = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
         var pageNumber = 1
         var pageInfo = PdfDocument.PageInfo.Builder(A4_WIDTH, A4_HEIGHT, pageNumber).create()
@@ -57,16 +62,19 @@ object PdfExporter {
         var canvas = page.canvas
         var yPosition = MARGIN.toFloat()
 
-        // Draw header
-        canvas.drawText("Inspection History for Hive #$hiveNumber", MARGIN.toFloat(), yPosition, titlePaint)
+        // Draw localized header
+        val titleText = context.getString(R.string.pdf_title, hiveNumber)
+        canvas.drawText(titleText, MARGIN.toFloat(), yPosition, titlePaint)
         yPosition += (titlePaint.descent() - titlePaint.ascent()) * 2
 
         sortedInspections.forEach { inspection ->
             val inspectionDate = dateFormatter.format(Date(inspection.inspectionDate))
-            val inspectionFields = formatInspectionFields(inspection)
+            // Pass context to format fields with localized keys
+            val inspectionFields = formatInspectionFields(context, inspection)
 
             // Check if there is enough space for the next inspection block
-            val blockHeight = calculateBlockHeight(inspectionFields, subtitlePaint, bodyPaint, contentWidth)
+            val blockHeight =
+                calculateBlockHeight(inspectionFields, subtitlePaint, bodyPaint, contentWidth)
             if (yPosition + blockHeight > A4_HEIGHT - MARGIN) {
                 document.finishPage(page)
                 pageNumber++
@@ -89,11 +97,19 @@ object PdfExporter {
                     val keyWidth = bodyPaint.measureText(keyText)
                     canvas.drawText(keyText, MARGIN.toFloat(), yPosition, bodyPaint)
 
-                    // Use StaticLayout for value text to handle wrapping
-                    val textLayout = StaticLayout.Builder.obtain(valueText, 0, valueText.length, bodyPaint, contentWidth - keyWidth.toInt())
+                    val textLayout = StaticLayout.Builder.obtain(
+                        valueText,
+                        0,
+                        valueText.length,
+                        bodyPaint,
+                        contentWidth - keyWidth.toInt()
+                    )
                         .build()
                     canvas.save()
-                    canvas.translate(MARGIN.toFloat() + keyWidth, yPosition - bodyPaint.fontMetrics.top)
+                    canvas.translate(
+                        MARGIN.toFloat() + keyWidth,
+                        yPosition - bodyPaint.fontMetrics.top
+                    )
                     textLayout.draw(canvas)
                     canvas.restore()
 
@@ -104,29 +120,47 @@ object PdfExporter {
         }
 
         document.finishPage(page)
-
-        // Save the document
         return savePdf(context, hiveNumber, document)
     }
 
-    private fun formatInspectionFields(inspection: Inspection): Map<String, String> {
+    private fun formatInspectionFields(
+        context: Context,
+        inspection: Inspection
+    ): Map<String, String> {
         val fields = mutableMapOf<String, String>()
-        fields["Queen Cells"] = (if (inspection.queenCellsPresent == true) "Yes" else "No") + (inspection.queenCellsCount?.let { " ($it)" } ?: "")
-        fields["Frames (Eggs/Open/Capped)"] = "${inspection.framesEggsCount ?: 0}/${inspection.framesOpenBroodCount ?: 0}/${inspection.framesCappedBroodCount ?: 0}"
-        fields["Frames (Honey/Pollen)"] = "${inspection.framesHoneyCount ?: 0}/${inspection.framesPollenCount ?: 0}"
-        fields["Pests/Diseases"] = inspection.pestsDiseasesObserved ?: ""
-        fields["Treatment"] = inspection.treatmentApplied ?: ""
-        fields["Temperament"] = inspection.temperamentRating?.toString() ?: ""
-        fields["Management Actions"] = inspection.managementActionsTaken ?: ""
-        fields["Notes"] = inspection.notes ?: ""
+        val textYes = context.getString(R.string.dialog_yes)
+        val textNo = context.getString(R.string.dialog_no)
+
+        fields[context.getString(R.string.hint_queen_cells_count)] =
+            (if (inspection.queenCellsPresent == true) textYes else textNo) + (inspection.queenCellsCount?.let { " ($it)" }
+                ?: "")
+        fields[context.getString(R.string.label_given_taken_brood)] =
+            "${inspection.framesEggsCount ?: 0}/${inspection.framesOpenBroodCount ?: 0}/${inspection.framesCappedBroodCount ?: 0}"
+        fields[context.getString(R.string.label_frames_feed)] =
+            "${inspection.framesHoneyCount ?: 0}/${inspection.framesPollenCount ?: 0}"
+        fields[context.getString(R.string.hint_pests_diseases)] =
+            inspection.pestsDiseasesObserved ?: ""
+        fields[context.getString(R.string.hint_treatment_applied)] =
+            inspection.treatmentApplied ?: ""
+        fields[context.getString(R.string.title_temperament_rating)] =
+            inspection.temperamentRating?.toString() ?: ""
+        fields[context.getString(R.string.hint_management_actions)] =
+            inspection.managementActionsTaken ?: ""
+        fields[context.getString(R.string.hint_notes_optional)] = inspection.notes ?: ""
         return fields
     }
 
-    private fun calculateBlockHeight(fields: Map<String, String>, subtitlePaint: Paint, bodyPaint: TextPaint, width: Int): Float {
+    private fun calculateBlockHeight(
+        fields: Map<String, String>,
+        subtitlePaint: Paint,
+        bodyPaint: TextPaint,
+        width: Int
+    ): Float {
         var height = (subtitlePaint.descent() - subtitlePaint.ascent()) + LINE_SPACING * 6
         fields.forEach { (_, value) ->
             if (value.isNotBlank()) {
-                val layout = StaticLayout.Builder.obtain(value, 0, value.length, bodyPaint, width).build()
+                val layout =
+                    StaticLayout.Builder.obtain(value, 0, value.length, bodyPaint, width).build()
                 height += layout.height + LINE_SPACING
             }
         }
@@ -135,6 +169,7 @@ object PdfExporter {
 
     private fun savePdf(context: Context, hiveNumber: String, document: PdfDocument): Boolean {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        // Filename remains in English to match the CsvExporter logic
         val fileName = "Pasika_Hive_${hiveNumber}_Inspections_$timestamp.pdf"
 
         return try {
@@ -146,8 +181,9 @@ object PdfExporter {
                     put(MediaStore.MediaColumns.RELATIVE_PATH, "Download/")
                 }
             }
-            val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-                ?: throw IOException("Failed to create new MediaStore entry for PDF.")
+            val uri =
+                contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+                    ?: throw IOException("Failed to create new MediaStore entry for PDF.")
 
             contentResolver.openOutputStream(uri)?.use { outputStream ->
                 document.writeTo(outputStream)

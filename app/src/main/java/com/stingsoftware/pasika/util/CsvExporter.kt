@@ -9,36 +9,24 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.stingsoftware.pasika.R
 
 object CsvExporter {
 
     private const val FILE_FORMAT = "yyyyMMdd_HHmmss"
 
-    // Defines the header row for the CSV file
-    private val CSV_HEADER = listOf(
-        "InspectionDate",
-        "QueenCellsPresent",
-        "QueenCellsCount",
-        "FramesWithEggs",
-        "FramesWithOpenBrood",
-        "FramesWithCappedBrood",
-        "FramesWithHoney",
-        "FramesWithPollen",
-        "PestsOrDiseases",
-        "TreatmentApplied",
-        "TemperamentRating (1-4)",
-        "ManagementActions",
-        "Notes"
-    )
-
-    fun exportInspections(context: Context, hiveNumber: String, inspections: List<Inspection>): Boolean {
+    fun exportInspections(
+        context: Context,
+        hiveNumber: String,
+        inspections: List<Inspection>
+    ): Boolean {
         if (inspections.isEmpty()) {
-            return false // Nothing to export
+            return false
         }
 
         val timestamp = SimpleDateFormat(FILE_FORMAT, Locale.US).format(Date())
         val fileName = "Pasika_Hive_${hiveNumber}_Inspections_$timestamp.csv"
-        val csvContent = generateCsvContent(inspections)
+        val csvContent = generateCsvContent(context, inspections)
 
         return try {
             val contentResolver = context.contentResolver
@@ -51,11 +39,14 @@ object CsvExporter {
                 }
             }
 
-            val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-                ?: throw IOException("Failed to create new MediaStore entry.")
-
+            val uri =
+                contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+                    ?: throw IOException("Failed to create new MediaStore entry.")
             contentResolver.openOutputStream(uri)?.use { outputStream ->
+                val bom = byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
+                outputStream.write(bom)
                 outputStream.write(csvContent.toByteArray())
+
             } ?: throw IOException("Failed to get output stream.")
 
             true // Success
@@ -65,11 +56,25 @@ object CsvExporter {
         }
     }
 
-    private fun generateCsvContent(inspections: List<Inspection>): String {
+    private fun generateCsvContent(context: Context, inspections: List<Inspection>): String {
         val stringBuilder = StringBuilder()
-        // Append header
-        stringBuilder.append(CSV_HEADER.joinToString(",")).append("\n")
+        val csvHeader = listOf(
+            context.getString(R.string.hint_inspection_date),
+            context.getString(R.string.hint_queen_cells),
+            context.getString(R.string.hint_queen_cells_count),
+            context.getString(R.string.label_frames_eggs),
+            context.getString(R.string.label_frames_open_brood),
+            context.getString(R.string.label_frames_capped_brood),
+            context.getString(R.string.hint_honey_stores_frames),
+            context.getString(R.string.hint_pollen_stores_frames),
+            context.getString(R.string.hint_pests_diseases),
+            context.getString(R.string.hint_treatment_applied),
+            context.getString(R.string.title_temperament_rating),
+            context.getString(R.string.hint_management_actions),
+            context.getString(R.string.hint_notes_optional)
+        ).joinToString(",")
 
+        stringBuilder.append(csvHeader).append("\n")
         // Append rows
         val sortedInspections = inspections.sortedBy { it.inspectionDate }
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
@@ -77,7 +82,11 @@ object CsvExporter {
         sortedInspections.forEach { inspection ->
             val row = listOf(
                 dateFormatter.format(Date(inspection.inspectionDate)),
-                if (inspection.queenCellsPresent == true) "Yes" else "No",
+                if (inspection.queenCellsPresent == true) {
+                    context.getString(R.string.dialog_yes)
+                } else {
+                    context.getString(R.string.dialog_no)
+                },
                 inspection.queenCellsCount?.toString() ?: "",
                 inspection.framesEggsCount?.toString() ?: "",
                 inspection.framesOpenBroodCount?.toString() ?: "",
