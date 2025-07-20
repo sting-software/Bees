@@ -340,7 +340,7 @@
 
     <string name="pdf_report_date">Date</string>
 
-    <string name="contact_title">Contacts</string>
+    <string name="contact_title">Email</string>
     <string name="contact_email_address" translatable="false">always.stung.software@gmail.com</string>
 
     <string name="error_no_email_app">No email app found.</string>

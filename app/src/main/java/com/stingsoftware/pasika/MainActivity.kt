@@ -1,13 +1,17 @@
 package com.stingsoftware.pasika
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.os.LocaleListCompat // <-- IMPORT ADDED
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -130,6 +134,12 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.drawer_email -> {
+                    sendEmail()
+                    drawerLayout.closeDrawers()
+                    true
+                }
+
                 R.id.drawer_exit_app -> {
                     showExitConfirmationDialog()
                     drawerLayout.closeDrawers()
@@ -162,17 +172,31 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
+    private fun sendEmail() {
+        val recipient = getString(R.string.contact_email_address)
 
-    override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(
-            navController,
-            appBarConfiguration
-        ) || super.onSupportNavigateUp()
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:") // Only email apps should handle this
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(recipient))
+        }
+
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(this, getString(R.string.error_no_email_app), Toast.LENGTH_SHORT).show()
+        }
     }
-}
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            if (toggle.onOptionsItemSelected(item)) {
+                return true
+            }
+            return super.onOptionsItemSelected(item)
+        }
+
+        override fun onSupportNavigateUp(): Boolean {
+            return NavigationUI.navigateUp(
+                navController,
+                appBarConfiguration
+            ) || super.onSupportNavigateUp()
+        }
+    }

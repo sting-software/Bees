@@ -1,15 +1,11 @@
 package com.stingsoftware.pasika.ui.settings
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -55,10 +51,6 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        binding.textViewEmail.setOnClickListener {
-            sendEmail()
-        }
-
         // Set listener for Exit App button
         binding.buttonExitApp.setOnClickListener {
             showExitConfirmationDialog()
@@ -87,25 +79,6 @@ class SettingsFragment : Fragment() {
             .setNegativeButton(getString(R.string.action_cancel), null)
             .show()
     }
-
-    private fun sendEmail() {
-        val recipient = getString(R.string.contact_email_address)
-
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(recipient))
-        }
-        try {
-            startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.error_no_email_app),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
