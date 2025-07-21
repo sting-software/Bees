@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "501363822316",
+    "project_id": "bees-3c030",
+    "storage_bucket": "bees-3c030.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501363822316:android:e11319f90d10c36f791fc9",
+        "android_client_info": {
+          "package_name": "com.stingsoftware.pasika"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMuok-hDypJiTJdQ09I_HvalgnxT0ZitE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

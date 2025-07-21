@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     private val repository: ApiaryRepository,
     savedStateHandle: SavedStateHandle,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val alarmScheduler = AlarmScheduler(context)

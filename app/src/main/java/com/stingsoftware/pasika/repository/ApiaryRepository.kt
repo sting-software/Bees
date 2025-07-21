@@ -18,7 +18,7 @@ class ApiaryRepository @Inject constructor(
     private val hiveDao: HiveDao,
     private val inspectionDao: InspectionDao,
     private val taskDao: TaskDao,
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
 
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()

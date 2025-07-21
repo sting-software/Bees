@@ -345,4 +345,14 @@
 
     <string name="error_no_email_app">No email app found.</string>
 
+    <string name="email_message">Please get in touch if you have:
+
+Any feedback or ideas
+
+Issues or bugs you’ve encountered
+
+Suggestions for new features or enhancements
+
+If you have screenshots, logs, or other files that help illustrate your point, feel free to attach them.</string>
+
 </resources>

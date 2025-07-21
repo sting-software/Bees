@@ -1,29 +1,29 @@
 [versions]
 # Android Gradle Plugin and Kotlin
-agp = "8.4.2"
-kotlin = "1.9.23"
+agp = "8.11.1"
+kotlin = "2.2.0"
 
 # Hilt
-hilt = "2.51.1"
+hilt = "2.57"
 
 # AndroidX Libraries
-activity = "1.9.0"
-appcompat = "1.7.0"
-constraintlayout = "2.1.4"
-coreKtx = "1.13.1"
-espressoCore = "3.5.1"
+activity = "1.10.1"
+appcompat = "1.7.1"
+constraintlayout = "2.2.1"
+coreKtx = "1.16.0"
+espressoCore = "3.6.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-lifecycle = "2.8.1"
-navigation = "2.7.7"
+junitVersion = "1.2.1"
+lifecycle = "2.9.2"
+navigation = "2.9.2"
 preferenceKtx = "1.2.1"
-room = "2.6.1"
+room = "2.7.2"
 
 # Google Material
 material = "1.12.0"
 
 # Kotlin Coroutines
-kotlinxCoroutines = "1.8.0"
+kotlinxCoroutines = "1.10.2"
 
 [libraries]
 # Hilt

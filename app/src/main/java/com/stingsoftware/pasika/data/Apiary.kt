@@ -6,7 +6,7 @@ import androidx.annotation.StringRes
 import com.stingsoftware.pasika.R
 
 // Enum for Apiary Type provides type safety
-enum class ApiaryType(@StringRes val stringResId: Int) {
+enum class ApiaryType(@param:StringRes val stringResId: Int) {
     STATIONARY(R.string.apiary_type_stationary),
     MIGRATORY(R.string.apiary_type_migratory)
 }

@@ -3,7 +3,6 @@ package com.stingsoftware.pasika
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -11,6 +10,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -85,7 +85,11 @@ class MainActivity : AppCompatActivity() {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.title_exit_app))
             .setMessage(getString(R.string.dialog_message_exit_app))
-            .setPositiveButton(getString(R.string.action_exit)) { _, _ -> finishAffinity() }
+            .setPositiveButton(getString(R.string.action_exit)) { _, _ ->
+
+//                throw RuntimeException("Test Crash") // Force a crash for Crashlytics
+                finishAffinity()
+            }
             .setNegativeButton(getString(R.string.action_cancel), null)
             .show()
     }
@@ -174,29 +178,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendEmail() {
         val recipient = getString(R.string.contact_email_address)
+        val message = getString(R.string.email_message)
 
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:") // Only email apps should handle this
+            data = "mailto:".toUri() // Only email apps should handle this
             putExtra(Intent.EXTRA_EMAIL, arrayOf(recipient))
+            putExtra(Intent.EXTRA_TEXT, message)
         }
 
         try {
             startActivity(intent)
-        } catch (e: ActivityNotFoundException) {
+        } catch (_: ActivityNotFoundException) {
             Toast.makeText(this, getString(R.string.error_no_email_app), Toast.LENGTH_SHORT).show()
         }
     }
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            if (toggle.onOptionsItemSelected(item)) {
-                return true
-            }
-            return super.onOptionsItemSelected(item)
-        }
 
-        override fun onSupportNavigateUp(): Boolean {
-            return NavigationUI.navigateUp(
-                navController,
-                appBarConfiguration
-            ) || super.onSupportNavigateUp()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
         }
+        return super.onOptionsItemSelected(item)
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(
+            navController,
+            appBarConfiguration
+        ) || super.onSupportNavigateUp()
+    }
+}

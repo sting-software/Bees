@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditApiaryViewModel @Inject constructor(
     private val repository: ApiaryRepository,
-    @ApplicationContext private val context: Context // Inject the application context
+    @param:ApplicationContext private val context: Context // Inject the application context
 ) : ViewModel() {
 
     private val _saveStatus = MutableLiveData<Resource<Apiary>>()
