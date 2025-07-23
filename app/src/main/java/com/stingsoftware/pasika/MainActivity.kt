@@ -86,8 +86,6 @@ class MainActivity : AppCompatActivity() {
             .setTitle(getString(R.string.title_exit_app))
             .setMessage(getString(R.string.dialog_message_exit_app))
             .setPositiveButton(getString(R.string.action_exit)) { _, _ ->
-
-//                throw RuntimeException("Test Crash") // Force a crash for Crashlytics
                 finishAffinity()
             }
             .setNegativeButton(getString(R.string.action_cancel), null)

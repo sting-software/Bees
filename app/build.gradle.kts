@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.navigation.safeargs.kotlin)
     alias(libs.plugins.hilt.android)
     id("com.google.gms.google-services")
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -19,6 +20,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    firebaseCrashlytics {
+        nativeSymbolUploadEnabled = true
     }
 
     buildTypes {
@@ -90,6 +94,11 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
 
-    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+
 }

@@ -145,7 +145,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             searchMenuItem?.collapseActionView()
         }
         if (!apiaryAdapter.isMultiSelectMode()) {
-            activity?.title = getString(R.string.app_name)
+            activity?.title = getString(R.string.home_title)
         }
     }
 
@@ -235,7 +235,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
                     R.string.title_select_apiaries
                 )
         } else {
-            activity?.title = getString(R.string.app_name)
+            activity?.title = getString(R.string.home_title)
         }
     }
 

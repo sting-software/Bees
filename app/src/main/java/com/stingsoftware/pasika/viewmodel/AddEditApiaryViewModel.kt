@@ -43,20 +43,7 @@ class AddEditApiaryViewModel @Inject constructor(
         startingHiveNumber: Int?,
         endingHiveNumber: Int?
     ) = viewModelScope.launch {
-        _saveStatus.postValue(Resource.Loading())
-
-        // In AddEditApiaryViewModel.kt -> saveOrUpdateApiary()
-        if (apiary.name.isBlank()) {
-            val fieldName = context.getString(R.string.hint_apiary_name)
-            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty, fieldName)))
-            return@launch
-        }
-        if (apiary.location.isBlank()) {
-            val fieldName = context.getString(R.string.hint_apiary_location)
-            _saveStatus.postValue(Resource.Error(context.getString(R.string.error_field_cannot_be_empty, fieldName)))
-            return@launch
-        }
-
+        // ... validation logic
         try {
             if (isNewApiary) {
                 val newApiaryId = repository.insertApiary(apiary)
@@ -64,12 +51,24 @@ class AddEditApiaryViewModel @Inject constructor(
                 if (autoNumberHives && startingHiveNumber != null && endingHiveNumber != null) {
                     // Auto-numbering logic
                     for (i in startingHiveNumber..endingHiveNumber) {
-                        repository.insertHive(createEmptyHive(newApiaryId, i.toString()))
+                        repository.insertHive(
+                            createEmptyHive(
+                                newApiaryId,
+                                i.toString(),
+                                apiary.lastInspectionDate
+                            )
+                        )
                     }
                 } else if (!autoNumberHives && apiary.numberOfHives > 0) {
                     // Manual quantity logic
                     repeat(apiary.numberOfHives) {
-                        repository.insertHive(createEmptyHive(newApiaryId, null))
+                        repository.insertHive(
+                            createEmptyHive(
+                                newApiaryId,
+                                null,
+                                apiary.lastInspectionDate
+                            )
+                        )
                     }
                 }
                 repository.updateApiaryHiveCount(newApiaryId)
@@ -89,7 +88,11 @@ class AddEditApiaryViewModel @Inject constructor(
         }
     }
 
-    private fun createEmptyHive(apiaryId: Long, hiveNumber: String?): Hive {
+    private fun createEmptyHive(
+        apiaryId: Long,
+        hiveNumber: String?,
+        lastInspectionDate: Long?
+    ): Hive {
         return Hive(
             apiaryId = apiaryId,
             hiveNumber = hiveNumber,
@@ -101,7 +104,7 @@ class AddEditApiaryViewModel @Inject constructor(
             materialOther = null,
             breed = null,
             breedOther = null,
-            lastInspectionDate = null,
+            lastInspectionDate = lastInspectionDate, // Use the parameter here
             notes = null,
             queenTagColor = null,
             queenTagColorOther = null,

@@ -53,9 +53,8 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
                 apiary?.let {
                     binding.editTextApiaryName.setText(it.name)
                     binding.editTextApiaryLocation.setText(it.location)
-                    val typeName = it.type.name.lowercase(Locale.getDefault())
-                        .replaceFirstChar { char -> if (char.isLowerCase()) char.titlecase(Locale.getDefault()) else char.toString() }
-                    binding.autoCompleteTextViewApiaryType.setText(typeName, false)
+                    binding.autoCompleteTextViewApiaryType.setText(getString(it.type.stringResId), false)
+
                     selectedDateMillis = it.lastInspectionDate
                     updateDateEditText(it.lastInspectionDate)
                     binding.editTextNotes.setText(it.notes)
@@ -172,13 +171,14 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
     private fun saveApiary(apiaryId: Long, isNewApiary: Boolean) {
         val name = binding.editTextApiaryName.text.toString().trim()
         val location = binding.editTextApiaryLocation.text.toString().trim()
-        val apiaryTypeString =
-            binding.autoCompleteTextViewApiaryType.text.toString().uppercase(Locale.getDefault())
+        val selectedTypeText = binding.autoCompleteTextViewApiaryType.text.toString()
         val notes = binding.editTextNotes.text.toString().trim().ifEmpty { null }
-
-        val apiaryType = try {
-            enumValueOf<ApiaryType>(apiaryTypeString)
-        } catch (_: Exception) {
+        val apiaryTypes = ApiaryType.entries.map { getString(it.stringResId) }
+        val selectedIndex = apiaryTypes.indexOf(selectedTypeText)
+        val apiaryType = if (selectedIndex != -1) {
+            ApiaryType.entries[selectedIndex]
+        } else {
+            // Fallback in case of an error, though it should not happen with a dropdown
             ApiaryType.STATIONARY
         }
 

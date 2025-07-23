@@ -72,4 +72,7 @@ interface ApiaryDao {
      */
     @Query("SELECT SUM(numberOfHives) FROM apiaries")
     fun getTotalHivesCount(): Flow<Int?> // Use Int? as SUM can return null if no rows
+
+    @Query("SELECT * FROM apiaries WHERE id = :apiaryId")
+    fun getApiaryFlowById(apiaryId: Long): Flow<Apiary?>
 }

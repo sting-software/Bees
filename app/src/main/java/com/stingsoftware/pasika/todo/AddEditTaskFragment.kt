@@ -37,8 +37,10 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (!isGranted) {
-                Toast.makeText(requireContext(),
-                    getString(R.string.notification_permission_denied), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.notification_permission_denied), Toast.LENGTH_LONG
+                ).show()
                 binding.switchReminder.isChecked = false
             }
         }
@@ -83,13 +85,18 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         // FIX: Use safe calls to handle nullable Editable
         val title = binding.editTextTaskTitle.text?.toString()?.trim()
         if (title.isNullOrBlank()) {
-            Toast.makeText(requireContext(),
-                getString(R.string.error_field_cannot_be_empty), Toast.LENGTH_SHORT).show()
+            val fieldTitle = getString(R.string.hint_task_title)
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.error_field_cannot_be_empty, fieldTitle), // Corrected line
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         val description = binding.editTextTaskDescription.text?.toString()?.trim()
-        val dueDate = if (binding.editTextDueDate.text?.isNotBlank() == true) selectedDateTime.timeInMillis else null
+        val dueDate =
+            if (binding.editTextDueDate.text?.isNotBlank() == true) selectedDateTime.timeInMillis else null
 
         val task = Task(
             id = currentTask?.id ?: 0L,
@@ -103,17 +110,29 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     }
 
     private fun showDateTimePicker() {
-        DatePickerDialog(requireContext(), { _, year, month, dayOfMonth ->
-            selectedDateTime.set(Calendar.YEAR, year)
-            selectedDateTime.set(Calendar.MONTH, month)
-            selectedDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                selectedDateTime.set(Calendar.YEAR, year)
+                selectedDateTime.set(Calendar.MONTH, month)
+                selectedDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
-            TimePickerDialog(requireContext(), { _, hourOfDay, minute ->
-                selectedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                selectedDateTime.set(Calendar.MINUTE, minute)
-                updateDateTimeEditText()
-            }, selectedDateTime.get(Calendar.HOUR_OF_DAY), selectedDateTime.get(Calendar.MINUTE), true).show()
-        }, selectedDateTime.get(Calendar.YEAR), selectedDateTime.get(Calendar.MONTH), selectedDateTime.get(Calendar.DAY_OF_MONTH)).show()
+                TimePickerDialog(
+                    requireContext(),
+                    { _, hourOfDay, minute ->
+                        selectedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        selectedDateTime.set(Calendar.MINUTE, minute)
+                        updateDateTimeEditText()
+                    },
+                    selectedDateTime.get(Calendar.HOUR_OF_DAY),
+                    selectedDateTime.get(Calendar.MINUTE),
+                    true
+                ).show()
+            },
+            selectedDateTime.get(Calendar.YEAR),
+            selectedDateTime.get(Calendar.MONTH),
+            selectedDateTime.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun updateDateTimeEditText() {

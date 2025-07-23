@@ -427,14 +427,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
-                        android:hint="@string/label_frames_open_brood">
+                        android:hint="@string/label_frames_capped_brood">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_capped_brood"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:maxLength="3" />
+                            android:maxLength="3"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

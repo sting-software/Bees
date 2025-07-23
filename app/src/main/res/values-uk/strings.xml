@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Бджоли</string>
+    <string name="home_title">Точки</string>
     <string name="home">Головна</string>
     <string name="stats">Статистика</string>
     <string name="to_do">Завдання</string>
@@ -202,7 +203,7 @@
     <string name="title_treatment">Обробка</string>
     <string name="title_health_and_treatment">Здоров\'я та лікування</string>
 
-    <string name="label_frames_total">Всього:</string>
+    <string name="label_frames_total">Усього:</string>
     <string name="label_frames_eggs">Яйця</string>
     <string name="label_frames_open_brood">Відкритий розплід</string>
     <string name="label_frames_capped_brood">Закритий розплід</string>
@@ -354,6 +355,11 @@
 пропозицій щодо співпраці.
 
 Якщо маєте скріншоти, логи або інші файли, які допоможуть проілюструвати ваші питання, прикріпіть їх до листа.</string>
+
+    <string name="update_inspection_date">Оновити дату огляду</string>
+    <string name="apply_this_new_date_to_all_hives_in_this_apiary">Застосувати цю дату для всіх вуликів на цій пасіці?</string>
+    <string name="update_all">Оновити усі</string>
+    <string name="just_this_one">Тільки цей</string>
 
 
 </resources>

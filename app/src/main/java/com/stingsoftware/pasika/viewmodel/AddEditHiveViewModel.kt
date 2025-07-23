@@ -128,4 +128,9 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
     fun resetSaveCompleted() {
         _saveCompleted.value = null
     }
+
+    fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) = viewModelScope.launch {
+        repository.updateInspectionDateForApiary(apiaryId, newDateMillis)
+        // Optionally use LiveData to signal completion if needed
+    }
 }

@@ -39,11 +39,10 @@ class ApiaryDetailViewModel @Inject constructor(
 
     private val _hiveSearchQuery = MutableStateFlow<String?>(null)
 
-    val apiary: LiveData<Apiary?> = liveData {
-        emit(repository.getApiaryById(apiaryId))
-    }
+    val apiary: LiveData<Apiary?> = repository.getApiaryFlowById(apiaryId).asLiveData()
 
-    val allHivesForApiary: LiveData<List<Hive>> = repository.getHivesForApiary(apiaryId).asLiveData()
+    val allHivesForApiary: LiveData<List<Hive>> =
+        repository.getHivesForApiary(apiaryId).asLiveData()
 
     val filteredHivesForApiary: MediatorLiveData<List<Hive>> = MediatorLiveData()
 
@@ -81,7 +80,11 @@ class ApiaryDetailViewModel @Inject constructor(
         _exportStatus.value = null
     }
 
-    private fun saveJsonToFile(context: Context, fileNamePrefix: String, jsonString: String): Boolean {
+    private fun saveJsonToFile(
+        context: Context,
+        fileNamePrefix: String,
+        jsonString: String
+    ): Boolean {
         val timestamp = SimpleDateFormat("yyyyMMdd", Locale.US).format(Date())
         val fileName = "${fileNamePrefix}_$timestamp.json"
 
@@ -94,8 +97,9 @@ class ApiaryDetailViewModel @Inject constructor(
                     put(MediaStore.MediaColumns.RELATIVE_PATH, "Download/Pasika")
                 }
             }
-            val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-                ?: throw IOException("Failed to create new MediaStore entry for JSON.")
+            val uri =
+                contentResolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+                    ?: throw IOException("Failed to create new MediaStore entry for JSON.")
 
             contentResolver.openOutputStream(uri)?.use { it.write(jsonString.toByteArray()) }
                 ?: throw IOException("Failed to get output stream.")

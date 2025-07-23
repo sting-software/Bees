@@ -186,4 +186,12 @@ class ApiaryRepository @Inject constructor(
     suspend fun markTasksAsIncomplete(taskIds: List<Long>) {
         taskDao.markTasksAsIncomplete(taskIds)
     }
+
+    suspend fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) {
+        hiveDao.updateInspectionDateForApiary(apiaryId, newDateMillis)
+    }
+
+    fun getApiaryFlowById(apiaryId: Long): Flow<Apiary?> {
+        return apiaryDao.getApiaryFlowById(apiaryId)
+    }
 }

@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Bees</string>
+    <string name="home_title">Apiaries</string>
     <string name="home">Home</string>
     <string name="stats">Stats</string>
     <string name="to_do">To-Do</string>
@@ -205,7 +206,7 @@
     <string name="label_frames_total">Total:</string>
     <string name="label_frames_eggs">Eggs</string>
     <string name="label_frames_open_brood">Open Brood</string>
-    <string name="label_frames_capped_brood">Capped</string>
+    <string name="label_frames_capped_brood">Capped Brood</string>
     <string name="label_frames_feed">Feed</string>
     <string name="label_given_taken_built_combs">Built Combs</string>
     <string name="label_given_taken_foundation">Foundation</string>
@@ -354,5 +355,10 @@ Issues or bugs you’ve encountered
 Suggestions for new features or enhancements
 
 If you have screenshots, logs, or other files that help illustrate your point, feel free to attach them.</string>
+
+    <string name="update_inspection_date">Update Inspection Date</string>
+    <string name="apply_this_new_date_to_all_hives_in_this_apiary">Apply this new date to all hives in this apiary?</string>
+    <string name="update_all">Update All</string>
+    <string name="just_this_one">Just This One</string>
 
 </resources>

@@ -219,7 +219,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
 
     private fun showBulkDeleteConfirmationDialog(tasksToDelete: List<Task>) {
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_title_delete_selected_items))
+            .setTitle(getString(R.string.dialog_title_delete_selected_tasks))
             .setMessage(
                 getString(
                     R.string.dialog_message_delete_selected_items,
