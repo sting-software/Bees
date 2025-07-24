@@ -5,7 +5,7 @@ import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Apiary::class, Hive::class, Inspection::class, Task::class], version = 5, exportSchema = false)
+@Database(entities = [Apiary::class, Hive::class, Inspection::class, Task::class], version = 6, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -33,11 +33,20 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        // FIX: This migration now correctly creates the necessary indexes
         private val MIGRATION_4_5 = object : Migration(4, 5) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("CREATE INDEX `index_hives_apiaryId` ON `hives` (`apiaryId`)")
                 db.execSQL("CREATE INDEX `index_inspections_hiveId` ON `inspections` (`hiveId`)")
+            }
+        }
+
+        /**
+         * NEW: Migration to add the displayOrder column to the apiaries table.
+         * The `DEFAULT 0` ensures existing rows get a valid value.
+         */
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `apiaries` ADD COLUMN `displayOrder` INTEGER NOT NULL DEFAULT 0")
             }
         }
 
@@ -48,9 +57,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pasika_database"
                 )
-                    // It's better to rely on explicit migrations rather than destructive ones.
-                    // If issues persist, clearing app data or uninstalling/reinstalling is the next step.
-                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                    // Add the new migration to the builder
+                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                     .build()
                 INSTANCE = instance
                 instance

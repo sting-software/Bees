@@ -152,8 +152,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    // THIS FUNCTION IS NOW FIXED
     private fun showLanguageSelectionDialog() {
         MaterialAlertDialogBuilder(this)
             .setTitle(getString(R.string.title_language_dialog))
@@ -165,10 +163,13 @@ class MainActivity : AppCompatActivity() {
 
                 val sharedPrefs = getSharedPreferences("app_settings", MODE_PRIVATE)
                 with(sharedPrefs.edit()) {
-                    putString("language_code", selectedLanguage) // Use correct key
+                    putString("language_code", selectedLanguage)
                     apply()
                 }
-                recreate()
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+                finish() // Close the old activity
             }
             .setNegativeButton(R.string.action_cancel, null)
             .show()

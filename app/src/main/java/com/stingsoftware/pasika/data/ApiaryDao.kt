@@ -49,13 +49,21 @@ interface ApiaryDao {
     suspend fun getApiaryById(apiaryId: Long): Apiary?
 
     /**
-     * Retrieves all apiaries from the database, ordered by name.
+     * MODIFIED: Retrieves all apiaries from the database, ordered by their custom display position.
      * Returns a Flow, which emits new lists of apiaries whenever the data changes.
      * This is ideal for observing real-time updates in the UI.
      * @return A Flow emitting a list of all Apiary objects.
      */
-    @Query("SELECT * FROM apiaries ORDER BY name ASC")
+    @Query("SELECT * FROM apiaries ORDER BY displayOrder ASC")
     fun getAllApiaries(): Flow<List<Apiary>>
+
+    /**
+     * NEW: Updates a list of apiaries in the database.
+     * This is used for bulk updates, such as reordering.
+     * @param apiaries The list of Apiary objects to update.
+     */
+    @Update
+    suspend fun updateApiaries(apiaries: List<Apiary>)
 
     /**
      * Retrieves the total number of apiaries in the database.

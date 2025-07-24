@@ -48,6 +48,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * NEW: Saves the final order of apiaries after a drag-and-drop operation is complete.
+     */
+    fun saveApiaryOrder(reorderedApiaries: List<Apiary>) {
+        viewModelScope.launch {
+            // Re-assign the displayOrder to every item based on its new position
+            val updatedApiaries = reorderedApiaries.mapIndexed { index, apiary ->
+                apiary.copy(displayOrder = index)
+            }
+            repository.updateApiaries(updatedApiaries)
+        }
+    }
+
     fun importApiaryFromFile(context: Context, uri: Uri) {
         viewModelScope.launch {
             try {

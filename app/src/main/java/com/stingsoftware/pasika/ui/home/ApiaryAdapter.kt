@@ -1,6 +1,8 @@
 package com.stingsoftware.pasika.ui.home
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -10,18 +12,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Apiary
 import com.stingsoftware.pasika.databinding.ItemApiaryBinding
+import java.util.Collections
 
 class ApiaryAdapter(
     private val onItemClick: (Apiary) -> Unit,
     private val onEditClick: (Apiary) -> Unit,
-    private val onLongClick: (Apiary) -> Unit,
-    private val onSelectionChange: (Int) -> Unit
+    private val onSelectionChange: (Int) -> Unit,
+    private val onStartDrag: (RecyclerView.ViewHolder) -> Unit
 ) : ListAdapter<Apiary, ApiaryAdapter.ApiaryViewHolder>(ApiaryDiffCallback()) {
 
     private val selectedItems = mutableSetOf<Long>()
     private var isMultiSelectMode = false
 
     inner class ApiaryViewHolder(private val binding: ItemApiaryBinding) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(apiary: Apiary) {
             binding.textViewApiaryName.text = apiary.name
             binding.textViewApiaryLocation.text = apiary.location
@@ -36,16 +40,19 @@ class ApiaryAdapter(
                 }
             }
 
-            binding.root.setOnLongClickListener {
-                onLongClick(apiary)
-                true
-            }
+            binding.root.setOnLongClickListener(null)
 
             binding.imageButtonEdit.setOnClickListener {
                 onEditClick(apiary)
             }
 
-            // --- NEW: Manage checkbox and background color ---
+            binding.dragHandle.setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                    onStartDrag(this)
+                }
+                false
+            }
+
             if (isMultiSelectMode) {
                 binding.checkboxApiarySelect.visibility = View.VISIBLE
                 binding.checkboxApiarySelect.isChecked = selectedItems.contains(apiary.id)
@@ -62,6 +69,18 @@ class ApiaryAdapter(
                 )
             )
         }
+    }
+
+    /**
+     * NEW: Moves an item in the list for smooth animation and returns the updated list.
+     */
+    fun moveItem(fromPosition: Int, toPosition: Int): List<Apiary> {
+        val newList = currentList.toMutableList()
+        Collections.swap(newList, fromPosition, toPosition)
+        // We submit the list here but without the DiffUtil running on the main thread immediately,
+        // which helps, but the key is notifyItemMoved.
+        submitList(newList)
+        return newList
     }
 
     fun toggleSelection(apiary: Apiary) {

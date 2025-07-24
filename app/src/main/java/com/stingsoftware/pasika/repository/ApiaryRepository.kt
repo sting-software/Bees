@@ -5,11 +5,11 @@ import androidx.room.Transaction
 import androidx.room.withTransaction
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Singleton
 class ApiaryRepository @Inject constructor(
@@ -22,8 +22,6 @@ class ApiaryRepository @Inject constructor(
 ) {
 
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()
-
-    // ... (All other functions remain unchanged)
 
     suspend fun insertApiary(apiary: Apiary): Long {
         return apiaryDao.insert(apiary)
@@ -39,6 +37,14 @@ class ApiaryRepository @Inject constructor(
 
     suspend fun getApiaryById(apiaryId: Long): Apiary? {
         return apiaryDao.getApiaryById(apiaryId)
+    }
+
+    /**
+     * NEW: Exposes the DAO's bulk update function to be used by the ViewModel for reordering.
+     * @param apiaries The list of apiaries with updated displayOrder values.
+     */
+    suspend fun updateApiaries(apiaries: List<Apiary>) {
+        apiaryDao.updateApiaries(apiaries)
     }
 
     suspend fun updateApiaryHiveCount(apiaryId: Long) {
@@ -103,7 +109,6 @@ class ApiaryRepository @Inject constructor(
 
     // Inspection operations
     suspend fun insertInspectionAndUpdateHive(inspection: Inspection) {
-        // This will now work because 'db' is available
         db.withTransaction {
             inspectionDao.insert(inspection)
             hiveDao.updateLastInspectionDate(inspection.hiveId, inspection.inspectionDate)

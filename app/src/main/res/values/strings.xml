@@ -360,5 +360,6 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <string name="apply_this_new_date_to_all_hives_in_this_apiary">Apply this new date to all hives in this apiary?</string>
     <string name="update_all">Update All</string>
     <string name="just_this_one">Just This One</string>
+    <string name="description_drag_to_reorder">Drag to reorder</string>
 
 </resources>

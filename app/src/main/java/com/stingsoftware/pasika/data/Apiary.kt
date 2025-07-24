@@ -20,5 +20,6 @@ data class Apiary(
     val numberOfHives: Int,
     val type: ApiaryType,
     val lastInspectionDate: Long? = null,
-    val notes: String? = null
+    val notes: String? = null,
+    val displayOrder: Int
 )

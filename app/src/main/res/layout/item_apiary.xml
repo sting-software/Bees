@@ -17,6 +17,18 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <ImageView
+            android:id="@+id/drag_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/description_drag_to_reorder"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ic_drag_indicator"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="?attr/colorControlNormal" />
+
         <CheckBox
             android:id="@+id/checkbox_apiary_select"
             android:layout_width="wrap_content"

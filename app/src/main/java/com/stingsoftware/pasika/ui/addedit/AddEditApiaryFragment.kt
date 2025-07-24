@@ -33,6 +33,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
     private val binding get() = _binding!!
 
     private var selectedDateMillis: Long? = null
+    private var currentApiary: Apiary? = null // To hold the full Apiary object on edit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,6 +52,7 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
             activity?.title = getString(R.string.title_edit_apiary)
             addEditApiaryViewModel.getApiary(apiaryId).observe(viewLifecycleOwner) { apiary ->
                 apiary?.let {
+                    this.currentApiary = it // Store the loaded apiary
                     binding.editTextApiaryName.setText(it.name)
                     binding.editTextApiaryLocation.setText(it.location)
                     binding.autoCompleteTextViewApiaryType.setText(getString(it.type.stringResId), false)
@@ -178,14 +180,13 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
         val apiaryType = if (selectedIndex != -1) {
             ApiaryType.entries[selectedIndex]
         } else {
-            // Fallback in case of an error, though it should not happen with a dropdown
             ApiaryType.STATIONARY
         }
 
         val autoNumberHives = binding.checkboxAutoNumberApiaryHives.isChecked
         var startingHiveNumber: Int? = null
         var endingHiveNumber: Int? = null
-        var numberOfHives = 0
+        var numberOfHives: Int
 
         if (isNewApiary) {
             if (autoNumberHives) {
@@ -206,6 +207,9 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
             } else {
                 numberOfHives = binding.editTextNumberOfHives.text.toString().toIntOrNull() ?: 0
             }
+        } else {
+            // BUG FIX: When editing, preserve the existing number of hives.
+            numberOfHives = currentApiary?.numberOfHives ?: 0
         }
 
         val apiary = Apiary(
@@ -215,7 +219,11 @@ class AddEditApiaryFragment : Fragment(R.layout.fragment_add_edit_apiary) {
             numberOfHives = numberOfHives,
             type = apiaryType,
             lastInspectionDate = selectedDateMillis,
-            notes = notes
+            notes = notes,
+            // COMPILE FIX: Provide a value for displayOrder.
+            // For an existing apiary, we use its current order.
+            // For a new one, we pass -1 to signal that the ViewModel needs to calculate it.
+            displayOrder = if (isNewApiary) -1 else currentApiary?.displayOrder ?: 0
         )
 
         addEditApiaryViewModel.saveOrUpdateApiary(

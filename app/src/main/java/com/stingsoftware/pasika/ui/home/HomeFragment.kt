@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Apiary
@@ -36,6 +38,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var apiaryAdapter: ApiaryAdapter
     private var searchView: SearchView? = null
     private var searchMenuItem: MenuItem? = null
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     private lateinit var onBackPressedCallback: OnBackPressedCallback
 
@@ -59,6 +62,21 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setup ItemTouchHelper with new callbacks for move and drop
+        val itemTouchHelperCallback = ApiaryItemTouchHelperCallback(
+            onMove = { fromPosition, toPosition ->
+                // This handles the smooth animation
+                apiaryAdapter.moveItem(fromPosition, toPosition)
+            },
+            onDrop = {
+                // This saves the result to the database after the animation is finished
+                val finalList = apiaryAdapter.currentList
+                homeViewModel.saveApiaryOrder(finalList)
+            }
+        )
+        itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerViewApiaries)
+
         apiaryAdapter = ApiaryAdapter(
             onItemClick = { apiary ->
                 if (apiaryAdapter.isMultiSelectMode()) {
@@ -76,14 +94,11 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
                     HomeFragmentDirections.actionHomeFragmentToAddEditApiaryFragment(apiary.id)
                 findNavController().navigate(action)
             },
-            onLongClick = { apiary ->
-                if (!apiaryAdapter.isMultiSelectMode()) {
-                    setMultiSelectMode(true)
-                    apiaryAdapter.toggleSelection(apiary)
-                }
-            },
             onSelectionChange = { count ->
                 updateToolbarTitleForSelection(count)
+            },
+            onStartDrag = { viewHolder ->
+                itemTouchHelper.startDrag(viewHolder)
             }
         )
         binding.recyclerViewApiaries.adapter = apiaryAdapter
@@ -111,14 +126,16 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
         homeViewModel.filteredApiaries.observe(viewLifecycleOwner) { apiaries ->
             apiaries?.let {
-                apiaryAdapter.submitList(it)
+                // Only submit the list if it's different from the adapter's current list
+                // This prevents an update during a drag operation
+                if (apiaryAdapter.currentList != it) {
+                    apiaryAdapter.submitList(it)
+                }
                 val isEmpty = it.isEmpty()
                 binding.emptyStateView.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 binding.recyclerViewApiaries.visibility = if (isEmpty) View.GONE else View.VISIBLE
                 binding.emptyStateView.textViewEmptyMessage.text =
                     getString(R.string.empty_state_no_apiaries)
-                binding.recyclerViewApiaries.visibility =
-                    if (it.isEmpty()) View.GONE else View.VISIBLE
             }
         }
 
@@ -139,6 +156,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
+    // Other fragment methods (onResume, setupMenu, etc.) remain the same...
     override fun onResume() {
         super.onResume()
         if (searchView?.isIconified == false) {
@@ -162,17 +180,14 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             override fun onPrepareMenu(menu: Menu) {
                 val inMultiSelectMode = apiaryAdapter.isMultiSelectMode()
 
-                // Standard actions
                 menu.findItem(R.id.action_import_apiary)?.isVisible = !inMultiSelectMode
                 menu.findItem(R.id.action_search_apiaries)?.isVisible = !inMultiSelectMode
 
-                // Multi-select actions
                 menu.findItem(R.id.action_select_all_apiaries)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_edit_selected_apiaries)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_delete_selected_apiaries)?.isVisible = inMultiSelectMode
                 menu.findItem(R.id.action_cancel_selection)?.isVisible = inMultiSelectMode
 
-                // Other UI elements
                 binding.fabAddApiary.visibility = if (inMultiSelectMode) View.GONE else View.VISIBLE
 
                 if (inMultiSelectMode && searchMenuItem?.isActionViewExpanded == true) {
@@ -276,5 +291,46 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onDestroyView()
         _binding = null
         onBackPressedCallback.remove()
+    }
+}
+
+/**
+ * MODIFIED: This callback now has two actions: one for moving, and one for when the item is dropped.
+ */
+class ApiaryItemTouchHelperCallback(
+    private val onMove: (fromPosition: Int, toPosition: Int) -> Unit,
+    private val onDrop: () -> Unit
+) : ItemTouchHelper.SimpleCallback(
+    ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+    0
+) {
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        val fromPosition = viewHolder.adapterPosition
+        val toPosition = target.adapterPosition
+        if (fromPosition != RecyclerView.NO_POSITION && toPosition != RecyclerView.NO_POSITION) {
+            onMove(fromPosition, toPosition)
+        }
+        return true
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        // Not used
+    }
+
+    /**
+     * This is called when the user drops the item they were dragging.
+     * We trigger the onDrop callback here to save the new order to the database.
+     */
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        onDrop()
+    }
+
+    override fun isLongPressDragEnabled(): Boolean {
+        return false
     }
 }
