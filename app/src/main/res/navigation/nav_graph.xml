@@ -5,6 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <!-- Existing Fragments and Actions from your file -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.stingsoftware.pasika.ui.home.HomeFragment"
@@ -157,12 +158,42 @@
         tools:layout="@layout/fragment_add_edit_task">
         <argument
             android:name="taskId"
-            app:argType="long"
-            android:defaultValue="-1L" />
+            android:defaultValue="-1L"
+            app:argType="long" />
         <argument
             android:name="title"
-            app:argType="string"
-            android:defaultValue="Task" />
+            android:defaultValue="Task"
+            app:argType="string" />
+    </fragment>
+
+    <!-- New Queen Rearing Fragments and Actions, correctly integrated -->
+    <fragment
+        android:id="@+id/queenRearingFragment"
+        android:name="com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragment"
+        android:label="@string/queen_rearing"
+        tools:layout="@layout/fragment_queen_rearing">
+        <action
+            android:id="@+id/action_queenRearingFragment_to_addEditGraftingBatchFragment"
+            app:destination="@id/addEditGraftingBatchFragment" />
+        <action
+            android:id="@+id/action_queenRearingFragment_to_batchDetailFragment"
+            app:destination="@id/batchDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEditGraftingBatchFragment"
+        android:name="com.stingsoftware.pasika.ui.queenrearing.batches.AddEditGraftingBatchFragment"
+        android:label="Add Grafting Batch"
+        tools:layout="@layout/fragment_add_edit_grafting_batch" />
+
+    <fragment
+        android:id="@+id/batchDetailFragment"
+        android:name="com.stingsoftware.pasika.ui.queenrearing.batches.BatchDetailFragment"
+        android:label="Batch Details"
+        tools:layout="@layout/fragment_batch_detail">
+        <argument
+            android:name="batchId"
+            app:argType="long" />
     </fragment>
 
 </navigation>

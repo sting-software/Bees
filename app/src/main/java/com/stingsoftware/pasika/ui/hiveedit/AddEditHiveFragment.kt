@@ -17,6 +17,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Hive
+import com.stingsoftware.pasika.data.HiveRole // NEW: Import for HiveRole
 import com.stingsoftware.pasika.databinding.FragmentAddEditHiveBinding
 import com.stingsoftware.pasika.viewmodel.AddEditHiveViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +57,7 @@ class AddEditHiveFragment : Fragment() {
 
         // Setup all UI components and listeners
         setupSpinners()
+        setupRoleSpinner() // NEW: Setup the role spinner
         setupConditionalViews(!isEditMode)
         setupDatePickers()
         setupTextWatchers()
@@ -78,6 +80,9 @@ class AddEditHiveFragment : Fragment() {
         binding.buttonSaveHive.setOnClickListener { handleSave() }
         binding.buttonCancelHive.setOnClickListener { findNavController().popBackStack() }
     }
+
+    // --- All original methods from your file are preserved below ---
+    // ... handleSave, showUpdateAllHivesDialog, saveHiveAndExit, saveMultipleHives ...
 
     private fun handleSave() {
         // Divert to a separate function if adding multiple hives
@@ -179,13 +184,16 @@ class AddEditHiveFragment : Fragment() {
             givenBeesKg = hiveData.givenBeesKg,
             givenHoneyKg = hiveData.givenHoneyKg,
             givenSugarKg = hiveData.givenSugarKg,
-            treatment = hiveData.treatment
+            treatment = hiveData.treatment,
+            role = hiveData.role // NEW: Pass the role to the ViewModel
         )
-        Toast.makeText(requireContext(), "$quantity hives added successfully", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(),
+            getString(R.string.hives_added_successfully, quantity), Toast.LENGTH_SHORT).show()
         findNavController().popBackStack()
     }
 
     private fun createHiveFromInput(): Hive {
+        // ... all your existing logic for gathering data ...
         val material = binding.autoCompleteTextViewMaterial.text.toString().trim().ifEmpty { null }
         val materialOther = binding.editTextMaterialOther.text.toString().trim().ifEmpty { null }
         val finalMaterial = if (material.equals(getString(R.string.other), ignoreCase = true)) materialOther else material
@@ -234,6 +242,9 @@ class AddEditHiveFragment : Fragment() {
         val treatment = binding.editTextTreatment.text.toString().trim().ifEmpty { null }
         val notes = binding.editTextHiveNotes.text.toString().trim().ifEmpty { null }
 
+        // NEW: Get the selected role from the dropdown
+        val role = HiveRole.valueOf(binding.autoCompleteTextViewRole.text.toString())
+
         return Hive(
             id = if (isEditMode) args.hiveId else 0L,
             apiaryId = args.apiaryId,
@@ -268,11 +279,13 @@ class AddEditHiveFragment : Fragment() {
             givenBeesKg = givenBeesKg,
             givenHoneyKg = givenHoneyKg,
             givenSugarKg = givenSugarKg,
-            treatment = treatment
+            treatment = treatment,
+            role = role // NEW: Add role to the Hive object
         )
     }
 
     private fun populateHiveData(hive: Hive) {
+        // ... all your existing logic for populating data ...
         binding.editTextHiveNumber.setText(hive.hiveNumber)
         binding.autoCompleteTextViewMaterial.setText(hive.material, false)
         binding.editTextMaterialOther.setText(hive.materialOther)
@@ -328,6 +341,9 @@ class AddEditHiveFragment : Fragment() {
         selectedHiveLastInspectionDateMillis = hive.lastInspectionDate
         updateDateEditText(selectedHiveLastInspectionDateMillis, binding.editTextHiveLastInspectionDate)
         binding.editTextHiveNotes.setText(hive.notes)
+
+        // NEW: Populate the role dropdown
+        binding.autoCompleteTextViewRole.setText(hive.role.name, false)
     }
 
     private fun setupDatePickers() {
@@ -396,6 +412,19 @@ class AddEditHiveFragment : Fragment() {
         binding.autoCompleteTextViewQueenTagColor.setAdapter(queenTagColorAdapter)
         binding.autoCompleteTextViewQueenTagColor.setOnItemClickListener { _, _, _, _ ->
             toggleOtherFieldVisibility(binding.autoCompleteTextViewQueenTagColor.text.toString(), binding.textInputLayoutQueenTagColorOther)
+        }
+    }
+
+    /**
+     * NEW: Sets up the dropdown for selecting the hive's role in queen rearing.
+     */
+    private fun setupRoleSpinner() {
+        val roles = HiveRole.entries.map { it.name }
+        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, roles)
+        binding.autoCompleteTextViewRole.setAdapter(adapter)
+        // Set a default value for new hives
+        if (!isEditMode) {
+            binding.autoCompleteTextViewRole.setText(HiveRole.PRODUCTION.name, false)
         }
     }
 
@@ -488,7 +517,8 @@ class AddEditHiveFragment : Fragment() {
         val openBrood = binding.editTextFramesOpenBrood.text.toString().toIntOrNull() ?: 0
         val cappedBrood = binding.editTextFramesCappedBrood.text.toString().toIntOrNull() ?: 0
         val feed = binding.editTextFramesFeed.text.toString().toIntOrNull() ?: 0
-        binding.textViewFramesTotalValue.text = (eggs + openBrood + cappedBrood + feed).toString()
+        val total = eggs + openBrood + cappedBrood + feed
+        binding.textViewFramesTotalValue.text = getString(R.string.integer_placeholder, total)
     }
 
     private fun updateCalculatedQuantity() {
@@ -496,7 +526,8 @@ class AddEditHiveFragment : Fragment() {
             val startNum = binding.editTextFromHiveNumber.text.toString().toIntOrNull()
             val endNum = binding.editTextToHiveNumber.text.toString().toIntOrNull()
             if (startNum != null && endNum != null && endNum >= startNum) {
-                binding.editTextQuantity.setText((endNum - startNum + 1).toString())
+                val quantity = endNum - startNum + 1
+                binding.editTextQuantity.setText(getString(R.string.integer_placeholder, quantity))
             } else {
                 binding.editTextQuantity.setText("")
             }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.stingsoftware.pasika.data.Hive
+import com.stingsoftware.pasika.data.HiveRole // Import HiveRole
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -72,7 +73,9 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
         givenBeesKg: Double?,
         givenHoneyKg: Double?,
         givenSugarKg: Double?,
-        treatment: String?
+        treatment: String?,
+        // NEW: Added role parameter to the function signature
+        role: HiveRole
     ) = viewModelScope.launch {
         try {
             if (autoNumber && startingHiveNumber != null && endingHiveNumber != null) {
@@ -88,7 +91,9 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
                         framesTotal = framesTotal, framesEggs = framesEggs, framesOpenBrood = framesOpenBrood,
                         framesCappedBrood = framesCappedBrood, framesFeed = framesFeed, givenBuiltCombs = givenBuiltCombs,
                         givenFoundation = givenFoundation, givenBrood = givenBrood, givenBeesKg = givenBeesKg,
-                        givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment
+                        givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment,
+                        // NEW: Assign the role to the new Hive object
+                        role = role
                     )
                     repository.insertHive(hive)
                 }
@@ -105,7 +110,9 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
                         framesTotal = framesTotal, framesEggs = framesEggs, framesOpenBrood = framesOpenBrood,
                         framesCappedBrood = framesCappedBrood, framesFeed = framesFeed, givenBuiltCombs = givenBuiltCombs,
                         givenFoundation = givenFoundation, givenBrood = givenBrood, givenBeesKg = givenBeesKg,
-                        givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment
+                        givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment,
+                        // NEW: Assign the role to the new Hive object
+                        role = role
                     )
                     repository.insertHive(hive)
                 }

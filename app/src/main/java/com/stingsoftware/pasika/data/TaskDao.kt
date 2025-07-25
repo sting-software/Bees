@@ -26,4 +26,7 @@ interface TaskDao {
     // NEW: Query to mark multiple tasks as incomplete
     @Query("UPDATE tasks SET isCompleted = 0 WHERE id IN (:taskIds)")
     suspend fun markTasksAsIncomplete(taskIds: List<Long>)
+
+    @Query("SELECT * FROM tasks WHERE graftingBatchId IS NOT NULL ORDER BY dueDate ASC")
+    fun getQueenRearingTasks(): Flow<List<Task>>
 }

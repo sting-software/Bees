@@ -360,6 +360,71 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <string name="apply_this_new_date_to_all_hives_in_this_apiary">Apply this new date to all hives in this apiary?</string>
     <string name="update_all">Update All</string>
     <string name="just_this_one">Just This One</string>
+
     <string name="description_drag_to_reorder">Drag to reorder</string>
+    <string name="integer_placeholder" translatable="false">%d</string>
+
+    <string name="hive_role">Role</string>
+    <string name="queen_rearing">Queen Rearing</string>
+    <string name="batches">Batches</string>
+    <string name="colonies">Colonies</string>
+    <string name="timeline">Timeline</string>
+    <string name="analytics">Analytics</string>
+    <string name="select_grafting_date">Select Grafting Date</string>
+    <string name="date_picker">DATE_PICKER</string>
+    <string name="check_acceptance_for">Check acceptance for %1$s</string>
+    <string name="check_how_many_cells_were_accepted_in_the_starter_colony">Check how many cells were accepted in the starter colony.</string>
+    <string name="move_cells_for_to_finisher">Move cells for %1$s to finisher</string>
+    <string name="check_for_capped_cells_and_move_the_cell_bar_to_a_finisher_colony">Check for capped cells and move the cell bar to a finisher colony.</string>
+    <string name="queens_emerge_for">Queens emerge for %1$s</string>
+    <string name="queens_are_expected_to_emerge_prepare_mating_nucs">Queens are expected to emerge. Prepare mating nucs.</string>
+    <string name="check_for_laying_queens_from">Check for laying queens from %1$s</string>
+    <string name="check_the_mating_nucs_for_laying_queens">Check the mating nucs for laying queens.</string>
+    <string name="hives_added_successfully">%1$d hives added successfully</string>
+    <string name="acceptance_rate_1f">Acceptance Rate: %.1f%%</string>
+    <string name="emergence_rate_1f">Emergence Rate: %.1f%%</string>
+    <string name="mating_success_1f">Mating Success: %.1f%%</string>
+    <string name="acceptance_rate">Acceptance Rate (%)</string>
+    <string name="grafted_on">Grafted on: %1$s</string>
+    <string name="mother">Mother: %1$s</string>
+    <string name="accepted">Accepted: %1$d / %2$d</string>
+    <string name="update_cell_status">Update Cell #%1$d Status</string>
+    <string name="grafted">Grafted: %1$s</string>
+    <string name="cells">Cells: %1$d</string>
+    <string name="cell">Cell #%1$d</string>
+    <string name="invalid_position">Invalid position: %1$d</string>
+    <string name="batch_name">Batch Name</string>
+    <string name="grafting_date">Grafting Date</string>
+    <string name="mother_colony">Mother Colony</string>
+    <string name="number_of_cells_grafted">Number of Cells Grafted</string>
+    <string name="notes">Notes</string>
+    <string name="save_batch">Save Batch</string>
+
+    <!-- Hive Roles -->
+    <string name="hive_role_production">Production</string>
+    <string name="hive_role_mother">Mother</string>
+    <string name="hive_role_starter">Starter</string>
+    <string name="hive_role_finisher">Finisher</string>
+    <string name="hive_role_nucleus">Nucleus</string>
+
+    <!-- Queen Cell Statuses -->
+    <string name="queen_cell_status_grafted">Grafted</string>
+    <string name="queen_cell_status_accepted">Accepted</string>
+    <string name="queen_cell_status_capped">Capped</string>
+    <string name="queen_cell_status_emerged">Emerged</string>
+    <string name="queen_cell_status_mating">Mating</string>
+    <string name="queen_cell_status_laying">Laying</string>
+    <string name="queen_cell_status_failed">Failed</string>
+
+    <string name="overall_performance">Overall Performance</string>
+    <string name="performance_by_batch">Performance by Batch</string>
+    <string name="batch_details">Batch Details</string>
+    <string name="queen_cells">Queen Cells</string>
+    <string name="chart_no_data">No chart data available</string>
+    <string name="mother_colonies">Mother Colonies</string>
+    <string name="starter_colonies">Starter Colonies</string>
+    <string name="finisher_colonies">Finisher Colonies</string>
+    <string name="nucleus_colonies">Nucleus Colonies</string>
+
 
 </resources>

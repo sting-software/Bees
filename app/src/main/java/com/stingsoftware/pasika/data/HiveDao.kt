@@ -34,4 +34,7 @@ interface HiveDao {
 
     @Query("UPDATE hives SET lastInspectionDate = :newDateMillis WHERE apiaryId = :apiaryId")
     suspend fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long)
+
+    @Query("SELECT * FROM hives WHERE role = :role")
+    fun getHivesByRole(role: HiveRole): Flow<List<Hive>>
 }

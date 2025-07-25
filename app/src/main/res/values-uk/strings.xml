@@ -363,5 +363,67 @@
 
     <string name="description_drag_to_reorder">Перетягніть, щоб змінити порядок</string>
 
+    <string name="hive_role">Роль</string>
+    <string name="queen_rearing">Виведення маток</string>
+    <string name="batches">Партії</string>
+    <string name="colonies">Сім\'ї</string>
+    <string name="timeline">Графік</string>
+    <string name="analytics">Аналітика</string>
+    <string name="select_grafting_date">Вибрати дату щеплення</string>
+    <string name="date_picker">ВИБІР_ДАТИ</string>
+    <string name="check_acceptance_for">Перевірити прийом для %1$s</string>
+    <string name="check_how_many_cells_were_accepted_in_the_starter_colony">Перевірте, скільки маточників прийнято у стартері.</string>
+    <string name="move_cells_for_to_finisher">Перенести маточники для %1$s у виховательку</string>
+    <string name="check_for_capped_cells_and_move_the_cell_bar_to_a_finisher_colony">Перевірте запечатані маточники та перенесіть планку в сім\'ю-виховательку.</string>
+    <string name="queens_emerge_for">Вихід маток для %1$s</string>
+    <string name="queens_are_expected_to_emerge_prepare_mating_nucs">Очікується вихід маток. Підготуйте нуклеуси.</string>
+    <string name="check_for_laying_queens_from">Перевірити плідних маток з %1$s</string>
+    <string name="check_the_mating_nucs_for_laying_queens">Перевірте нуклеуси на наявність плідних маток.</string>
+    <string name="hives_added_successfully">%1$d вуликів успішно додано</string>
+    <string name="acceptance_rate_1f">Рівень прийому: %.1f%%</string>
+    <string name="emergence_rate_1f">Рівень виходу: %.1f%%</string>
+    <string name="mating_success_1f">Успішність обльоту: %.1f%%</string>
+    <string name="acceptance_rate">Рівень прийому (%)</string>
+    <string name="grafted_on">Щеплено: %1$s</string>
+    <string name="mother">Матка: %1$s</string>
+    <string name="accepted">Прийнято: %1$d / %2$d</string>
+    <string name="update_cell_status">Оновити статус маточника №%1$d</string>
+    <string name="grafted">Щеплено: %1$s</string>
+    <string name="cells">Маточники: %1$d</string>
+    <string name="cell">Маточник №%1$d</string>
+    <string name="invalid_position">Невірна позиція: %1$d</string>
+
+    <string name="batch_name">Назва партії</string>
+    <string name="grafting_date">Дата щеплення</string>
+    <string name="mother_colony">Материнська сім\'я</string>
+    <string name="number_of_cells_grafted">Кількість щеплених маточників</string>
+    <string name="notes">Нотатки</string>
+    <string name="save_batch">Зберегти партію</string>
+
+    <!-- Hive Roles -->
+    <string name="hive_role_production">Продуктивна</string>
+    <string name="hive_role_mother">Материнська</string>
+    <string name="hive_role_starter">Стартер</string>
+    <string name="hive_role_finisher">Вихователька</string>
+    <string name="hive_role_nucleus">Нуклеус</string>
+
+    <!-- Queen Cell Statuses -->
+    <string name="queen_cell_status_grafted">Прищеплений</string>
+    <string name="queen_cell_status_accepted">Прийнятий</string>
+    <string name="queen_cell_status_capped">Запечатаний</string>
+    <string name="queen_cell_status_emerged">Вийшла</string>
+    <string name="queen_cell_status_mating">На обльоті</string>
+    <string name="queen_cell_status_laying">Плідна</string>
+    <string name="queen_cell_status_failed">Невдача</string>
+
+    <string name="overall_performance">Загальна продуктивність</string>
+    <string name="performance_by_batch">Продуктивність по партіях</string>
+    <string name="batch_details">Деталі партії</string>
+    <string name="queen_cells">Маточники</string>
+    <string name="chart_no_data">Немає даних для діаграми</string>
+    <string name="mother_colonies">Материнські сім\'ї</string>
+    <string name="starter_colonies">Cтартери</string>
+    <string name="finisher_colonies">Фінішери</string>
+    <string name="nucleus_colonies">Нуклеуси</string>
 
 </resources>

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.map
 
 @Singleton
 class ApiaryRepository @Inject constructor(
@@ -18,11 +19,54 @@ class ApiaryRepository @Inject constructor(
     private val hiveDao: HiveDao,
     private val inspectionDao: InspectionDao,
     private val taskDao: TaskDao,
+    private val queenRearingDao: QueenRearingDao,
     @param:ApplicationContext private val context: Context
 ) {
+    // --- Queen Rearing Methods ---
+    fun getAllGraftingBatches(): Flow<List<GraftingBatch>> = queenRearingDao.getAllGraftingBatches()
+    suspend fun insertGraftingBatch(batch: GraftingBatch): Long =
+        queenRearingDao.insertGraftingBatch(batch)
 
+    suspend fun insertQueenCells(cells: List<QueenCell>) = queenRearingDao.insertQueenCells(cells)
+    fun getQueenCellsForBatch(batchId: Long): Flow<List<QueenCell>> =
+        queenRearingDao.getQueenCellsForBatch(batchId)
+
+    fun getHivesByRole(role: HiveRole): Flow<List<Hive>> = hiveDao.getHivesByRole(role)
+    fun getGraftingBatchById(batchId: Long): Flow<GraftingBatch> =
+        queenRearingDao.getGraftingBatchById(batchId)
+
+    suspend fun updateQueenCell(cell: QueenCell) = queenRearingDao.updateQueenCell(cell)
+    fun getQueenRearingTasks(): Flow<List<Task>> = taskDao.getQueenRearingTasks()
+    fun getAllQueenCells(): Flow<List<QueenCell>> = queenRearingDao.getAllQueenCells()
+    fun getQueenRearingStats(): Flow<QueenRearingStats> {
+        return getAllQueenCells().map { cells ->
+            val total = cells.size
+            if (total == 0) return@map QueenRearingStats()
+
+            val accepted =
+                cells.count { it.status >= QueenCellStatus.ACCEPTED && it.status != QueenCellStatus.FAILED }
+            val emerged =
+                cells.count { it.status >= QueenCellStatus.EMERGED && it.status != QueenCellStatus.FAILED }
+            val laying = cells.count { it.status == QueenCellStatus.LAYING }
+
+            val acceptanceRate = accepted.toFloat() / total.toFloat()
+            val emergenceRate = if (accepted > 0) emerged.toFloat() / accepted.toFloat() else 0f
+            val matingSuccessRate = if (emerged > 0) laying.toFloat() / emerged.toFloat() else 0f
+
+            QueenRearingStats(
+                totalCells = total,
+                acceptedCells = accepted,
+                emergedQueens = emerged,
+                layingQueens = laying,
+                acceptanceRate = acceptanceRate * 100,
+                emergenceRate = emergenceRate * 100,
+                matingSuccessRate = matingSuccessRate * 100
+            )
+        }
+    }
+
+    // --- Original Apiary Methods ---
     val allApiaries: Flow<List<Apiary>> = apiaryDao.getAllApiaries()
-
     suspend fun insertApiary(apiary: Apiary): Long {
         return apiaryDao.insert(apiary)
     }
@@ -39,10 +83,6 @@ class ApiaryRepository @Inject constructor(
         return apiaryDao.getApiaryById(apiaryId)
     }
 
-    /**
-     * NEW: Exposes the DAO's bulk update function to be used by the ViewModel for reordering.
-     * @param apiaries The list of apiaries with updated displayOrder values.
-     */
     suspend fun updateApiaries(apiaries: List<Apiary>) {
         apiaryDao.updateApiaries(apiaries)
     }
@@ -57,7 +97,11 @@ class ApiaryRepository @Inject constructor(
         }
     }
 
-    // Hive operations
+    fun getApiaryFlowById(apiaryId: Long): Flow<Apiary?> {
+        return apiaryDao.getApiaryFlowById(apiaryId)
+    }
+
+    // --- Original Hive Methods ---
     suspend fun insertHive(hive: Hive): Long {
         return hiveDao.insert(hive)
     }
@@ -107,7 +151,7 @@ class ApiaryRepository @Inject constructor(
         updateApiaryHiveCount(destinationApiaryId)
     }
 
-    // Inspection operations
+    // --- Original Inspection Methods ---
     suspend fun insertInspectionAndUpdateHive(inspection: Inspection) {
         db.withTransaction {
             inspectionDao.insert(inspection)
@@ -135,7 +179,7 @@ class ApiaryRepository @Inject constructor(
         return inspectionDao.searchInspections(hiveId, query)
     }
 
-    // Export/Import operations
+    // --- Original Export/Import Methods ---
     suspend fun getApiaryExportData(apiaryId: Long): ApiaryExportData? {
         val apiary = apiaryDao.getApiaryById(apiaryId) ?: return null
         val hives = hiveDao.getHivesForApiary(apiaryId).first()
@@ -173,17 +217,12 @@ class ApiaryRepository @Inject constructor(
         updateApiaryHiveCount(newApiaryId)
     }
 
-    // Task operations
+    // --- Original Task Methods ---
     fun getAllTasks(): Flow<List<Task>> = taskDao.getAllTasks()
-
     suspend fun getTaskById(taskId: Long): Task? = taskDao.getTaskById(taskId)
-
     suspend fun insertTask(task: Task): Long = taskDao.insert(task)
-
     suspend fun updateTask(task: Task) = taskDao.update(task)
-
     suspend fun deleteTask(task: Task) = taskDao.delete(task)
-
     suspend fun markTasksAsCompleted(taskIds: List<Long>) {
         taskDao.markTasksAsCompleted(taskIds)
     }
@@ -194,9 +233,5 @@ class ApiaryRepository @Inject constructor(
 
     suspend fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) {
         hiveDao.updateInspectionDateForApiary(apiaryId, newDateMillis)
-    }
-
-    fun getApiaryFlowById(apiaryId: Long): Flow<Apiary?> {
-        return apiaryDao.getApiaryFlowById(apiaryId)
     }
 }

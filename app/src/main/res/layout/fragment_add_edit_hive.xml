@@ -28,8 +28,6 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
-                <!-- Removed: text_view_hive_identification_title -->
-
                 <!-- Add Multiple Hives Checkbox -->
                 <CheckBox
                     android:id="@+id/checkbox_add_multiple_hives"
@@ -308,6 +306,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/role_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="@string/hive_role"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/text_input_layout_breed_other">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/auto_complete_text_view_role"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -434,7 +451,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="number"
-                            android:maxLength="3"/>
+                            android:maxLength="3" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout

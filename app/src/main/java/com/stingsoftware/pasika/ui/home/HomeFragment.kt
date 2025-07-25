@@ -62,14 +62,11 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setup ItemTouchHelper with new callbacks for move and drop
         val itemTouchHelperCallback = ApiaryItemTouchHelperCallback(
             onMove = { fromPosition, toPosition ->
-                // This handles the smooth animation
                 apiaryAdapter.moveItem(fromPosition, toPosition)
             },
             onDrop = {
-                // This saves the result to the database after the animation is finished
                 val finalList = apiaryAdapter.currentList
                 homeViewModel.saveApiaryOrder(finalList)
             }
@@ -99,6 +96,9 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
             },
             onStartDrag = { viewHolder ->
                 itemTouchHelper.startDrag(viewHolder)
+            },
+            onMultiSelectModeChange = { enabled ->
+                activity?.invalidateOptionsMenu()
             }
         )
         binding.recyclerViewApiaries.adapter = apiaryAdapter
@@ -126,8 +126,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
         homeViewModel.filteredApiaries.observe(viewLifecycleOwner) { apiaries ->
             apiaries?.let {
-                // Only submit the list if it's different from the adapter's current list
-                // This prevents an update during a drag operation
                 if (apiaryAdapter.currentList != it) {
                     apiaryAdapter.submitList(it)
                 }
@@ -156,7 +154,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    // Other fragment methods (onResume, setupMenu, etc.) remain the same...
     override fun onResume() {
         super.onResume()
         if (searchView?.isIconified == false) {
@@ -240,7 +237,7 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun setMultiSelectMode(enabled: Boolean) {
         apiaryAdapter.setMultiSelectMode(enabled)
-        activity?.invalidateOptionsMenu()
+        // The call to invalidateOptionsMenu() is now handled by the adapter's callback
     }
 
     private fun updateToolbarTitleForSelection(count: Int) {
@@ -294,9 +291,6 @@ class HomeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 }
 
-/**
- * MODIFIED: This callback now has two actions: one for moving, and one for when the item is dropped.
- */
 class ApiaryItemTouchHelperCallback(
     private val onMove: (fromPosition: Int, toPosition: Int) -> Unit,
     private val onDrop: () -> Unit
@@ -318,13 +312,8 @@ class ApiaryItemTouchHelperCallback(
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // Not used
     }
 
-    /**
-     * This is called when the user drops the item they were dragging.
-     * We trigger the onDrop callback here to save the new order to the database.
-     */
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
         onDrop()

@@ -18,19 +18,22 @@ class ApiaryAdapter(
     private val onItemClick: (Apiary) -> Unit,
     private val onEditClick: (Apiary) -> Unit,
     private val onSelectionChange: (Int) -> Unit,
-    private val onStartDrag: (RecyclerView.ViewHolder) -> Unit
+    private val onStartDrag: (RecyclerView.ViewHolder) -> Unit,
+    private val onMultiSelectModeChange: (Boolean) -> Unit
 ) : ListAdapter<Apiary, ApiaryAdapter.ApiaryViewHolder>(ApiaryDiffCallback()) {
 
     private val selectedItems = mutableSetOf<Long>()
     private var isMultiSelectMode = false
 
-    inner class ApiaryViewHolder(private val binding: ItemApiaryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ApiaryViewHolder(private val binding: ItemApiaryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("ClickableViewAccessibility")
         fun bind(apiary: Apiary) {
             binding.textViewApiaryName.text = apiary.name
             binding.textViewApiaryLocation.text = apiary.location
             binding.textViewApiaryType.text = itemView.context.getString(apiary.type.stringResId)
-            binding.textViewNumberOfHives.text = itemView.context.getString(R.string.label_hives_count, apiary.numberOfHives)
+            binding.textViewNumberOfHives.text =
+                itemView.context.getString(R.string.label_hives_count, apiary.numberOfHives)
 
             binding.root.setOnClickListener {
                 if (isMultiSelectMode) {
@@ -40,7 +43,13 @@ class ApiaryAdapter(
                 }
             }
 
-            binding.root.setOnLongClickListener(null)
+            binding.root.setOnLongClickListener {
+                if (!isMultiSelectMode) {
+                    setMultiSelectMode(true)
+                    toggleSelection(apiary)
+                }
+                true
+            }
 
             binding.imageButtonEdit.setOnClickListener {
                 onEditClick(apiary)
@@ -77,20 +86,21 @@ class ApiaryAdapter(
     fun moveItem(fromPosition: Int, toPosition: Int): List<Apiary> {
         val newList = currentList.toMutableList()
         Collections.swap(newList, fromPosition, toPosition)
-        // We submit the list here but without the DiffUtil running on the main thread immediately,
-        // which helps, but the key is notifyItemMoved.
         submitList(newList)
         return newList
     }
 
     fun toggleSelection(apiary: Apiary) {
-        if (selectedItems.contains(apiary.id)) {
-            selectedItems.remove(apiary.id)
-        } else {
-            selectedItems.add(apiary.id)
+        val apiaryIndex = currentList.indexOfFirst { it.id == apiary.id }
+        if (apiaryIndex != -1) {
+            if (selectedItems.contains(apiary.id)) {
+                selectedItems.remove(apiary.id)
+            } else {
+                selectedItems.add(apiary.id)
+            }
+            notifyItemChanged(apiaryIndex)
+            onSelectionChange(selectedItems.size)
         }
-        notifyItemChanged(currentList.indexOf(apiary))
-        onSelectionChange(selectedItems.size)
     }
 
     fun selectAll() {
@@ -103,6 +113,7 @@ class ApiaryAdapter(
     fun setMultiSelectMode(enabled: Boolean) {
         if (isMultiSelectMode != enabled) {
             isMultiSelectMode = enabled
+            onMultiSelectModeChange(enabled)
             if (!enabled) {
                 clearSelection()
             }
@@ -134,7 +145,10 @@ class ApiaryAdapter(
     }
 
     class ApiaryDiffCallback : DiffUtil.ItemCallback<Apiary>() {
-        override fun areItemsTheSame(oldItem: Apiary, newItem: Apiary): Boolean = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: Apiary, newItem: Apiary): Boolean = oldItem == newItem
+        override fun areItemsTheSame(oldItem: Apiary, newItem: Apiary): Boolean =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(oldItem: Apiary, newItem: Apiary): Boolean =
+            oldItem == newItem
     }
 }

@@ -50,5 +50,6 @@ data class Hive(
     val givenBeesKg: Double? = null,
     val givenHoneyKg: Double? = null,
     val givenSugarKg: Double? = null,
-    val treatment: String? = null
+    val treatment: String? = null,
+    val role: HiveRole = HiveRole.PRODUCTION
 )
