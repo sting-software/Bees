@@ -590,7 +590,7 @@
                         android:id="@+id/edit_text_queen_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number" /> <!-- Changed inputType to number -->
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -630,24 +630,6 @@
                         android:inputType="textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_layout_queen_cells"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/hint_queen_cells"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_line">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_text_queen_cells"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <!-- NEW: Isolation From Date -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_isolation_from_date"
@@ -660,7 +642,7 @@
                     app:endIconMode="custom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_cells">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_line">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_isolation_from_date"

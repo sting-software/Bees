@@ -21,7 +21,8 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/batch_name_edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -39,8 +40,8 @@
                 android:id="@+id/grafting_date_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

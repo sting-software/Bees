@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.stingsoftware.pasika.R
+import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.databinding.FragmentColoniesListBinding
 import com.stingsoftware.pasika.ui.apiarydetail.HiveAdapter
+import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragmentDirections
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,6 +23,12 @@ class ColoniesFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: QueenRearingViewModel by viewModels({ requireParentFragment() })
+
+    // Properties to hold the lists to check for the empty state
+    private var motherColonies: List<Hive>? = null
+    private var starterColonies: List<Hive>? = null
+    private var finisherColonies: List<Hive>? = null
+    private var nucleusColonies: List<Hive>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,53 +44,53 @@ class ColoniesFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        val motherAdapter = HiveAdapter(
-            onItemClick = {},
-            onEditClick = {},
-            onDeleteSwipe = {},
-            onLongClick = {},
-            onSelectionChange = {}
-        )
-        val starterAdapter = HiveAdapter(
-            onItemClick = {},
-            onEditClick = {},
-            onDeleteSwipe = {},
-            onLongClick = {},
-            onSelectionChange = {}
-        )
-        val finisherAdapter = HiveAdapter(
-            onItemClick = {},
-            onEditClick = {},
-            onDeleteSwipe = {},
-            onLongClick = {},
-            onSelectionChange = {}
-        )
-        val nucleusAdapter = HiveAdapter(
-            onItemClick = {},
-            onEditClick = {},
-            onDeleteSwipe = {},
-            onLongClick = {},
-            onSelectionChange = {}
-        )
-
-        binding.recyclerViewMother.apply {
-            adapter = motherAdapter; layoutManager = LinearLayoutManager(context)
-        }
-        binding.recyclerViewStarter.apply {
-            adapter = starterAdapter; layoutManager = LinearLayoutManager(context)
-        }
-        binding.recyclerViewFinisher.apply {
-            adapter = finisherAdapter; layoutManager = LinearLayoutManager(context)
-        }
-        binding.recyclerViewNucleus.apply {
-            adapter = nucleusAdapter; layoutManager = LinearLayoutManager(context)
+        val onEditClicked: (Hive) -> Unit = { hive ->
+            val action = QueenRearingFragmentDirections.actionQueenRearingFragmentToAddEditHiveFragment(
+                hiveId = hive.id,
+                apiaryId = hive.apiaryId,
+                title = getString(R.string.title_edit_hive)
+            )
+            parentFragment?.findNavController()?.navigate(action)
         }
 
-        viewModel.getMotherColonies().observe(viewLifecycleOwner) { motherAdapter.submitList(it) }
-        viewModel.getStarterColonies().observe(viewLifecycleOwner) { starterAdapter.submitList(it) }
-        viewModel.getFinisherColonies()
-            .observe(viewLifecycleOwner) { finisherAdapter.submitList(it) }
-        viewModel.getNucleusColonies().observe(viewLifecycleOwner) { nucleusAdapter.submitList(it) }
+        val motherAdapter = createAdapter(onEditClicked)
+        val starterAdapter = createAdapter(onEditClicked)
+        val finisherAdapter = createAdapter(onEditClicked)
+        val nucleusAdapter = createAdapter(onEditClicked)
+
+        binding.recyclerViewMother.apply { adapter = motherAdapter; layoutManager = LinearLayoutManager(context) }
+        binding.recyclerViewStarter.apply { adapter = starterAdapter; layoutManager = LinearLayoutManager(context) }
+        binding.recyclerViewFinisher.apply { adapter = finisherAdapter; layoutManager = LinearLayoutManager(context) }
+        binding.recyclerViewNucleus.apply { adapter = nucleusAdapter; layoutManager = LinearLayoutManager(context) }
+
+        viewModel.getMotherColonies().observe(viewLifecycleOwner) { motherAdapter.submitList(it); motherColonies = it; updateEmptyStateVisibility() }
+        viewModel.getStarterColonies().observe(viewLifecycleOwner) { starterAdapter.submitList(it); starterColonies = it; updateEmptyStateVisibility() }
+        viewModel.getFinisherColonies().observe(viewLifecycleOwner) { finisherAdapter.submitList(it); finisherColonies = it; updateEmptyStateVisibility() }
+        viewModel.getNucleusColonies().observe(viewLifecycleOwner) { nucleusAdapter.submitList(it); nucleusColonies = it; updateEmptyStateVisibility() }
+    }
+
+    private fun createAdapter(onEditClicked: (Hive) -> Unit) = HiveAdapter(
+        onItemClick = {},
+        onEditClick = onEditClicked,
+        onDeleteSwipe = {},
+        onLongClick = {},
+        onSelectionChange = {}
+    )
+    private fun updateEmptyStateVisibility() {
+        // Return if not all lists have been initialized yet
+        if (motherColonies == null || starterColonies == null || finisherColonies == null || nucleusColonies == null) return
+
+        val areAllEmpty = motherColonies!!.isEmpty() && starterColonies!!.isEmpty() && finisherColonies!!.isEmpty() && nucleusColonies!!.isEmpty()
+
+        if (areAllEmpty) {
+            binding.scrollViewColonies.visibility = View.GONE
+            binding.emptyState.root.visibility = View.VISIBLE
+            binding.emptyState.textViewEmptyMessage.text =
+                getString(R.string.no_colonies_assigned)
+        } else {
+            binding.scrollViewColonies.visibility = View.VISIBLE
+            binding.emptyState.root.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {

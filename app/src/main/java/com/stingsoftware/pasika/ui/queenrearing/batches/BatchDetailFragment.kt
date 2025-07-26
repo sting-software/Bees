@@ -11,6 +11,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.stingsoftware.pasika.R
+import com.stingsoftware.pasika.data.GraftingBatch
 import com.stingsoftware.pasika.data.QueenCell
 import com.stingsoftware.pasika.data.QueenCellStatus
 import com.stingsoftware.pasika.databinding.FragmentBatchDetailBinding
@@ -40,8 +41,8 @@ class BatchDetailFragment : Fragment() {
 
         binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
 
-        val cellAdapter = QueenCellAdapter { cell ->
-            showStatusUpdateDialog(cell)
+        val cellAdapter = QueenCellAdapter { cell, cellNumber ->
+            showStatusUpdateDialog(cell, cellNumber)
         }
 
         binding.recyclerViewQueenCells.apply {
@@ -49,19 +50,23 @@ class BatchDetailFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
         }
 
-        // First, observe the batch details
-        viewModel.getBatch(args.batchId).observe(viewLifecycleOwner) { batch ->
+        val batchLiveData = viewModel.getBatch(args.batchId)
+        val cellsLiveData = viewModel.getQueenCells(args.batchId)
+
+        batchLiveData.observe(viewLifecycleOwner) { batch ->
             batch?.let {
                 binding.batchName.text = it.name
                 val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
                 binding.graftingDate.text =
                     getString(R.string.grafted_on, sdf.format(Date(it.graftingDate)))
-                // Once we have the batch, trigger the fetch for the mother hive
                 viewModel.fetchMotherHive(it.motherHiveId)
+
+                cellsLiveData.value?.let { cells ->
+                    updateCellStats(cells, it)
+                }
             }
         }
 
-        // Second, observe the motherHive LiveData property that will be updated by the fetch
         viewModel.motherHive.observe(viewLifecycleOwner) { hive ->
             hive?.let {
                 binding.motherColony.text =
@@ -69,17 +74,23 @@ class BatchDetailFragment : Fragment() {
             }
         }
 
-        viewModel.getQueenCells(args.batchId).observe(viewLifecycleOwner) { cells ->
+        cellsLiveData.observe(viewLifecycleOwner) { cells ->
             cellAdapter.submitList(cells)
-            val acceptedCount = cells.count { it.status != QueenCellStatus.GRAFTED && it.status != QueenCellStatus.FAILED }
-            binding.cellStats.text = getString(R.string.accepted, acceptedCount, cells.size)
+            batchLiveData.value?.let { batch ->
+                updateCellStats(cells, batch)
+            }
         }
     }
 
-    private fun showStatusUpdateDialog(cell: QueenCell) {
-        val statuses = QueenCellStatus.entries.map { it.name }.toTypedArray()
+    private fun updateCellStats(cells: List<QueenCell>, batch: GraftingBatch) {
+        val acceptedCount = cells.count { it.status != QueenCellStatus.GRAFTED && it.status != QueenCellStatus.FAILED }
+        binding.cellStats.text = getString(R.string.accepted, acceptedCount, batch.cellsGrafted)
+    }
+
+    private fun showStatusUpdateDialog(cell: QueenCell, cellNumber: Int) {
+        val statuses = QueenCellStatus.entries.map { it.getLabel(requireContext()) }.toTypedArray()
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.update_cell_status, cell.id))
+            .setTitle(getString(R.string.update_cell_status, cellNumber))
             .setItems(statuses) { dialog, which ->
                 val newStatus = QueenCellStatus.entries[which]
                 val updatedCell = cell.copy(status = newStatus)

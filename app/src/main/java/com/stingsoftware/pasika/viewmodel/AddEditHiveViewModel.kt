@@ -74,49 +74,40 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
         givenHoneyKg: Double?,
         givenSugarKg: Double?,
         treatment: String?,
-        // NEW: Added role parameter to the function signature
         role: HiveRole
     ) = viewModelScope.launch {
         try {
+            val hivesToInsert = mutableListOf<Hive>()
+            val baseHive = Hive(
+                apiaryId = apiaryId, hiveNumber = null, hiveType = hiveType,
+                hiveTypeOther = hiveTypeOther, frameType = frameType, frameTypeOther = frameTypeOther,
+                material = material, materialOther = materialOther, breed = breed, breedOther = breedOther,
+                lastInspectionDate = lastInspectionDate, notes = notes, queenTagColor = queenTagColor,
+                queenTagColorOther = queenTagColorOther, queenNumber = queenNumber, queenYear = queenYear,
+                queenLine = queenLine, queenCells = queenCells, isolationFromDate = isolationFromDate,
+                isolationToDate = isolationToDate, defensivenessRating = defensivenessRating,
+                framesTotal = framesTotal, framesEggs = framesEggs, framesOpenBrood = framesOpenBrood,
+                framesCappedBrood = framesCappedBrood, framesFeed = framesFeed, givenBuiltCombs = givenBuiltCombs,
+                givenFoundation = givenFoundation, givenBrood = givenBrood, givenBeesKg = givenBeesKg,
+                givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment,
+                role = role
+            )
+
             if (autoNumber && startingHiveNumber != null && endingHiveNumber != null) {
                 for (i in startingHiveNumber..endingHiveNumber) {
-                    val hive = Hive(
-                        apiaryId = apiaryId, hiveNumber = i.toString(), hiveType = hiveType,
-                        hiveTypeOther = hiveTypeOther, frameType = frameType, frameTypeOther = frameTypeOther,
-                        material = material, materialOther = materialOther, breed = breed, breedOther = breedOther,
-                        lastInspectionDate = lastInspectionDate, notes = notes, queenTagColor = queenTagColor,
-                        queenTagColorOther = queenTagColorOther, queenNumber = queenNumber, queenYear = queenYear,
-                        queenLine = queenLine, queenCells = queenCells, isolationFromDate = isolationFromDate,
-                        isolationToDate = isolationToDate, defensivenessRating = defensivenessRating,
-                        framesTotal = framesTotal, framesEggs = framesEggs, framesOpenBrood = framesOpenBrood,
-                        framesCappedBrood = framesCappedBrood, framesFeed = framesFeed, givenBuiltCombs = givenBuiltCombs,
-                        givenFoundation = givenFoundation, givenBrood = givenBrood, givenBeesKg = givenBeesKg,
-                        givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment,
-                        // NEW: Assign the role to the new Hive object
-                        role = role
-                    )
-                    repository.insertHive(hive)
+                    hivesToInsert.add(baseHive.copy(hiveNumber = i.toString()))
                 }
             } else {
                 for (i in 1..quantity) {
-                    val hive = Hive(
-                        apiaryId = apiaryId, hiveNumber = null, hiveType = hiveType,
-                        hiveTypeOther = hiveTypeOther, frameType = frameType, frameTypeOther = frameTypeOther,
-                        material = material, materialOther = materialOther, breed = breed, breedOther = breedOther,
-                        lastInspectionDate = lastInspectionDate, notes = notes, queenTagColor = queenTagColor,
-                        queenTagColorOther = queenTagColorOther, queenNumber = queenNumber, queenYear = queenYear,
-                        queenLine = queenLine, queenCells = queenCells, isolationFromDate = isolationFromDate,
-                        isolationToDate = isolationToDate, defensivenessRating = defensivenessRating,
-                        framesTotal = framesTotal, framesEggs = framesEggs, framesOpenBrood = framesOpenBrood,
-                        framesCappedBrood = framesCappedBrood, framesFeed = framesFeed, givenBuiltCombs = givenBuiltCombs,
-                        givenFoundation = givenFoundation, givenBrood = givenBrood, givenBeesKg = givenBeesKg,
-                        givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment,
-                        // NEW: Assign the role to the new Hive object
-                        role = role
-                    )
-                    repository.insertHive(hive)
+                    hivesToInsert.add(baseHive.copy()) // Add a copy for each quantity
                 }
             }
+
+            if (hivesToInsert.isNotEmpty()) {
+                // Call the new repository method for bulk insert
+                repository.insertHives(hivesToInsert)
+            }
+
             repository.updateApiaryHiveCount(apiaryId)
             _saveCompleted.value = true
         } catch (e: Exception) {

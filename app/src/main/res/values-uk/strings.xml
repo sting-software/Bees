@@ -129,7 +129,11 @@
     <string name="message_hive_moved_from_to">Вулик переміщено з \'%1$s\' до \'%2$s\'.</string>
 
     <string name="dialog_message_delete_hive">Ви впевнені, що хочете видалити вулик №%s?</string>
-    <string name="dialog_title_delete_selected_hives">Видалити вибрані вулики</string>
+    <plurals name="dialog_title_delete_selected_hives">
+        <item quantity="one">Видалити %1$d обраний вулик</item>
+        <item quantity="few">Видалити %1$d обрані вулики</item>
+        <item quantity="many">Видалити %1$d обраних вуликів</item>
+    </plurals>
     <string name="dialog_message_delete_selected_hives">Ви впевнені, що хочете видалити %d вибраних вуликів?</string>
     <string name="dialog_title_move_hives">Перемістити %1$d вуликів до…</string>
 
@@ -144,7 +148,7 @@
     <string name="error_bulk_edit_quantity_mismatch">Розрахована кількість (%d) має відповідати кількості вибраних вуликів (%d).</string>
 
     <string name="hive_number_format">Вулик №%s</string>
-    <string name="hive_number_unknown">Вулик №?</string>
+    <string name="hive_number_unknown">Вулик №</string>
     <string name="hive_type_format">Тип: %s</string>
     <string name="frame_type_format">Рамки: %s</string>
     <string name="breed_format">Порода: %s</string>
@@ -395,14 +399,14 @@
 
     <string name="batch_name">Назва партії</string>
     <string name="grafting_date">Дата щеплення</string>
-    <string name="mother_colony">Материнська сім\'я</string>
+    <string name="mother_colony">Племінна сім\'я</string>
     <string name="number_of_cells_grafted">Кількість щеплених маточників</string>
     <string name="notes">Нотатки</string>
     <string name="save_batch">Зберегти партію</string>
 
     <!-- Hive Roles -->
     <string name="hive_role_production">Продуктивна</string>
-    <string name="hive_role_mother">Материнська</string>
+    <string name="hive_role_mother">Племінна</string>
     <string name="hive_role_starter">Стартер</string>
     <string name="hive_role_finisher">Вихователька</string>
     <string name="hive_role_nucleus">Нуклеус</string>
@@ -421,9 +425,38 @@
     <string name="batch_details">Деталі партії</string>
     <string name="queen_cells">Маточники</string>
     <string name="chart_no_data">Немає даних для діаграми</string>
-    <string name="mother_colonies">Материнські сім\'ї</string>
+    <string name="mother_colonies">Племінні</string>
     <string name="starter_colonies">Cтартери</string>
-    <string name="finisher_colonies">Фінішери</string>
+    <string name="finisher_colonies">Виховательки</string>
     <string name="nucleus_colonies">Нуклеуси</string>
+    <string name="no_batches_created">Ще не створено жодної партії. Натисніть \'+\', щоб почати.</string>
+    <string name="no_tasks_scheduled">Немає запланованих завдань. Створіть партію, щоб побачити її графік.</string>
+    <string name="no_colonies_assigned">Немає сімей, призначених для виведення маток. Ви можете призначити їм ролі під час редагування вулика.</string>
+    <string name="message_hive_saved">Вулик збережено</string>
+    <string name="grafting_batch">Партія</string>
+
+    <plurals name="dialog_title_delete_selected_batches">
+        <item quantity="one">Видалити %1$d обрану партію</item>
+        <item quantity="few">Видалити %1$d обрані партії</item>
+        <item quantity="many">Видалити %1$d обраних партій</item>
+    </plurals>
+
+    <plurals name="dialog_message_delete_selected_batches">
+        <item quantity="one">Ви впевнені, що хочете видалити %1$d обрану партію? Усі пов\'язані маточники та завдання також будуть видалені.</item>
+        <item quantity="few">Ви впевнені, що хочете видалити %1$d обрані партії? Усі пов\'язані маточники та завдання також будуть видалені.</item>
+        <item quantity="many">Ви впевнені, що хочете видалити %1$d обраних партій? Усі пов\'язані маточники та завдання також будуть видалені.</item>
+    </plurals>
+
+    <plurals name="dialog_title_delete_selected_tasks">
+        <item quantity="one">Видалити %1$d обране завдання</item>
+        <item quantity="few">Видалити %1$d обрані завдання</item>
+        <item quantity="many">Видалити %1$d обраних завдань</item>
+    </plurals>
+
+    <plurals name="dialog_message_delete_selected_tasks">
+        <item quantity="one">Ви впевнені, що хочете видалити %1$d обране завдання?</item>
+        <item quantity="few">Ви впевнені, що хочете видалити %1$d обрані завдання?</item>
+        <item quantity="many">Ви впевнені, що хочете видалити %1$d обраних завдань?</item>
+    </plurals>
 
 </resources>

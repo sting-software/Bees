@@ -87,7 +87,7 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                 if (count > 0) {
                     activity?.title = getString(R.string.selected_count_format, count)
                 } else {
-                    activity?.title = ""
+                    activity?.title = args.apiaryName
                 }
             }
         )
@@ -377,7 +377,6 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                     isCurrentlyActive
                 )
 
-                // --- FIX: This block restores the swipe-to-delete visual effect ---
                 val itemView = viewHolder.itemView
                 deleteIcon?.let {
                     val iconMargin = (itemView.height - it.intrinsicHeight) / 2
@@ -436,12 +435,17 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun showBulkDeleteConfirmationDialog(hivesToDelete: List<Hive>) {
+        val quantity = hivesToDelete.size
+        // FIX: Use a plurals resource to get the correct singular/plural string.
+        // This requires a corresponding <plurals> item in a resource file (e.g., res/values/plurals.xml).
+        val title = resources.getQuantityString(R.plurals.dialog_title_delete_selected_hives, quantity, quantity)
+
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_title_delete_selected_items))
+            .setTitle(title) // Use the correctly formatted title
             .setMessage(
                 getString(
                     R.string.dialog_message_delete_selected_items,
-                    hivesToDelete.size,
+                    quantity,
                     hivesToDelete.joinToString(", ") { it.hiveNumber ?: "N/A" }
                 )
             )
@@ -449,7 +453,7 @@ class ApiaryDetailFragment : Fragment(), SearchView.OnQueryTextListener {
                 hivesToDelete.forEach { apiaryDetailViewModel.deleteHive(it) }
                 Toast.makeText(
                     requireContext(),
-                    getString(R.string.message_hives_deleted, hivesToDelete.size),
+                    getString(R.string.message_hives_deleted, quantity),
                     Toast.LENGTH_SHORT
                 ).show()
                 setMultiSelectMode(false)

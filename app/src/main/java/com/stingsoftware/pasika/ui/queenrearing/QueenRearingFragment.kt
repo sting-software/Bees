@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,26 +29,23 @@ class QueenRearingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.queen_rearing)
+
         val viewPager = binding.viewPager
         val tabLayout = binding.tabs
 
-        // Set up the ViewPager with the PagerAdapter
         viewPager.adapter = QueenRearingPagerAdapter(this)
 
-        // Attach the TabLayout to the ViewPager
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = getTabTitle(position)
         }.attach()
 
-        // Set up the FloatingActionButton to navigate to the Add/Edit Batch screen
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_queenRearingFragment_to_addEditGraftingBatchFragment)
+            val action = QueenRearingFragmentDirections.actionQueenRearingFragmentToAddEditGraftingBatchFragment()
+            findNavController().navigate(action)
         }
     }
 
-    /**
-     * Returns the title for each tab based on its position.
-     */
     private fun getTabTitle(position: Int): String? {
         return when (position) {
             BATCHES_PAGE_INDEX -> getString(R.string.batches)

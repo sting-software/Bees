@@ -8,6 +8,9 @@ interface HiveDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(hive: Hive): Long
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertAll(hives: List<Hive>)
+
     @Update
     suspend fun update(hive: Hive): Int
 

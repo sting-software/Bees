@@ -13,25 +13,34 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val repository: ApiaryRepository,
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val taskScheduler = TaskScheduler(context)
 
-    private val taskId = savedStateHandle.get<Long>("taskId")
-
-    val task = liveData {
-        if (taskId != null && taskId != -1L) {
-            emit(repository.getTaskById(taskId))
-        } else {
-            emit(null)
-        }
-    }
+    // Private MutableLiveData to hold the task, and a public immutable LiveData to expose it.
+    private val _task = MutableLiveData<Task?>()
+    val task: LiveData<Task?> = _task
 
     private val _saveStatus = MutableLiveData<Boolean>()
     val saveStatus: LiveData<Boolean> = _saveStatus
 
+    init {
+        // Fetch the task as soon as the ViewModel is created.
+        val taskId = savedStateHandle.get<Long>("taskId")
+        if (taskId != null && taskId != -1L) {
+            viewModelScope.launch {
+                _task.value = repository.getTaskById(taskId)
+            }
+        } else {
+            _task.value = null
+        }
+    }
+
+    /**
+     * Saves the task to the repository and schedules or cancels reminders.
+     */
     fun onSaveClick(task: Task) {
         viewModelScope.launch {
             if (task.id == 0L) {

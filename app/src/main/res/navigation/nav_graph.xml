@@ -5,7 +5,7 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <!-- Existing Fragments and Actions from your file -->
+    <!-- Home and Apiary Fragments -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.stingsoftware.pasika.ui.home.HomeFragment"
@@ -69,6 +69,17 @@
     </fragment>
 
     <fragment
+        android:id="@+id/bulkEditApiaryFragment"
+        android:name="com.stingsoftware.pasika.ui.bulkedit.BulkEditApiaryFragment"
+        android:label="@string/title_bulk_edit_apiaries"
+        tools:layout="@layout/fragment_bulk_edit_apiary">
+        <argument
+            android:name="apiaryIds"
+            app:argType="long[]" />
+    </fragment>
+
+    <!-- Hive and Inspection Fragments -->
+    <fragment
         android:id="@+id/addEditHiveFragment"
         android:name="com.stingsoftware.pasika.ui.hiveedit.AddEditHiveFragment"
         android:label="{title}"
@@ -131,16 +142,7 @@
             app:argType="string" />
     </fragment>
 
-    <fragment
-        android:id="@+id/bulkEditApiaryFragment"
-        android:name="com.stingsoftware.pasika.ui.bulkedit.BulkEditApiaryFragment"
-        android:label="@string/title_bulk_edit_apiaries"
-        tools:layout="@layout/fragment_bulk_edit_apiary">
-        <argument
-            android:name="apiaryIds"
-            app:argType="long[]" />
-    </fragment>
-
+    <!-- To-Do Fragments -->
     <fragment
         android:id="@+id/todoListFragment"
         android:name="com.stingsoftware.pasika.todo.TodoListFragment"
@@ -166,7 +168,7 @@
             app:argType="string" />
     </fragment>
 
-    <!-- New Queen Rearing Fragments and Actions, correctly integrated -->
+    <!-- Queen Rearing Section -->
     <fragment
         android:id="@+id/queenRearingFragment"
         android:name="com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragment"
@@ -178,13 +180,24 @@
         <action
             android:id="@+id/action_queenRearingFragment_to_batchDetailFragment"
             app:destination="@id/batchDetailFragment" />
+        <action
+            android:id="@+id/action_queenRearingFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+        <action
+            android:id="@+id/action_queenRearingFragment_to_addEditHiveFragment"
+            app:destination="@id/addEditHiveFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/addEditGraftingBatchFragment"
         android:name="com.stingsoftware.pasika.ui.queenrearing.batches.AddEditGraftingBatchFragment"
-        android:label="Add Grafting Batch"
-        tools:layout="@layout/fragment_add_edit_grafting_batch" />
+        android:label="@string/grafting_batch"
+        tools:layout="@layout/fragment_add_edit_grafting_batch">
+        <argument
+            android:name="batchId"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 
     <fragment
         android:id="@+id/batchDetailFragment"

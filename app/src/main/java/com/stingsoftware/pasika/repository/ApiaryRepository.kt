@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.map
+import java.util.Calendar
 
 @Singleton
 class ApiaryRepository @Inject constructor(
@@ -27,6 +28,10 @@ class ApiaryRepository @Inject constructor(
     suspend fun insertGraftingBatch(batch: GraftingBatch): Long =
         queenRearingDao.insertGraftingBatch(batch)
 
+    suspend fun updateGraftingBatch(batch: GraftingBatch) =
+        queenRearingDao.updateGraftingBatch(batch)
+
+
     suspend fun insertQueenCells(cells: List<QueenCell>) = queenRearingDao.insertQueenCells(cells)
     fun getQueenCellsForBatch(batchId: Long): Flow<List<QueenCell>> =
         queenRearingDao.getQueenCellsForBatch(batchId)
@@ -38,6 +43,60 @@ class ApiaryRepository @Inject constructor(
     suspend fun updateQueenCell(cell: QueenCell) = queenRearingDao.updateQueenCell(cell)
     fun getQueenRearingTasks(): Flow<List<Task>> = taskDao.getQueenRearingTasks()
     fun getAllQueenCells(): Flow<List<QueenCell>> = queenRearingDao.getAllQueenCells()
+
+    suspend fun insertGraftingBatchAndTasks(batch: GraftingBatch, cellCount: Int) {
+        db.withTransaction {
+            val batchId = queenRearingDao.insertGraftingBatch(batch)
+            val cells = (1..cellCount).map { QueenCell(batchId = batchId) }
+            queenRearingDao.insertQueenCells(cells)
+
+            val graftingTime = batch.graftingDate
+            val oneDayInMillis = 24 * 60 * 60 * 1000L
+
+            val checkAcceptanceTask = Task(
+                title = context.getString(R.string.check_acceptance_for, batch.name),
+                description = context.getString(R.string.check_how_many_cells_were_accepted_in_the_starter_colony),
+                dueDate = graftingTime + (1 * oneDayInMillis),
+                graftingBatchId = batchId,
+                reminderEnabled = true
+            )
+
+            val moveToFinisherTask = Task(
+                title = context.getString(R.string.move_cells_for_to_finisher, batch.name),
+                description = context.getString(R.string.check_for_capped_cells_and_move_the_cell_bar_to_a_finisher_colony),
+                dueDate = graftingTime + (5 * oneDayInMillis),
+                graftingBatchId = batchId,
+                reminderEnabled = true
+            )
+
+            val emergenceTask = Task(
+                title = context.getString(R.string.queens_emerge_for, batch.name),
+                description = context.getString(R.string.queens_are_expected_to_emerge_prepare_mating_nucs),
+                dueDate = graftingTime + (11 * oneDayInMillis),
+                graftingBatchId = batchId,
+                reminderEnabled = true
+            )
+
+            val checkLayingTask = Task(
+                title = context.getString(R.string.check_for_laying_queens_from, batch.name),
+                description = context.getString(R.string.check_the_mating_nucs_for_laying_queens),
+                dueDate = graftingTime + (25 * oneDayInMillis),
+                graftingBatchId = batchId,
+                reminderEnabled = true
+            )
+
+            taskDao.insert(checkAcceptanceTask)
+            taskDao.insert(moveToFinisherTask)
+            taskDao.insert(emergenceTask)
+            taskDao.insert(checkLayingTask)
+        }
+    }
+
+    suspend fun deleteGraftingBatchesAndTasks(batches: List<GraftingBatch>) {
+        val batchIds = batches.map { it.id }
+        queenRearingDao.deleteBatchesAndDependencies(batchIds)
+    }
+
     fun getQueenRearingStats(): Flow<QueenRearingStats> {
         return getAllQueenCells().map { cells ->
             val total = cells.size
@@ -49,7 +108,7 @@ class ApiaryRepository @Inject constructor(
                 cells.count { it.status >= QueenCellStatus.EMERGED && it.status != QueenCellStatus.FAILED }
             val laying = cells.count { it.status == QueenCellStatus.LAYING }
 
-            val acceptanceRate = accepted.toFloat() / total.toFloat()
+            val acceptanceRate = if (total > 0) accepted.toFloat() / total.toFloat() else 0f
             val emergenceRate = if (accepted > 0) emerged.toFloat() / accepted.toFloat() else 0f
             val matingSuccessRate = if (emerged > 0) laying.toFloat() / emerged.toFloat() else 0f
 
@@ -101,9 +160,13 @@ class ApiaryRepository @Inject constructor(
         return apiaryDao.getApiaryFlowById(apiaryId)
     }
 
-    // --- Original Hive Methods ---
+    // --- Original Hive Methods (Corrected Structure) ---
     suspend fun insertHive(hive: Hive): Long {
         return hiveDao.insert(hive)
+    }
+
+    suspend fun insertHives(hives: List<Hive>) {
+        hiveDao.insertAll(hives)
     }
 
     suspend fun updateHive(hive: Hive) {
@@ -122,7 +185,11 @@ class ApiaryRepository @Inject constructor(
         return hiveDao.getHivesForApiary(apiaryId)
     }
 
-    suspend fun moveHives(hiveIds: List<Long>, sourceApiaryId: Long, destinationApiaryId: Long) {
+    suspend fun moveHives(
+        hiveIds: List<Long>,
+        sourceApiaryId: Long,
+        destinationApiaryId: Long
+    ) {
         val sourceApiaryName = apiaryDao.getApiaryById(sourceApiaryId)?.name
             ?: context.getString(R.string.unknown_apiary)
         val destinationApiaryName =
@@ -149,6 +216,10 @@ class ApiaryRepository @Inject constructor(
         hiveDao.moveHives(hiveIds, destinationApiaryId)
         updateApiaryHiveCount(sourceApiaryId)
         updateApiaryHiveCount(destinationApiaryId)
+    }
+
+    suspend fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) {
+        hiveDao.updateInspectionDateForApiary(apiaryId, newDateMillis)
     }
 
     // --- Original Inspection Methods ---
@@ -189,7 +260,10 @@ class ApiaryRepository @Inject constructor(
         val inspectionsByHiveId = inspections.groupBy { it.hiveId }
 
         val hivesWithInspections = hives.map { hive ->
-            HiveExportData(hive = hive, inspections = inspectionsByHiveId[hive.id] ?: emptyList())
+            HiveExportData(
+                hive = hive,
+                inspections = inspectionsByHiveId[hive.id] ?: emptyList()
+            )
         }
 
         return ApiaryExportData(apiary = apiary, hivesWithInspections = hivesWithInspections)
@@ -217,21 +291,16 @@ class ApiaryRepository @Inject constructor(
         updateApiaryHiveCount(newApiaryId)
     }
 
-    // --- Original Task Methods ---
+    // --- Task Methods ---
     fun getAllTasks(): Flow<List<Task>> = taskDao.getAllTasks()
     suspend fun getTaskById(taskId: Long): Task? = taskDao.getTaskById(taskId)
     suspend fun insertTask(task: Task): Long = taskDao.insert(task)
     suspend fun updateTask(task: Task) = taskDao.update(task)
     suspend fun deleteTask(task: Task) = taskDao.delete(task)
-    suspend fun markTasksAsCompleted(taskIds: List<Long>) {
+    suspend fun deleteTasks(tasks: List<Task>) = taskDao.deleteTasks(tasks)
+    suspend fun markTasksAsCompleted(taskIds: List<Long>) =
         taskDao.markTasksAsCompleted(taskIds)
-    }
 
-    suspend fun markTasksAsIncomplete(taskIds: List<Long>) {
+    suspend fun markTasksAsIncomplete(taskIds: List<Long>) =
         taskDao.markTasksAsIncomplete(taskIds)
-    }
-
-    suspend fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) {
-        hiveDao.updateInspectionDateForApiary(apiaryId, newDateMillis)
-    }
 }

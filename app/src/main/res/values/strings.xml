@@ -129,7 +129,10 @@
     <string name="message_hive_moved_from_to">Hive moved from \'%1$s\' to \'%2$s\'.</string>
 
     <string name="dialog_message_delete_hive">Are you sure you want to delete Hive %s?</string>
-    <string name="dialog_title_delete_selected_hives">Delete Selected Hives</string>
+    <plurals name="dialog_title_delete_selected_hives">
+        <item quantity="one">Delete %1$d selected hive</item>
+        <item quantity="other">Delete %1$d selected hives</item>
+    </plurals>
     <string name="dialog_message_delete_selected_hives">Are you sure you want to delete %d selected hives?</string>
     <string name="dialog_title_move_hives">Move %1$d Hive(s) To…</string>
 
@@ -144,7 +147,7 @@
     <string name="error_bulk_edit_quantity_mismatch">Calculated quantity (%d) must match selected hives count (%d).</string>
 
     <string name="hive_number_format">Hive #%s</string>
-    <string name="hive_number_unknown">Hive #Unknown</string>
+    <string name="hive_number_unknown">Hive #</string>
     <string name="hive_type_format">Type: %s</string>
     <string name="frame_type_format">Frames: %s</string>
     <string name="breed_format">Breed: %s</string>
@@ -425,6 +428,30 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <string name="starter_colonies">Starter Colonies</string>
     <string name="finisher_colonies">Finisher Colonies</string>
     <string name="nucleus_colonies">Nucleus Colonies</string>
+    <string name="no_batches_created">No batches created yet. Tap \'+\' to begin.</string>
+    <string name="no_tasks_scheduled">No tasks scheduled. Create a batch to see its timeline.</string>
+    <string name="no_colonies_assigned">No colonies assigned to queen rearing roles. You can assign roles when editing a hive.</string>
+    <string name="message_hive_saved">Hive saved</string>
+    <string name="grafting_batch">Grafting Batch</string>
 
+    <plurals name="dialog_title_delete_selected_batches">
+        <item quantity="one">Delete %1$d selected batch</item>
+        <item quantity="other">Delete %1$d selected batches</item>
+    </plurals>
+
+    <plurals name="dialog_message_delete_selected_batches">
+        <item quantity="one">Are you sure you want to delete %1$d selected batch? All related cells and tasks will also be deleted.</item>
+        <item quantity="other">Are you sure you want to delete %1$d selected batches? All related cells and tasks will also be deleted.</item>
+    </plurals>
+
+    <plurals name="dialog_title_delete_selected_tasks">
+        <item quantity="one">Delete %1$d selected task</item>
+        <item quantity="other">Delete %1$d selected tasks</item>
+    </plurals>
+
+    <plurals name="dialog_message_delete_selected_tasks">
+        <item quantity="one">Are you sure you want to delete %1$d selected task?</item>
+        <item quantity="other">Are you sure you want to delete %1$d selected tasks?</item>
+    </plurals>
 
 </resources>

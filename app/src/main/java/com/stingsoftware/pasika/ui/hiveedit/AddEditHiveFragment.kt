@@ -57,7 +57,7 @@ class AddEditHiveFragment : Fragment() {
 
         // Setup all UI components and listeners
         setupSpinners()
-        setupRoleSpinner() // NEW: Setup the role spinner
+        setupRoleSpinner()
         setupConditionalViews(!isEditMode)
         setupDatePickers()
         setupTextWatchers()
@@ -93,7 +93,8 @@ class AddEditHiveFragment : Fragment() {
 
         // Standard logic for saving a single hive (new or edited)
         val hiveToSave = createHiveFromInput()
-        val dateChanged = isEditMode && originalHive?.lastInspectionDate != selectedHiveLastInspectionDateMillis
+        val dateChanged =
+            isEditMode && originalHive?.lastInspectionDate != selectedHiveLastInspectionDateMillis
 
         if (dateChanged && selectedHiveLastInspectionDateMillis != null) {
             showUpdateAllHivesDialog(hiveToSave)
@@ -107,7 +108,10 @@ class AddEditHiveFragment : Fragment() {
             .setTitle(getString(R.string.update_inspection_date))
             .setMessage(getString(R.string.apply_this_new_date_to_all_hives_in_this_apiary))
             .setPositiveButton(getString(R.string.update_all)) { _, _ ->
-                addEditHiveViewModel.updateInspectionDateForApiary(hiveToSave.apiaryId, hiveToSave.lastInspectionDate!!)
+                addEditHiveViewModel.updateInspectionDateForApiary(
+                    hiveToSave.apiaryId,
+                    hiveToSave.lastInspectionDate!!
+                )
                 saveHiveAndExit(hiveToSave)
             }
             .setNegativeButton(getString(R.string.just_this_one)) { _, _ ->
@@ -119,7 +123,13 @@ class AddEditHiveFragment : Fragment() {
 
     private fun saveHiveAndExit(hive: Hive) {
         addEditHiveViewModel.saveOrUpdateHive(hive)
-        Toast.makeText(requireContext(), if(isEditMode) "Hive updated" else "Hive saved", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            if (isEditMode) getString(R.string.message_hive_updated) else getString(
+                R.string.message_hive_saved
+            ),
+            Toast.LENGTH_SHORT
+        ).show()
         findNavController().popBackStack()
     }
 
@@ -133,14 +143,16 @@ class AddEditHiveFragment : Fragment() {
             startingHiveNumber = binding.editTextFromHiveNumber.text.toString().trim().toIntOrNull()
             endingHiveNumber = binding.editTextToHiveNumber.text.toString().trim().toIntOrNull()
             if (startingHiveNumber == null || endingHiveNumber == null || endingHiveNumber < startingHiveNumber) {
-                binding.textInputLayoutToHiveNumber.error = getString(R.string.error_invalid_number_range)
+                binding.textInputLayoutToHiveNumber.error =
+                    getString(R.string.error_invalid_number_range)
                 return
             }
             quantity = endingHiveNumber - startingHiveNumber + 1
         } else {
             quantity = binding.editTextQuantity.text.toString().trim().toIntOrNull()
             if (quantity == null || quantity <= 0) {
-                binding.textInputLayoutQuantity.error = getString(R.string.error_must_be_positive_number)
+                binding.textInputLayoutQuantity.error =
+                    getString(R.string.error_must_be_positive_number)
                 return
             }
         }
@@ -187,8 +199,10 @@ class AddEditHiveFragment : Fragment() {
             treatment = hiveData.treatment,
             role = hiveData.role // NEW: Pass the role to the ViewModel
         )
-        Toast.makeText(requireContext(),
-            getString(R.string.hives_added_successfully, quantity), Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.hives_added_successfully, quantity), Toast.LENGTH_SHORT
+        ).show()
         findNavController().popBackStack()
     }
 
@@ -196,34 +210,55 @@ class AddEditHiveFragment : Fragment() {
         // ... all your existing logic for gathering data ...
         val material = binding.autoCompleteTextViewMaterial.text.toString().trim().ifEmpty { null }
         val materialOther = binding.editTextMaterialOther.text.toString().trim().ifEmpty { null }
-        val finalMaterial = if (material.equals(getString(R.string.other), ignoreCase = true)) materialOther else material
+        val finalMaterial = if (material.equals(
+                getString(R.string.other),
+                ignoreCase = true
+            )
+        ) materialOther else material
 
         val hiveType = binding.autoCompleteTextViewHiveType.text.toString().trim().ifEmpty { null }
         val hiveTypeOther = binding.editTextHiveTypeOther.text.toString().trim().ifEmpty { null }
-        val finalHiveType = if (hiveType.equals(getString(R.string.other), ignoreCase = true)) hiveTypeOther else hiveType
+        val finalHiveType = if (hiveType.equals(
+                getString(R.string.other),
+                ignoreCase = true
+            )
+        ) hiveTypeOther else hiveType
 
-        val frameType = binding.autoCompleteTextViewFrameType.text.toString().trim().ifEmpty { null }
+        val frameType =
+            binding.autoCompleteTextViewFrameType.text.toString().trim().ifEmpty { null }
         val frameTypeOther = binding.editTextFrameTypeOther.text.toString().trim().ifEmpty { null }
-        val finalFrameType = if (frameType.equals(getString(R.string.other), ignoreCase = true)) frameTypeOther else frameType
+        val finalFrameType = if (frameType.equals(
+                getString(R.string.other),
+                ignoreCase = true
+            )
+        ) frameTypeOther else frameType
 
         val breed = binding.autoCompleteTextViewBreed.text.toString().trim().ifEmpty { null }
         val breedOther = binding.editTextBreedOther.text.toString().trim().ifEmpty { null }
-        val finalBreed = if (breed.equals(getString(R.string.other), ignoreCase = true)) breedOther else breed
+        val finalBreed =
+            if (breed.equals(getString(R.string.other), ignoreCase = true)) breedOther else breed
 
         val framesTotal = binding.textViewFramesTotalValue.text.toString().toIntOrNull()
         val framesEggs = binding.editTextFramesEggs.text.toString().trim().toIntOrNull()
         val framesOpenBrood = binding.editTextFramesOpenBrood.text.toString().trim().toIntOrNull()
-        val framesCappedBrood = binding.editTextFramesCappedBrood.text.toString().trim().toIntOrNull()
+        val framesCappedBrood =
+            binding.editTextFramesCappedBrood.text.toString().trim().toIntOrNull()
         val framesFeed = binding.editTextFramesFeed.text.toString().trim().toIntOrNull()
 
-        val queenTagColor = binding.autoCompleteTextViewQueenTagColor.text.toString().trim().ifEmpty { null }
-        val queenTagColorOther = binding.editTextQueenTagColorOther.text.toString().trim().ifEmpty { null }
-        val finalQueenTagColor = if (queenTagColor.equals(getString(R.string.other), ignoreCase = true)) queenTagColorOther else queenTagColor
+        val queenTagColor =
+            binding.autoCompleteTextViewQueenTagColor.text.toString().trim().ifEmpty { null }
+        val queenTagColorOther =
+            binding.editTextQueenTagColorOther.text.toString().trim().ifEmpty { null }
+        val finalQueenTagColor = if (queenTagColor.equals(
+                getString(R.string.other),
+                ignoreCase = true
+            )
+        ) queenTagColorOther else queenTagColor
 
         val queenNumber = binding.editTextQueenNumber.text.toString().trim().ifEmpty { null }
         val queenYear = binding.editTextQueenYear.text.toString().trim().ifEmpty { null }
         val queenLine = binding.editTextQueenLine.text.toString().trim().ifEmpty { null }
-        val queenCells = binding.editTextQueenCells.text.toString().trim().toIntOrNull()
+//        val queenCells = binding.editTextQueenCells.text.toString().trim().toIntOrNull()
 
         val defensivenessRating = when (binding.radioGroupDefensiveness.checkedRadioButtonId) {
             R.id.radio_defensiveness_1 -> 1
@@ -242,13 +277,15 @@ class AddEditHiveFragment : Fragment() {
         val treatment = binding.editTextTreatment.text.toString().trim().ifEmpty { null }
         val notes = binding.editTextHiveNotes.text.toString().trim().ifEmpty { null }
 
-        // NEW: Get the selected role from the dropdown
-        val role = HiveRole.valueOf(binding.autoCompleteTextViewRole.text.toString())
+        val selectedRoleLabel = binding.autoCompleteTextViewRole.text.toString()
+        val role = HiveRole.entries.find { it.getLabel(requireContext()) == selectedRoleLabel }
+            ?: HiveRole.PRODUCTION
 
         return Hive(
             id = if (isEditMode) args.hiveId else 0L,
             apiaryId = args.apiaryId,
-            hiveNumber = if(isEditMode) binding.editTextHiveNumber.text.toString().trim().ifEmpty { null } else null,
+            hiveNumber = if (isEditMode) binding.editTextHiveNumber.text.toString().trim()
+                .ifEmpty { null } else null,
             hiveType = finalHiveType,
             hiveTypeOther = hiveTypeOther,
             frameType = finalFrameType,
@@ -264,7 +301,7 @@ class AddEditHiveFragment : Fragment() {
             queenNumber = queenNumber,
             queenYear = queenYear,
             queenLine = queenLine,
-            queenCells = queenCells,
+//            queenCells = queenCells,
             isolationFromDate = selectedIsolationFromDateMillis,
             isolationToDate = selectedIsolationToDateMillis,
             defensivenessRating = defensivenessRating,
@@ -280,12 +317,11 @@ class AddEditHiveFragment : Fragment() {
             givenHoneyKg = givenHoneyKg,
             givenSugarKg = givenSugarKg,
             treatment = treatment,
-            role = role // NEW: Add role to the Hive object
+            role = role
         )
     }
 
     private fun populateHiveData(hive: Hive) {
-        // ... all your existing logic for populating data ...
         binding.editTextHiveNumber.setText(hive.hiveNumber)
         binding.autoCompleteTextViewMaterial.setText(hive.material, false)
         binding.editTextMaterialOther.setText(hive.materialOther)
@@ -310,12 +346,15 @@ class AddEditHiveFragment : Fragment() {
 
         binding.autoCompleteTextViewQueenTagColor.setText(hive.queenTagColor, false)
         binding.editTextQueenTagColorOther.setText(hive.queenTagColorOther)
-        toggleOtherFieldVisibility(hive.queenTagColor ?: "", binding.textInputLayoutQueenTagColorOther)
+        toggleOtherFieldVisibility(
+            hive.queenTagColor ?: "",
+            binding.textInputLayoutQueenTagColorOther
+        )
 
         binding.editTextQueenNumber.setText(hive.queenNumber)
         binding.editTextQueenYear.setText(hive.queenYear)
         binding.editTextQueenLine.setText(hive.queenLine)
-        binding.editTextQueenCells.setText(hive.queenCells?.toString())
+//        binding.editTextQueenCells.setText(hive.queenCells?.toString())
 
         selectedIsolationFromDateMillis = hive.isolationFromDate
         updateDateEditText(selectedIsolationFromDateMillis, binding.editTextIsolationFromDate)
@@ -339,30 +378,66 @@ class AddEditHiveFragment : Fragment() {
         binding.editTextTreatment.setText(hive.treatment)
 
         selectedHiveLastInspectionDateMillis = hive.lastInspectionDate
-        updateDateEditText(selectedHiveLastInspectionDateMillis, binding.editTextHiveLastInspectionDate)
+        updateDateEditText(
+            selectedHiveLastInspectionDateMillis,
+            binding.editTextHiveLastInspectionDate
+        )
         binding.editTextHiveNotes.setText(hive.notes)
 
-        // NEW: Populate the role dropdown
-        binding.autoCompleteTextViewRole.setText(hive.role.name, false)
+        binding.autoCompleteTextViewRole.setText(hive.role.getLabel(requireContext()), false)
     }
 
     private fun setupDatePickers() {
-        binding.editTextHiveLastInspectionDate.setOnClickListener { showDatePickerDialog(::selectedHiveLastInspectionDateMillis, binding.editTextHiveLastInspectionDate) }
-        binding.textInputLayoutHiveLastInspectionDate.setEndIconOnClickListener { showDatePickerDialog(::selectedHiveLastInspectionDateMillis, binding.editTextHiveLastInspectionDate) }
-        binding.editTextIsolationFromDate.setOnClickListener { showDatePickerDialog(::selectedIsolationFromDateMillis, binding.editTextIsolationFromDate) }
-        binding.textInputLayoutIsolationFromDate.setEndIconOnClickListener { showDatePickerDialog(::selectedIsolationFromDateMillis, binding.editTextIsolationFromDate) }
-        binding.editTextIsolationToDate.setOnClickListener { showDatePickerDialog(::selectedIsolationToDateMillis, binding.editTextIsolationToDate) }
-        binding.textInputLayoutIsolationToDate.setEndIconOnClickListener { showDatePickerDialog(::selectedIsolationToDateMillis, binding.editTextIsolationToDate) }
+        binding.editTextHiveLastInspectionDate.setOnClickListener {
+            showDatePickerDialog(
+                ::selectedHiveLastInspectionDateMillis,
+                binding.editTextHiveLastInspectionDate
+            )
+        }
+        binding.textInputLayoutHiveLastInspectionDate.setEndIconOnClickListener {
+            showDatePickerDialog(
+                ::selectedHiveLastInspectionDateMillis,
+                binding.editTextHiveLastInspectionDate
+            )
+        }
+        binding.editTextIsolationFromDate.setOnClickListener {
+            showDatePickerDialog(
+                ::selectedIsolationFromDateMillis,
+                binding.editTextIsolationFromDate
+            )
+        }
+        binding.textInputLayoutIsolationFromDate.setEndIconOnClickListener {
+            showDatePickerDialog(
+                ::selectedIsolationFromDateMillis,
+                binding.editTextIsolationFromDate
+            )
+        }
+        binding.editTextIsolationToDate.setOnClickListener {
+            showDatePickerDialog(
+                ::selectedIsolationToDateMillis,
+                binding.editTextIsolationToDate
+            )
+        }
+        binding.textInputLayoutIsolationToDate.setEndIconOnClickListener {
+            showDatePickerDialog(
+                ::selectedIsolationToDateMillis,
+                binding.editTextIsolationToDate
+            )
+        }
     }
 
-    private fun showDatePickerDialog(dateMillisProperty: kotlin.reflect.KMutableProperty0<Long?>, editText: TextInputEditText) {
+    private fun showDatePickerDialog(
+        dateMillisProperty: kotlin.reflect.KMutableProperty0<Long?>,
+        editText: TextInputEditText
+    ) {
         val calendar = Calendar.getInstance()
         dateMillisProperty.get()?.let { calendar.timeInMillis = it }
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-            val newCalendar = Calendar.getInstance().apply { set(selectedYear, selectedMonth, selectedDayOfMonth) }
+            val newCalendar = Calendar.getInstance()
+                .apply { set(selectedYear, selectedMonth, selectedDayOfMonth) }
             dateMillisProperty.set(newCalendar.timeInMillis)
             updateDateEditText(newCalendar.timeInMillis, editText)
         }, year, month, day).show()
@@ -380,38 +455,58 @@ class AddEditHiveFragment : Fragment() {
 
     private fun setupSpinners() {
         val materialChoices = resources.getStringArray(R.array.material_choices)
-        val materialAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, materialChoices)
+        val materialAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, materialChoices)
         binding.autoCompleteTextViewMaterial.setAdapter(materialAdapter)
         binding.autoCompleteTextViewMaterial.setOnItemClickListener { _, _, _, _ ->
-            toggleOtherFieldVisibility(binding.autoCompleteTextViewMaterial.text.toString(), binding.textInputLayoutMaterialOther)
+            toggleOtherFieldVisibility(
+                binding.autoCompleteTextViewMaterial.text.toString(),
+                binding.textInputLayoutMaterialOther
+            )
         }
 
         val hiveTypes = resources.getStringArray(R.array.hive_types)
-        val hiveTypeAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, hiveTypes)
+        val hiveTypeAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, hiveTypes)
         binding.autoCompleteTextViewHiveType.setAdapter(hiveTypeAdapter)
         binding.autoCompleteTextViewHiveType.setOnItemClickListener { _, _, _, _ ->
-            toggleOtherFieldVisibility(binding.autoCompleteTextViewHiveType.text.toString(), binding.textInputLayoutHiveTypeOther)
+            toggleOtherFieldVisibility(
+                binding.autoCompleteTextViewHiveType.text.toString(),
+                binding.textInputLayoutHiveTypeOther
+            )
         }
 
         val frameTypes = resources.getStringArray(R.array.frame_types)
-        val frameTypeAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, frameTypes)
+        val frameTypeAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, frameTypes)
         binding.autoCompleteTextViewFrameType.setAdapter(frameTypeAdapter)
         binding.autoCompleteTextViewFrameType.setOnItemClickListener { _, _, _, _ ->
-            toggleOtherFieldVisibility(binding.autoCompleteTextViewFrameType.text.toString(), binding.textInputLayoutFrameTypeOther)
+            toggleOtherFieldVisibility(
+                binding.autoCompleteTextViewFrameType.text.toString(),
+                binding.textInputLayoutFrameTypeOther
+            )
         }
 
         val breedChoices = resources.getStringArray(R.array.breed_choices)
-        val breedAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, breedChoices)
+        val breedAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, breedChoices)
         binding.autoCompleteTextViewBreed.setAdapter(breedAdapter)
         binding.autoCompleteTextViewBreed.setOnItemClickListener { _, _, _, _ ->
-            toggleOtherFieldVisibility(binding.autoCompleteTextViewBreed.text.toString(), binding.textInputLayoutBreedOther)
+            toggleOtherFieldVisibility(
+                binding.autoCompleteTextViewBreed.text.toString(),
+                binding.textInputLayoutBreedOther
+            )
         }
 
         val queenTagColors = resources.getStringArray(R.array.queen_tag_colors)
-        val queenTagColorAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, queenTagColors)
+        val queenTagColorAdapter =
+            ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, queenTagColors)
         binding.autoCompleteTextViewQueenTagColor.setAdapter(queenTagColorAdapter)
         binding.autoCompleteTextViewQueenTagColor.setOnItemClickListener { _, _, _, _ ->
-            toggleOtherFieldVisibility(binding.autoCompleteTextViewQueenTagColor.text.toString(), binding.textInputLayoutQueenTagColorOther)
+            toggleOtherFieldVisibility(
+                binding.autoCompleteTextViewQueenTagColor.text.toString(),
+                binding.textInputLayoutQueenTagColorOther
+            )
         }
     }
 
@@ -419,21 +514,28 @@ class AddEditHiveFragment : Fragment() {
      * NEW: Sets up the dropdown for selecting the hive's role in queen rearing.
      */
     private fun setupRoleSpinner() {
-        val roles = HiveRole.entries.map { it.name }
-        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, roles)
+        val roleLabels = HiveRole.entries.map { it.getLabel(requireContext()) }
+        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, roleLabels)
         binding.autoCompleteTextViewRole.setAdapter(adapter)
-        // Set a default value for new hives
+
         if (!isEditMode) {
-            binding.autoCompleteTextViewRole.setText(HiveRole.PRODUCTION.name, false)
+            binding.autoCompleteTextViewRole.setText(
+                HiveRole.PRODUCTION.getLabel(requireContext()),
+                false
+            )
         }
     }
 
-    private fun toggleOtherFieldVisibility(selectedItem: String, otherInputField: com.google.android.material.textfield.TextInputLayout) {
-        otherInputField.visibility = if (selectedItem.equals(getString(R.string.other), ignoreCase = true)) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+    private fun toggleOtherFieldVisibility(
+        selectedItem: String,
+        otherInputField: com.google.android.material.textfield.TextInputLayout
+    ) {
+        otherInputField.visibility =
+            if (selectedItem.equals(getString(R.string.other), ignoreCase = true)) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
     }
 
     private fun setupConditionalViews(isNewHive: Boolean) {
@@ -444,9 +546,12 @@ class AddEditHiveFragment : Fragment() {
             binding.editTextQuantity.setText("")
 
             binding.checkboxAddMultipleHives.setOnCheckedChangeListener { _, isChecked ->
-                binding.checkboxAutomaticNumbering.visibility = if (isChecked) View.VISIBLE else View.GONE
-                binding.textInputLayoutHiveNumber.visibility = if (isChecked) View.GONE else View.VISIBLE
-                binding.textInputLayoutQuantity.visibility = if (isChecked) View.VISIBLE else View.GONE
+                binding.checkboxAutomaticNumbering.visibility =
+                    if (isChecked) View.VISIBLE else View.GONE
+                binding.textInputLayoutHiveNumber.visibility =
+                    if (isChecked) View.GONE else View.VISIBLE
+                binding.textInputLayoutQuantity.visibility =
+                    if (isChecked) View.VISIBLE else View.GONE
                 if (isChecked) {
                     binding.editTextQuantity.setText("1")
                 } else {
@@ -456,7 +561,8 @@ class AddEditHiveFragment : Fragment() {
             }
 
             binding.checkboxAutomaticNumbering.setOnCheckedChangeListener { _, isChecked ->
-                binding.layoutAutoNumberingRange.visibility = if (isChecked) View.VISIBLE else View.GONE
+                binding.layoutAutoNumberingRange.visibility =
+                    if (isChecked) View.VISIBLE else View.GONE
                 binding.editTextQuantity.isEnabled = !isChecked
                 if (isChecked) {
                     binding.editTextQuantity.setText("")
@@ -482,6 +588,7 @@ class AddEditHiveFragment : Fragment() {
                 binding.textInputLayoutFromHiveNumber.error = null
                 binding.textInputLayoutToHiveNumber.error = null
             }
+
             override fun afterTextChanged(s: Editable?) {
                 updateCalculatedQuantity()
             }
@@ -494,6 +601,7 @@ class AddEditHiveFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.textInputLayoutQuantity.error = null
             }
+
             override fun afterTextChanged(s: Editable?) {}
         })
     }

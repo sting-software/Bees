@@ -9,7 +9,7 @@ import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.QueenCell
 import com.stingsoftware.pasika.databinding.ItemQueenCellBinding
 
-class QueenCellAdapter(private val onCellClicked: (QueenCell) -> Unit) :
+class QueenCellAdapter(private val onCellClicked: (QueenCell, Int) -> Unit) :
     ListAdapter<QueenCell, QueenCellAdapter.QueenCellViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueenCellViewHolder {
@@ -24,13 +24,14 @@ class QueenCellAdapter(private val onCellClicked: (QueenCell) -> Unit) :
 
     class QueenCellViewHolder(
         private val binding: ItemQueenCellBinding,
-        private val onCellClicked: (QueenCell) -> Unit
+        private val onCellClicked: (QueenCell, Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cell: QueenCell) {
-            binding.cellId.text = itemView.context.getString(R.string.cell, cell.id)
-            binding.cellStatus.text = cell.status.name
-            itemView.setOnClickListener { onCellClicked(cell) }
+            val cellNumber = adapterPosition + 1
+            binding.cellId.text = itemView.context.getString(R.string.cell, cellNumber)
+            binding.cellStatus.text = cell.status.getLabel(itemView.context)
+            itemView.setOnClickListener { onCellClicked(cell, cellNumber) }
         }
     }
 

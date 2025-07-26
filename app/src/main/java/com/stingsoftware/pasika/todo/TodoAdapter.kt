@@ -78,17 +78,23 @@ class TodoAdapter(
                     textViewTaskTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
 
-                textViewTaskDescription.visibility = if (task.description.isNullOrBlank()) View.GONE else View.VISIBLE
-                textViewTaskDescription.text = task.description
-
-                if (task.dueDate != null) {
-                    val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-                    textViewDueDate.text = itemView.context.getString(R.string.hint_due_date_time_optional, sdf.format(Date(task.dueDate)))
-                    textViewDueDate.visibility = View.VISIBLE
+                // Show or hide the description based on its content
+                if (task.description.isNullOrBlank()) {
+                    textViewTaskDescription.visibility = View.GONE
                 } else {
+                    textViewTaskDescription.visibility = View.VISIBLE
+                    textViewTaskDescription.text = task.description
+                }
+
+                // Format and display the due date if it exists
+                task.dueDate?.let {
+                    textViewDueDate.visibility = View.VISIBLE
+                    textViewDueDate.text = formatDate(it)
+                } ?: run {
                     textViewDueDate.visibility = View.GONE
                 }
 
+                // Set card background color based on selection or completion status
                 val cardColor = if (selectedItems.contains(task.id)) {
                     ContextCompat.getColor(itemView.context, R.color.colorHiveSelectedBackground)
                 } else if (task.isCompleted) {
@@ -99,6 +105,15 @@ class TodoAdapter(
                 (itemView as MaterialCardView).setCardBackgroundColor(cardColor)
             }
         }
+
+        /**
+         * Formats a timestamp into a readable date and time string.
+         * Example: "Sun, 27 Jul 2025, 11:10"
+         */
+        private fun formatDate(timestamp: Long): String {
+            val sdf = SimpleDateFormat("EEE, dd MMM yyyy, hh:mm", Locale.getDefault())
+            return sdf.format(Date(timestamp))
+        }
     }
 
     fun setMultiSelectMode(enabled: Boolean) {
@@ -108,7 +123,6 @@ class TodoAdapter(
                 selectedItems.clear()
                 onSelectionChange(0)
             }
-            // Redraw the entire list to show/hide checkboxes and update selection states
             notifyItemRangeChanged(0, itemCount)
         }
     }
@@ -130,7 +144,6 @@ class TodoAdapter(
             selectedItems.clear()
             currentList.forEach { selectedItems.add(it.id) }
         }
-        // Redraw all items to reflect the new selection state
         notifyItemRangeChanged(0, itemCount)
         onSelectionChange(selectedItems.size)
     }

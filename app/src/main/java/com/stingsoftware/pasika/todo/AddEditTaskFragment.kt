@@ -82,13 +82,12 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     }
 
     private fun onSave() {
-        // FIX: Use safe calls to handle nullable Editable
         val title = binding.editTextTaskTitle.text?.toString()?.trim()
         if (title.isNullOrBlank()) {
             val fieldTitle = getString(R.string.hint_task_title)
             Toast.makeText(
                 requireContext(),
-                getString(R.string.error_field_cannot_be_empty, fieldTitle), // Corrected line
+                getString(R.string.error_field_cannot_be_empty, fieldTitle),
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -98,15 +97,20 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         val dueDate =
             if (binding.editTextDueDate.text?.isNotBlank() == true) selectedDateTime.timeInMillis else null
 
-        val task = Task(
-            id = currentTask?.id ?: 0L,
+        // **THE FIX IS HERE:**
+        // We now use the .copy() method on the existing task.
+        // This preserves all fields, including the graftingBatchId,
+        // while updating only the ones that were changed on the screen.
+        val taskToSave = currentTask?.copy(
             title = title,
             description = description,
             dueDate = dueDate,
-            isCompleted = currentTask?.isCompleted ?: false,
             reminderEnabled = binding.switchReminder.isChecked
         )
-        viewModel.onSaveClick(task)
+
+        if (taskToSave != null) {
+            viewModel.onSaveClick(taskToSave)
+        }
     }
 
     private fun showDateTimePicker() {
