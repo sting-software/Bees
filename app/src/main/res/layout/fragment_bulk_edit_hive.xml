@@ -11,11 +11,11 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Section: Title and Info -->
         <TextView
             android:id="@+id/text_view_bulk_edit_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="@string/title_bulk_edit_hives"
             android:textAppearance="?attr/textAppearanceHeadline5"
             android:textStyle="bold"
@@ -35,6 +35,19 @@
             app:layout_constraintTop_toBottomOf="@id/text_view_bulk_edit_title"
             tools:text="Editing 5 selected hives" />
 
+        <TextView
+            android:id="@+id/text_view_bulk_edit_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/bulk_edit_hives_info"
+            android:textAppearance="?attr/textAppearanceCaption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_selected_hives_count" />
+
+
+        <!-- Section: Hive Characteristics -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_hive_characteristics"
             android:layout_width="0dp"
@@ -43,7 +56,7 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_selected_hives_count">
+            app:layout_constraintTop_toBottomOf="@id/text_view_bulk_edit_info">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -68,9 +81,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/spinner_prompt_material"
-                    app:layout_constraintTop_toBottomOf="@id/text_view_hive_characteristics_title"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_view_hive_characteristics_title">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_text_view_material"
                         android:layout_width="match_parent"
@@ -85,9 +99,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/label_hive_type"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_material"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_material">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_text_view_hive_type"
                         android:layout_width="match_parent"
@@ -102,9 +117,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/spinner_prompt_frame_type"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_type"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_type">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_text_view_frame_type"
                         android:layout_width="match_parent"
@@ -119,18 +135,39 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/spinner_prompt_breed"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_frame_type"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_frame_type">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_text_view_breed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_layout_role"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/hive_role"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_breed">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_complete_text_view_role"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Section: Frames -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_frames"
             android:layout_width="0dp"
@@ -140,10 +177,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_hive_characteristics">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
+
                 <TextView
                     android:id="@+id/text_view_frames_title"
                     android:layout_width="0dp"
@@ -151,9 +190,10 @@
                     android:text="@string/title_frames"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <LinearLayout
                     android:id="@+id/layout_frames_row1"
                     android:layout_width="match_parent"
@@ -161,6 +201,7 @@
                     android:layout_marginTop="16dp"
                     android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/text_view_frames_title">
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/text_input_layout_frames_eggs"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -169,12 +210,14 @@
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:hint="@string/label_frames_eggs">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_eggs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"/>
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/text_input_layout_frames_open_brood"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -183,13 +226,15 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:hint="@string/label_frames_open_brood">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_open_brood"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"/>
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/layout_frames_row2"
                     android:layout_width="match_parent"
@@ -197,6 +242,7 @@
                     android:layout_marginTop="16dp"
                     android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/layout_frames_row1">
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/text_input_layout_frames_capped_brood"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -205,12 +251,14 @@
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:hint="@string/label_frames_capped_brood">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_capped_brood"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"/>
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/text_input_layout_frames_feed"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -219,32 +267,49 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:hint="@string/label_frames_feed">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_frames_feed"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="number"/>
+                            android:inputType="number" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/text_input_layout_frames_total"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="0dp"
+
+                <!-- CORRECTED: Total frames is now a non-editable TextView -->
+                <LinearLayout
+                    android:id="@+id/layout_frames_row3"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:hint="@string/label_frames_total"
-                    app:layout_constraintTop_toBottomOf="@id/layout_frames_row2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edit_text_frames_total"
-                        android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/layout_frames_row2">
+
+                    <TextView
+                        android:id="@+id/text_view_frames_total_label"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="number"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="@string/label_frames_total"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_view_frames_total_value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:textAppearance="?attr/textAppearanceHeadline6"
+                        android:textColor="?attr/colorPrimary"
+                        tools:text="40" />
+                </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Section: Queen Bee -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_queen_bee"
             android:layout_width="0dp"
@@ -254,10 +319,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_frames">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
+
                 <TextView
                     android:id="@+id/text_view_queen_title"
                     android:layout_width="0dp"
@@ -265,9 +332,10 @@
                     android:text="@string/title_queen_bee"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_queen_tag_color"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -275,15 +343,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/spinner_prompt_queen_tag_color"
-                    app:layout_constraintTop_toBottomOf="@id/text_view_queen_title"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_view_queen_title">
+
                     <AutoCompleteTextView
                         android:id="@+id/auto_complete_text_view_queen_tag_color"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_queen_number"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -291,15 +361,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_queen_tag_number"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_tag_color"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_tag_color">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_queen_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_queen_year"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -307,9 +379,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_queen_year"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_number"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_number">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_queen_year"
                         android:layout_width="match_parent"
@@ -317,6 +390,7 @@
                         android:inputType="number"
                         android:maxLength="4" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_queen_line"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -324,18 +398,65 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_queen_line"
-                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_year"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_year">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_queen_line"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapWords" />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_layout_isolation_from_date"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/hint_isolation_from_date"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconMode="custom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_queen_line">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_text_isolation_from_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_layout_isolation_to_date"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/hint_isolation_to_date"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconMode="custom"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_input_layout_isolation_from_date">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_text_isolation_to_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Section: Defensiveness -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_defensiveness_rating"
             android:layout_width="0dp"
@@ -345,10 +466,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_queen_bee">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
+
                 <TextView
                     android:id="@+id/text_view_defensiveness_title"
                     android:layout_width="0dp"
@@ -356,36 +479,41 @@
                     android:text="@string/title_defensiveness_rating"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <RadioGroup
                     android:id="@+id/radio_group_defensiveness"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/text_view_defensiveness_title"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_view_defensiveness_title">
+
                     <RadioButton
                         android:id="@+id/radio_defensiveness_1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/rating_1" />
+
                     <RadioButton
                         android:id="@+id/radio_defensiveness_2"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/rating_2" />
+
                     <RadioButton
                         android:id="@+id/radio_defensiveness_3"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/rating_3" />
+
                     <RadioButton
                         android:id="@+id/radio_defensiveness_4"
                         android:layout_width="0dp"
@@ -396,6 +524,163 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Section: Given/Taken -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_given_taken"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_defensiveness_rating">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/text_view_given_taken_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/title_given_taken"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/layout_given_taken_row1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_given_taken_title">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_given_built_combs"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_given_taken_built_combs">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_given_built_combs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_given_foundation"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_given_taken_foundation">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_given_foundation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_given_taken_row2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/layout_given_taken_row1">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_given_brood"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_given_taken_brood">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_given_brood"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_given_bees_kg"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_given_taken_bees_kg">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_given_bees_kg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_given_taken_row3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_given_taken_row2">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_given_honey_kg"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_given_taken_honey_kg">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_given_honey_kg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/text_input_layout_given_sugar_kg"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="@string/label_given_taken_sugar_kg">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edit_text_given_sugar_kg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Section: Treatment -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_treatment"
             android:layout_width="0dp"
@@ -404,11 +689,13 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_defensiveness_rating">
+            app:layout_constraintTop_toBottomOf="@id/card_given_taken">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp">
+
                 <TextView
                     android:id="@+id/text_view_treatment_title"
                     android:layout_width="0dp"
@@ -416,9 +703,10 @@
                     android:text="@string/title_treatment"
                     android:textAppearance="?attr/textAppearanceSubtitle1"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/text_input_layout_treatment"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -426,9 +714,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/hint_treatment_applied"
-                    app:layout_constraintTop_toBottomOf="@id/text_view_treatment_title"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/text_view_treatment_title">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_treatment"
                         android:layout_width="match_parent"
@@ -439,6 +728,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Section: Auto-numbering -->
         <CheckBox
             android:id="@+id/checkbox_auto_number_hives_bulk"
             android:layout_width="0dp"
@@ -457,14 +747,16 @@
             android:layout_marginTop="8dp"
             android:hint="@string/label_starting_hive_number"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/checkbox_auto_number_hives_bulk"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/checkbox_auto_number_hives_bulk"
+            tools:visibility="visible">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_starting_hive_number_bulk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -474,10 +766,13 @@
             android:layout_marginTop="4dp"
             android:textColor="?attr/colorError"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_starting_hive_number_bulk"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_starting_hive_number_bulk"
+            tools:text="Warning: This will re-number the selected hives."
+            tools:visibility="visible" />
 
+        <!-- Section: General Fields -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_hive_last_inspection_date"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -487,16 +782,16 @@
             android:hint="@string/hint_last_inspection_date_optional"
             app:endIconDrawable="@drawable/ic_calendar"
             app:endIconMode="custom"
-            app:layout_constraintTop_toBottomOf="@id/text_view_auto_numbering_warning"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/text_view_auto_numbering_warning">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_hive_last_inspection_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
                 android:clickable="true"
+                android:focusable="false"
                 android:inputType="none" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -507,9 +802,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:hint="@string/hint_notes_optional"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_last_inspection_date"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_last_inspection_date">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_hive_notes"
@@ -520,6 +815,7 @@
                 android:minLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Section: Buttons -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_save_bulk_edit"
             style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
@@ -528,9 +824,9 @@
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:text="@string/action_save"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes"
+            app:layout_constraintEnd_toStartOf="@id/button_cancel_bulk_edit"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_cancel_bulk_edit" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_cancel_bulk_edit"
@@ -540,9 +836,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:text="@string/action_cancel"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/button_save_bulk_edit"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_hive_notes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

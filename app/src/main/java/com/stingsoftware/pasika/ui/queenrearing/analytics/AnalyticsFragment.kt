@@ -1,5 +1,6 @@
 package com.stingsoftware.pasika.ui.queenrearing.analytics
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.GraftingBatch
 import com.stingsoftware.pasika.data.QueenCell
@@ -68,28 +71,89 @@ class AnalyticsFragment : Fragment() {
     }
 
     private fun setupBarChart(batches: List<GraftingBatch>, allCells: List<QueenCell>) {
-        val entries = ArrayList<BarEntry>()
+        val acceptanceEntries = ArrayList<BarEntry>()
+        val emergenceEntries = ArrayList<BarEntry>()
+        val matingSuccessEntries = ArrayList<BarEntry>()
         val labels = ArrayList<String>()
 
         batches.forEachIndexed { index, batch ->
             val batchCells = allCells.filter { it.batchId == batch.id }
-            val total = batch.cellsGrafted
+            labels.add(batch.name)
+
+            val totalGrafted = batch.cellsGrafted
             val accepted =
                 batchCells.count { it.status >= QueenCellStatus.ACCEPTED && it.status != QueenCellStatus.FAILED }
-            val acceptanceRate = if (total > 0) (accepted.toFloat() / total.toFloat()) * 100 else 0f
-            entries.add(BarEntry(index.toFloat(), acceptanceRate))
-            labels.add(batch.name)
+            val emerged =
+                batchCells.count { it.status >= QueenCellStatus.EMERGED && it.status != QueenCellStatus.FAILED }
+            val layingOrSold =
+                batchCells.count { it.status == QueenCellStatus.LAYING || it.status == QueenCellStatus.SOLD }
+
+            val acceptanceRate =
+                if (totalGrafted > 0) (accepted.toFloat() / totalGrafted.toFloat()) * 100 else 0f
+            val emergenceRate =
+                if (accepted > 0) (emerged.toFloat() / accepted.toFloat()) * 100 else 0f
+            val matingSuccessRate =
+                if (emerged > 0) (layingOrSold.toFloat() / emerged.toFloat()) * 100 else 0f
+
+            val xValue = index.toFloat()
+            acceptanceEntries.add(BarEntry(xValue, acceptanceRate))
+            emergenceEntries.add(BarEntry(xValue, emergenceRate))
+            matingSuccessEntries.add(BarEntry(xValue, matingSuccessRate))
         }
 
-        val dataSet = BarDataSet(entries, getString(R.string.acceptance_rate))
-        dataSet.color = Color.parseColor("#FFC107")
+        val acceptanceDataSet =
+            BarDataSet(acceptanceEntries, getString(R.string.chart_acceptance)).apply {
+                color = Color.parseColor("#FFC107")
+            }
+        val emergenceDataSet =
+            BarDataSet(emergenceEntries, getString(R.string.chart_emergence)).apply {
+                color = Color.parseColor("#4CAF50")
+            }
+        val matingSuccessDataSet = BarDataSet(
+            matingSuccessEntries,
+            getString(R.string.chart_mating_success)
+        ).apply { color = Color.parseColor("#2196F3") }
+
+        val barData = BarData(acceptanceDataSet, emergenceDataSet, matingSuccessDataSet)
+        barData.setValueFormatter(PercentFormatter())
+
+
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val isNightMode = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+        val textColor = if (isNightMode) Color.WHITE else Color.BLACK
+
+        acceptanceDataSet.valueTextColor = textColor
+        emergenceDataSet.valueTextColor = textColor
+        matingSuccessDataSet.valueTextColor = textColor
 
         binding.batchChart.apply {
             data = barData
             description.isEnabled = false
+
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            xAxis.position = XAxis.XAxisPosition.TOP
             xAxis.granularity = 1f
             xAxis.isGranularityEnabled = true
+            xAxis.textColor = textColor
+            xAxis.setCenterAxisLabels(true)
+
+            axisLeft.textColor = textColor
+            axisLeft.axisMinimum = 0f
+            axisLeft.axisMaximum = 100f
+            axisLeft.valueFormatter = PercentFormatter()
+
+            axisRight.isEnabled = false
+
+            legend.textColor = textColor
+
+            val groupSpace = 0.1f
+            val barSpace = 0.05f
+            val barWidth = 0.25f
+            barData.barWidth = barWidth
+            xAxis.axisMinimum = 0f
+            xAxis.axisMaximum = 0f + barData.getGroupWidth(groupSpace, barSpace) * batches.size
+            groupBars(0f, groupSpace, barSpace)
+
             invalidate()
         }
     }

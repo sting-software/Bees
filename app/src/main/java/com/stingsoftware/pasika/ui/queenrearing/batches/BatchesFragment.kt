@@ -14,10 +14,11 @@ import com.stingsoftware.pasika.data.GraftingBatch
 import com.stingsoftware.pasika.databinding.FragmentBatchesListBinding
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragmentDirections
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingViewModel
+import com.stingsoftware.pasika.ui.queenrearing.SearchableFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BatchesFragment : Fragment() {
+class BatchesFragment : Fragment(), SearchableFragment {
 
     private var _binding: FragmentBatchesListBinding? = null
     private val binding get() = _binding!!
@@ -111,8 +112,16 @@ class BatchesFragment : Fragment() {
             inflater.inflate(R.menu.menu_batches, menu)
             (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.selected_count_format, batchesAdapter.getSelectedItems().size)
         } else {
-            menu.clear()
-            (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.queen_rearing)
+            // Do not clear the menu here, let the parent fragment handle it
+        }
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        // Hide search when in multi-select mode
+        if (isResumed) { // Check if fragment is resumed
+            val searchItem = activity?.findViewById<View>(R.id.action_search)
+            searchItem?.visibility = if (batchesAdapter.isMultiSelectMode()) View.GONE else View.VISIBLE
         }
     }
 
@@ -163,6 +172,10 @@ class BatchesFragment : Fragment() {
             }
             .setNegativeButton(R.string.dialog_no, null)
             .show()
+    }
+
+    override fun search(query: String?) {
+        viewModel.setSearchQuery(query)
     }
 
     override fun onDestroyView() {

@@ -96,21 +96,23 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         val description = binding.editTextTaskDescription.text?.toString()?.trim()
         val dueDate =
             if (binding.editTextDueDate.text?.isNotBlank() == true) selectedDateTime.timeInMillis else null
+        val reminderEnabled = binding.switchReminder.isChecked
 
-        // **THE FIX IS HERE:**
-        // We now use the .copy() method on the existing task.
-        // This preserves all fields, including the graftingBatchId,
-        // while updating only the ones that were changed on the screen.
+        // Correctly handle both creating a new task and updating an existing one.
+        // Using .copy() preserves the ID and graftingBatchId for existing tasks.
         val taskToSave = currentTask?.copy(
             title = title,
             description = description,
             dueDate = dueDate,
-            reminderEnabled = binding.switchReminder.isChecked
+            reminderEnabled = reminderEnabled
+        ) ?: Task(
+            title = title,
+            description = description,
+            dueDate = dueDate,
+            reminderEnabled = reminderEnabled
         )
 
-        if (taskToSave != null) {
-            viewModel.onSaveClick(taskToSave)
-        }
+        viewModel.onSaveClick(taskToSave)
     }
 
     private fun showDateTimePicker() {

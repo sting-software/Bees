@@ -389,7 +389,7 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <string name="mating_success_1f">Mating Success: %.1f%%</string>
     <string name="acceptance_rate">Acceptance Rate (%)</string>
     <string name="grafted_on">Grafted on: %1$s</string>
-    <string name="mother">Mother: %1$s</string>
+    <string name="mother">Mother hive: %1$s</string>
     <string name="accepted">Accepted: %1$d / %2$d</string>
     <string name="update_cell_status">Update Cell #%1$d Status</string>
     <string name="grafted">Grafted: %1$s</string>
@@ -417,6 +417,7 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <string name="queen_cell_status_emerged">Emerged</string>
     <string name="queen_cell_status_mating">Mating</string>
     <string name="queen_cell_status_laying">Laying</string>
+    <string name="queen_cell_status_sold">Sold</string>
     <string name="queen_cell_status_failed">Failed</string>
 
     <string name="overall_performance">Overall Performance</string>
@@ -433,6 +434,21 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <string name="no_colonies_assigned">No colonies assigned to queen rearing roles. You can assign roles when editing a hive.</string>
     <string name="message_hive_saved">Hive saved</string>
     <string name="grafting_batch">Grafting Batch</string>
+    <string name="change_status">Change Status</string>
+    <string name="chart_acceptance">Acceptance %</string>
+    <string name="chart_emergence">Emergence %</string>
+    <string name="chart_mating_success">Mating Success %</string>
+    <string name="number_of_cells">Number of cells</string>
+    <string name="select_mother">Please select a mother colony</string>
+    <string name="title_inspection_details">Inspection</string>
+    <string name="use_starter_colony">Use starter colony</string>
+    <string name="add_task">Add task</string>
+    <string name="add">Add</string>
+    <string name="remove_task">Remove task</string>
+    <string name="custom_notifications">Custom notifications</string>
+    <string name="add_custom_task">Add Custom Task</string>
+    <string name="days_after_grafting_string">Days after grafting</string>
+    <string name="custom_task_for_batch">Custom task for batch: %1$s</string>
 
     <plurals name="dialog_title_delete_selected_batches">
         <item quantity="one">Delete %1$d selected batch</item>
@@ -452,6 +468,26 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <plurals name="dialog_message_delete_selected_tasks">
         <item quantity="one">Are you sure you want to delete %1$d selected task?</item>
         <item quantity="other">Are you sure you want to delete %1$d selected tasks?</item>
+    </plurals>
+
+    <plurals name="update_status_for_cells_title">
+        <item quantity="one">Update Status for %1$d Cell</item>
+        <item quantity="other">Update Status for %1$d Cells</item>
+    </plurals>
+
+    <plurals name="dialog_message_delete_selected_cells">
+        <item quantity="one">Are you sure you want to delete %1$d selected cell?</item>
+        <item quantity="other">Are you sure you want to delete %1$d selected cells?</item>
+    </plurals>
+
+    <plurals name="task_days">
+        <item quantity="one">in %d day</item>
+        <item quantity="other">in %d days</item>
+    </plurals>
+
+    <plurals name="days_after_grafting">
+        <item quantity="one">%d day after grafting</item>
+        <item quantity="other">%d days after grafting</item>
     </plurals>
 
 </resources>

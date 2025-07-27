@@ -1,6 +1,7 @@
 package com.stingsoftware.pasika.ui.queenrearing.batches
 
 import androidx.lifecycle.*
+import com.stingsoftware.pasika.data.CustomTask
 import com.stingsoftware.pasika.data.GraftingBatch
 import com.stingsoftware.pasika.data.HiveRole
 import com.stingsoftware.pasika.repository.ApiaryRepository
@@ -21,6 +22,9 @@ class AddEditGraftingBatchViewModel @Inject constructor(
     private val _batch = MutableLiveData<GraftingBatch?>()
     val batch: LiveData<GraftingBatch?> = _batch
 
+    private val _customTasks = MutableLiveData<List<CustomTask>>(emptyList())
+    val customTasks: LiveData<List<CustomTask>> = _customTasks
+
     init {
         if (batchId != null && batchId != -1L) {
             viewModelScope.launch {
@@ -29,12 +33,23 @@ class AddEditGraftingBatchViewModel @Inject constructor(
         }
     }
 
-    fun saveBatch(batch: GraftingBatch, cellCount: Int) {
+    fun addCustomTask(task: CustomTask) {
+        val currentTasks = _customTasks.value ?: emptyList()
+        _customTasks.value = currentTasks + task
+    }
+
+    fun removeCustomTask(task: CustomTask) {
+        val currentTasks = _customTasks.value ?: emptyList()
+        _customTasks.value = currentTasks - task
+    }
+
+    fun saveBatch(batch: GraftingBatch, customTasks: List<CustomTask>) {
         viewModelScope.launch {
             if (batch.id == 0L) {
-                repository.insertGraftingBatchAndTasks(batch, cellCount)
+                repository.insertGraftingBatchAndTasks(batch, customTasks)
             } else {
                 repository.updateGraftingBatch(batch)
+                // Note: Updating custom tasks for an existing batch is not implemented here.
             }
         }
     }

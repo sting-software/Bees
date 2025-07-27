@@ -178,7 +178,6 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
                 val task = todoAdapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteTask(task)
 
-                // FIX: Correctly undo the delete by re-inserting the task
                 Snackbar.make(requireView(), getString(R.string.message_task_deleted), Snackbar.LENGTH_LONG)
                     .setAction(getString(R.string.action_undo)) { viewModel.insertTask(task) }
                     .show()

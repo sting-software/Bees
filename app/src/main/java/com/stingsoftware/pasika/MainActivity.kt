@@ -59,19 +59,23 @@ class MainActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val topLevelDestinations = navController.graph.map { it.id }.toSet()
+        val topLevelDestinations = setOf(R.id.homeFragment, R.id.queenRearingFragment, R.id.todoListFragment)
         appBarConfiguration = AppBarConfiguration(topLevelDestinations, drawerLayout)
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
 
 
+        // Let NavigationUI handle the bottom navigation automatically.
+        // This will correctly navigate between top-level destinations.
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            if (item.itemId == R.id.homeFragment) {
-                navController.popBackStack(navController.graph.startDestinationId, false)
-                return@setOnItemSelectedListener true
-            }
             NavigationUI.onNavDestinationSelected(item, navController)
-            true
         }
+
+        // Add a listener to handle re-selection of an item.
+        // This is where we pop the back stack to the start destination of the selected tab.
+        binding.bottomNavigation.setOnItemReselectedListener { item ->
+            navController.popBackStack(item.itemId, false)
+        }
+
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomNavigation.menu.findItem(destination.id)?.isChecked = true

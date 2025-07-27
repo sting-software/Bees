@@ -44,8 +44,8 @@
 
     <string name="selected_count_format">Вибрано: %1$d</string>
 
-    <string name="error_field_cannot_be_empty">Поле «%1$s» не може бути порожнім.</string>
-    <string name="error_must_be_positive_number">Поле «%1$s» має бути додатним числом.</string>
+    <string name="error_field_cannot_be_empty">Поле \"%1$s\" не може бути порожнім.</string>
+    <string name="error_must_be_positive_number">Поле \"%1$s\" має бути додатним числом.</string>
     <string name="error_invalid_number_range">Кінцеве число має бути більшим або рівним початковому.</string>
 
     <string name="title_apiaries">Пасіки</string>
@@ -155,7 +155,7 @@
     <string name="last_inspection_format">Останній огляд: %s</string>
     <string name="last_inspection_none">Останній огляд: немає</string>
     <string name="bulk_edit_hives_count">Редагування %d вибраних вуликів</string>
-    <string name="bulk_edit_hives_info">Будуть оновлені лише заповнені поля. Залиште поля порожніми, щоб зберегти наявні значення.</string>
+    <string name="bulk_edit_hives_info">Лише заповнені поля будуть оновлені. Залиште поля порожніми, щоб зберегти наявні значення.</string>
     <string name="checkbox_auto_number_selected_hives">Автоматично нумерувати вибрані вулики</string>
 
     <string name="spinner_prompt_material">Матеріал</string>
@@ -389,7 +389,7 @@
     <string name="mating_success_1f">Успішність обльоту: %.1f%%</string>
     <string name="acceptance_rate">Рівень прийому (%)</string>
     <string name="grafted_on">Щеплено: %1$s</string>
-    <string name="mother">Матка: %1$s</string>
+    <string name="mother">Племіння сім\'я: %1$s</string>
     <string name="accepted">Прийнято: %1$d / %2$d</string>
     <string name="update_cell_status">Оновити статус маточника №%1$d</string>
     <string name="grafted">Щеплено: %1$s</string>
@@ -418,6 +418,7 @@
     <string name="queen_cell_status_emerged">Вийшла</string>
     <string name="queen_cell_status_mating">На обльоті</string>
     <string name="queen_cell_status_laying">Плідна</string>
+    <string name="queen_cell_status_sold">Продано</string>
     <string name="queen_cell_status_failed">Невдача</string>
 
     <string name="overall_performance">Загальна продуктивність</string>
@@ -434,6 +435,21 @@
     <string name="no_colonies_assigned">Немає сімей, призначених для виведення маток. Ви можете призначити їм ролі під час редагування вулика.</string>
     <string name="message_hive_saved">Вулик збережено</string>
     <string name="grafting_batch">Партія</string>
+    <string name="change_status">Змінити статус</string>
+    <string name="chart_acceptance">Прийом %</string>
+    <string name="chart_emergence">Вихід %</string>
+    <string name="chart_mating_success">Обліт %</string>
+    <string name="number_of_cells">Кількість</string>
+    <string name="select_mother">Оберіть племінну сім\'ю</string>
+    <string name="title_inspection_details">Огляд</string>
+    <string name="use_starter_colony">Використати сім\'ю-стартер</string>
+    <string name="add_task">Додати завдання</string>
+    <string name="add">Додати</string>
+    <string name="remove_task">Прибрати завдання</string>
+    <string name="custom_notifications">Власні сповіщення</string>
+    <string name="add_custom_task">Додати власне завдання</string>
+    <string name="days_after_grafting_string">Днів після прививки</string>
+    <string name="custom_task_for_batch">Власне завдання для партії: %1$s</string>
 
     <plurals name="dialog_title_delete_selected_batches">
         <item quantity="one">Видалити %1$d обрану партію</item>
@@ -457,6 +473,32 @@
         <item quantity="one">Ви впевнені, що хочете видалити %1$d обране завдання?</item>
         <item quantity="few">Ви впевнені, що хочете видалити %1$d обрані завдання?</item>
         <item quantity="many">Ви впевнені, що хочете видалити %1$d обраних завдань?</item>
+    </plurals>
+
+    <plurals name="update_status_for_cells_title">
+        <item quantity="one">Оновити статус для %1$d маточника</item>
+        <item quantity="few">Оновити статус для %1$d маточників</item>
+        <item quantity="many">Оновити статус для %1$d маточників</item>
+    </plurals>
+
+    <plurals name="dialog_message_delete_selected_cells">
+        <item quantity="one">Ви впевнені, що хочете видалити %1$d вибраний маточник?</item>
+        <item quantity="few">Ви впевнені, що хочете видалити %1$d вибрані маточники?</item>
+        <item quantity="many">Ви впевнені, що хочете видалити %1$d вибраних маточників?</item>
+    </plurals>
+
+    <plurals name="task_days">
+        <item quantity="one">через %d день</item>
+        <item quantity="few">через %d дні</item>
+        <item quantity="many">через %d днів</item>
+        <item quantity="other">через %d днів</item>
+    </plurals>
+
+    <plurals name="days_after_grafting">
+        <item quantity="one">%d день після прививки</item>
+        <item quantity="few">%d дні після прививки</item>
+        <item quantity="many">%d днів після прививки</item>
+        <item quantity="other">%d дня після прививки</item>
     </plurals>
 
 </resources>

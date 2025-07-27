@@ -1,31 +1,51 @@
 package com.stingsoftware.pasika.ui.queenrearing
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.stingsoftware.pasika.data.GraftingBatch
+import com.stingsoftware.pasika.data.Hive
 import com.stingsoftware.pasika.data.HiveRole
+import com.stingsoftware.pasika.data.Task
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class QueenRearingViewModel @Inject constructor(
     private val repository: ApiaryRepository
 ) : ViewModel() {
 
-    val graftingBatches = repository.getAllGraftingBatches().asLiveData()
-    val queenRearingTasks = repository.getQueenRearingTasks().asLiveData()
+    private val searchQuery = MutableStateFlow("")
 
-    fun getMotherColonies() = repository.getHivesByRole(HiveRole.MOTHER).asLiveData()
-    fun getStarterColonies() = repository.getHivesByRole(HiveRole.STARTER).asLiveData()
-    fun getFinisherColonies() = repository.getHivesByRole(HiveRole.FINISHER).asLiveData()
-    fun getNucleusColonies() = repository.getHivesByRole(HiveRole.NUCLEUS).asLiveData()
+    val graftingBatches: LiveData<List<GraftingBatch>> = searchQuery.flatMapLatest { query ->
+        // This would need to be updated if you want to search batches
+        repository.getAllGraftingBatches()
+    }.asLiveData()
 
-    fun deleteGraftingBatches(batches: List<GraftingBatch>) {
-        viewModelScope.launch {
-            repository.deleteGraftingBatchesAndTasks(batches)
+    val queenRearingTasks: LiveData<List<Task>> = searchQuery.flatMapLatest { query ->
+        if (query.isBlank()) {
+            repository.getQueenRearingTasks()
+        } else {
+            repository.searchQueenRearingTasks(query)
         }
+    }.asLiveData()
+
+    fun setSearchQuery(query: String?) {
+        searchQuery.value = query ?: ""
     }
+
+    fun deleteGraftingBatches(batches: List<GraftingBatch>) = viewModelScope.launch {
+        repository.deleteGraftingBatchesAndTasks(batches)
+    }
+
+    fun getMotherColonies(): LiveData<List<Hive>> = repository.getHivesByRole(HiveRole.MOTHER).asLiveData()
+    fun getStarterColonies(): LiveData<List<Hive>> = repository.getHivesByRole(HiveRole.STARTER).asLiveData()
+    fun getFinisherColonies(): LiveData<List<Hive>> = repository.getHivesByRole(HiveRole.FINISHER).asLiveData()
+    fun getNucleusColonies(): LiveData<List<Hive>> = repository.getHivesByRole(HiveRole.NUCLEUS).asLiveData()
+
+    val anyBatchUsesStarter: LiveData<Boolean> = repository.anyBatchUsesStarter().asLiveData()
 }

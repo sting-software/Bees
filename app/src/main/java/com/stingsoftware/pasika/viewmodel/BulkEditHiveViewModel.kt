@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stingsoftware.pasika.data.Hive
+import com.stingsoftware.pasika.data.HiveRole
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -40,55 +41,107 @@ class BulkEditHiveViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Updates all selected hives with the provided values.
+     * Any parameter that is null will not be updated, preserving the original value in the hive.
+     */
     fun updateSelectedHives(
-        // Existing params
-        hiveType: String?, frameType: String?, framesTotal: Int?, breed: String?,
-        lastInspectionDate: Long?, notes: String?, autoNumber: Boolean, startingHiveNumber: Int?,
-        // New params to add
-        material: String?, queenTagColor: String?, queenNumber: String?, queenYear: String?,
-        queenLine: String?, queenCells: Int?, isolationFromDate: Long?, isolationToDate: Long?,
-        defensivenessRating: Int?, framesEggs: Int?, framesOpenBrood: Int?, framesCappedBrood: Int?,
-        framesFeed: Int?, givenBuiltCombs: Int?, givenFoundation: Int?, givenBrood: Int?,
-        givenBeesKg: Double?, givenHoneyKg: Double?, givenSugarKg: Double?, treatment: String?
+        // Hive Characteristics
+        material: String?,
+        hiveType: String?,
+        frameType: String?,
+        breed: String?,
+        role: HiveRole?,
+
+        // Frame Counts
+        framesEggs: Int?,
+        framesOpenBrood: Int?,
+        framesCappedBrood: Int?,
+        framesFeed: Int?,
+        framesTotal: Int?,
+
+        // Queen Bee
+        queenTagColor: String?,
+        queenNumber: String?,
+        queenYear: String?,
+        queenLine: String?,
+        isolationFromDate: Long?,
+        isolationToDate: Long?,
+
+        // Other attributes
+        defensivenessRating: Int?,
+
+        // Given/Taken
+        givenBuiltCombs: Int?,
+        givenFoundation: Int?,
+        givenBrood: Int?,
+        givenBeesKg: Double?,
+        givenHoneyKg: Double?,
+        givenSugarKg: Double?,
+
+        // Treatment
+        treatment: String?,
+
+        // General
+        lastInspectionDate: Long?,
+        notes: String?,
+
+        // Numbering
+        autoNumber: Boolean,
+        startingHiveNumber: Int?
     ) = viewModelScope.launch {
         _selectedHives.value?.let { hives ->
+            // Sort hives by their current ID to ensure consistent re-numbering
             val sortedHives = hives.sortedBy { it.id }
 
             for ((index, hive) in sortedHives.withIndex()) {
                 val updatedHive = hive.copy(
-                    // Existing copy logic
+                    // Hive Characteristics
+                    material = material ?: hive.material,
                     hiveType = hiveType ?: hive.hiveType,
                     frameType = frameType ?: hive.frameType,
-                    framesTotal = framesTotal ?: hive.framesTotal,
                     breed = breed ?: hive.breed,
-                    lastInspectionDate = lastInspectionDate ?: hive.lastInspectionDate,
-                    notes = notes ?: hive.notes,
-                    hiveNumber = if (autoNumber && startingHiveNumber != null) {
-                        (startingHiveNumber + index).toString()
-                    } else {
-                        hive.hiveNumber
-                    },
-                    // New copy logic for all other attributes
-                    material = material ?: hive.material,
-                    queenTagColor = queenTagColor ?: hive.queenTagColor,
-                    queenNumber = queenNumber ?: hive.queenNumber,
-                    queenYear = queenYear ?: hive.queenYear,
-                    queenLine = queenLine ?: hive.queenLine,
-                    queenCells = queenCells ?: hive.queenCells,
-                    isolationFromDate = isolationFromDate ?: hive.isolationFromDate,
-                    isolationToDate = isolationToDate ?: hive.isolationToDate,
-                    defensivenessRating = defensivenessRating ?: hive.defensivenessRating,
+                    role = role ?: hive.role,
+
+                    // Frame Counts
                     framesEggs = framesEggs ?: hive.framesEggs,
                     framesOpenBrood = framesOpenBrood ?: hive.framesOpenBrood,
                     framesCappedBrood = framesCappedBrood ?: hive.framesCappedBrood,
                     framesFeed = framesFeed ?: hive.framesFeed,
+                    framesTotal = framesTotal ?: hive.framesTotal,
+
+                    // Queen Bee
+                    queenTagColor = queenTagColor ?: hive.queenTagColor,
+                    queenNumber = queenNumber ?: hive.queenNumber,
+                    queenYear = queenYear ?: hive.queenYear,
+                    queenLine = queenLine ?: hive.queenLine,
+                    isolationFromDate = isolationFromDate ?: hive.isolationFromDate,
+                    isolationToDate = isolationToDate ?: hive.isolationToDate,
+
+                    // Other attributes
+                    defensivenessRating = defensivenessRating ?: hive.defensivenessRating,
+
+                    // Given/Taken
                     givenBuiltCombs = givenBuiltCombs ?: hive.givenBuiltCombs,
                     givenFoundation = givenFoundation ?: hive.givenFoundation,
                     givenBrood = givenBrood ?: hive.givenBrood,
                     givenBeesKg = givenBeesKg ?: hive.givenBeesKg,
                     givenHoneyKg = givenHoneyKg ?: hive.givenHoneyKg,
                     givenSugarKg = givenSugarKg ?: hive.givenSugarKg,
-                    treatment = treatment ?: hive.treatment
+
+                    // Treatment
+                    treatment = treatment ?: hive.treatment,
+
+                    // General
+                    lastInspectionDate = lastInspectionDate ?: hive.lastInspectionDate,
+                    notes = notes ?: hive.notes,
+
+                    // Numbering - only applied if autoNumber is checked
+                    hiveNumber = if (autoNumber && startingHiveNumber != null) {
+                        (startingHiveNumber + index).toString()
+                    } else {
+                        hive.hiveNumber
+                    }
                 )
                 repository.updateHive(updatedHive)
             }

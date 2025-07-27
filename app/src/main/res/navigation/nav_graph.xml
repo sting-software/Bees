@@ -110,7 +110,7 @@
     <fragment
         android:id="@+id/inspectionListFragment"
         android:name="com.stingsoftware.pasika.ui.inspectionlist.InspectionListFragment"
-        android:label="string/title_inspections_for_hive"
+        android:label="@string/title_inspections_for_hive"
         tools:layout="@layout/fragment_inspection_list">
         <argument
             android:name="hiveId"
@@ -127,7 +127,7 @@
     <fragment
         android:id="@+id/addEditInspectionFragment"
         android:name="com.stingsoftware.pasika.ui.inspectionedit.AddEditInspectionFragment"
-        android:label="{title}"
+        android:label="@string/title_inspection_details"
         tools:layout="@layout/fragment_add_edit_inspection">
         <argument
             android:name="hiveId"
@@ -136,10 +136,6 @@
             android:name="inspectionId"
             android:defaultValue="-1L"
             app:argType="long" />
-        <argument
-            android:name="title"
-            android:defaultValue="Inspection"
-            app:argType="string" />
     </fragment>
 
     <!-- To-Do Fragments -->

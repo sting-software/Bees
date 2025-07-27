@@ -5,19 +5,26 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Hive
-import com.stingsoftware.pasika.data.HiveRole // NEW: Import for HiveRole
+import com.stingsoftware.pasika.data.HiveRole
 import com.stingsoftware.pasika.databinding.FragmentAddEditHiveBinding
 import com.stingsoftware.pasika.viewmodel.AddEditHiveViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +60,8 @@ class AddEditHiveFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupMenu()
+        setupBackButtonHandler()
         isEditMode = args.hiveId != -1L
 
         // Setup all UI components and listeners
@@ -64,7 +73,7 @@ class AddEditHiveFragment : Fragment() {
         setupFramesTextWatchers()
 
         if (isEditMode) {
-            activity?.title = getString(R.string.title_edit_hive)
+            (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.title_edit_hive)
             addEditHiveViewModel.getHive(args.hiveId).observe(viewLifecycleOwner) { hive ->
                 hive?.let {
                     originalHive = it
@@ -73,7 +82,7 @@ class AddEditHiveFragment : Fragment() {
                 }
             }
         } else {
-            activity?.title = getString(R.string.title_add_hive)
+            (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.title_add_hive)
             updateFramesTotal()
         }
 
@@ -81,8 +90,94 @@ class AddEditHiveFragment : Fragment() {
         binding.buttonCancelHive.setOnClickListener { findNavController().popBackStack() }
     }
 
-    // --- All original methods from your file are preserved below ---
-    // ... handleSave, showUpdateAllHivesDialog, saveHiveAndExit, saveMultipleHives ...
+    private fun setupMenu() {
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_save, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.action_save_hive -> {
+                        handleSave()
+                        true
+                    }
+                    android.R.id.home -> {
+                        handleAutoSaveOnExit()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupBackButtonHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                handleAutoSaveOnExit()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    private fun hasChanges(): Boolean {
+        val currentHive = createHiveFromInput()
+        return if (isEditMode) {
+            originalHive != null && originalHive != currentHive
+        } else {
+            // For a new hive, any non-default value is a change.
+            // Create a hive object that represents a completely empty form.
+            val defaultHive = Hive(
+                id = 0L,
+                apiaryId = args.apiaryId,
+                hiveNumber = null,
+                hiveType = null,
+                hiveTypeOther = null,
+                frameType = null,
+                frameTypeOther = null,
+                material = null,
+                materialOther = null,
+                breed = null,
+                breedOther = null,
+                lastInspectionDate = null,
+                notes = null,
+                queenTagColor = null,
+                queenTagColorOther = null,
+                queenNumber = null,
+                queenYear = null,
+                queenLine = null,
+                queenCells = null,
+                isolationFromDate = null,
+                isolationToDate = null,
+                defensivenessRating = null,
+                framesTotal = 0, // Total is 0 when individual frames are empty/0
+                framesEggs = null,
+                framesOpenBrood = null,
+                framesCappedBrood = null,
+                framesFeed = null,
+                givenBuiltCombs = null,
+                givenFoundation = null,
+                givenBrood = null,
+                givenBeesKg = null,
+                givenHoneyKg = null,
+                givenSugarKg = null,
+                treatment = null,
+                role = HiveRole.PRODUCTION // Default role for new hives
+            )
+            currentHive != defaultHive
+        }
+    }
+
+    private fun handleAutoSaveOnExit() {
+        if (hasChanges()) {
+            handleSave()
+        } else {
+            findNavController().popBackStack()
+        }
+    }
+
 
     private fun handleSave() {
         // Divert to a separate function if adding multiple hives
@@ -135,7 +230,7 @@ class AddEditHiveFragment : Fragment() {
 
     private fun saveMultipleHives() {
         val autoNumber = binding.checkboxAutomaticNumbering.isChecked
-        var quantity: Int?
+        val quantity: Int?
         var startingHiveNumber: Int? = null
         var endingHiveNumber: Int? = null
 
@@ -197,7 +292,7 @@ class AddEditHiveFragment : Fragment() {
             givenHoneyKg = hiveData.givenHoneyKg,
             givenSugarKg = hiveData.givenSugarKg,
             treatment = hiveData.treatment,
-            role = hiveData.role // NEW: Pass the role to the ViewModel
+            role = hiveData.role
         )
         Toast.makeText(
             requireContext(),
@@ -207,7 +302,6 @@ class AddEditHiveFragment : Fragment() {
     }
 
     private fun createHiveFromInput(): Hive {
-        // ... all your existing logic for gathering data ...
         val material = binding.autoCompleteTextViewMaterial.text.toString().trim().ifEmpty { null }
         val materialOther = binding.editTextMaterialOther.text.toString().trim().ifEmpty { null }
         val finalMaterial = if (material.equals(
@@ -258,7 +352,6 @@ class AddEditHiveFragment : Fragment() {
         val queenNumber = binding.editTextQueenNumber.text.toString().trim().ifEmpty { null }
         val queenYear = binding.editTextQueenYear.text.toString().trim().ifEmpty { null }
         val queenLine = binding.editTextQueenLine.text.toString().trim().ifEmpty { null }
-//        val queenCells = binding.editTextQueenCells.text.toString().trim().toIntOrNull()
 
         val defensivenessRating = when (binding.radioGroupDefensiveness.checkedRadioButtonId) {
             R.id.radio_defensiveness_1 -> 1
@@ -301,7 +394,7 @@ class AddEditHiveFragment : Fragment() {
             queenNumber = queenNumber,
             queenYear = queenYear,
             queenLine = queenLine,
-//            queenCells = queenCells,
+            queenCells = null, // UI for this is commented out, so passing null
             isolationFromDate = selectedIsolationFromDateMillis,
             isolationToDate = selectedIsolationToDateMillis,
             defensivenessRating = defensivenessRating,
@@ -354,7 +447,6 @@ class AddEditHiveFragment : Fragment() {
         binding.editTextQueenNumber.setText(hive.queenNumber)
         binding.editTextQueenYear.setText(hive.queenYear)
         binding.editTextQueenLine.setText(hive.queenLine)
-//        binding.editTextQueenCells.setText(hive.queenCells?.toString())
 
         selectedIsolationFromDateMillis = hive.isolationFromDate
         updateDateEditText(selectedIsolationFromDateMillis, binding.editTextIsolationFromDate)
@@ -510,9 +602,6 @@ class AddEditHiveFragment : Fragment() {
         }
     }
 
-    /**
-     * NEW: Sets up the dropdown for selecting the hive's role in queen rearing.
-     */
     private fun setupRoleSpinner() {
         val roleLabels = HiveRole.entries.map { it.getLabel(requireContext()) }
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_menu_popup_item, roleLabels)
@@ -644,6 +733,7 @@ class AddEditHiveFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (activity as? AppCompatActivity)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         _binding = null
     }
 }

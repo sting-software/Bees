@@ -2,10 +2,14 @@ package com.stingsoftware.pasika.ui.queenrearing.timeline
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.view.ActionMode
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,10 +20,11 @@ import com.stingsoftware.pasika.todo.TodoAdapter
 import com.stingsoftware.pasika.todo.TodoViewModel
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragmentDirections
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingViewModel
+import com.stingsoftware.pasika.ui.queenrearing.SearchableFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TimelineFragment : Fragment() {
+class TimelineFragment : Fragment(), SearchableFragment {
 
     private var _binding: FragmentTimelineBinding? = null
     private val binding get() = _binding!!
@@ -27,15 +32,15 @@ class TimelineFragment : Fragment() {
     private val queenRearingViewModel: QueenRearingViewModel by viewModels({ requireParentFragment() })
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var todoAdapter: TodoAdapter
-    private var actionMode: ActionMode? = null
+    private var isMultiSelectMode = false
+    private lateinit var backPressedCallback: OnBackPressedCallback
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTimelineBinding.inflate(inflater, container, false)
-        todoViewModel = ViewModelProvider(this).get(TodoViewModel::class.java)
-        setHasOptionsMenu(true)
+        todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
         return binding.root
     }
 
@@ -43,12 +48,23 @@ class TimelineFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         observeTasks()
+        setupMenu()
+        setupOnBackPressed()
+    }
+
+    private fun setupOnBackPressed() {
+        backPressedCallback = object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                finishMultiSelectMode()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
     }
 
     private fun setupRecyclerView() {
         todoAdapter = TodoAdapter(
             onTaskClicked = { task ->
-                if (todoAdapter.isMultiSelectMode()) {
+                if (isMultiSelectMode) {
                     todoAdapter.toggleSelection(task)
                 } else {
                     val action = QueenRearingFragmentDirections.actionQueenRearingFragmentToAddEditTaskFragment(
@@ -62,18 +78,21 @@ class TimelineFragment : Fragment() {
                 todoViewModel.onTaskCheckedChanged(task, isChecked)
             },
             onLongClick = { task ->
-                if (!todoAdapter.isMultiSelectMode()) {
+                if (!isMultiSelectMode) {
+                    isMultiSelectMode = true
+                    backPressedCallback.isEnabled = true
+                    activity?.invalidateOptionsMenu()
                     todoAdapter.setMultiSelectMode(true)
-                    actionMode = (activity as? androidx.appcompat.app.AppCompatActivity)?.startSupportActionMode(ActionModeCallback())
                     todoAdapter.toggleSelection(task)
                 }
             },
             onSelectionChange = { count ->
-                if (count == 0) {
-                    actionMode?.finish()
-                } else {
-                    actionMode?.title = getString(R.string.selected_count_format, count)
-                    actionMode?.invalidate()
+                if (isMultiSelectMode) {
+                    if (count == 0) {
+                        finishMultiSelectMode()
+                    } else {
+                        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.selected_count_format, count)
+                    }
                 }
             }
         )
@@ -99,46 +118,70 @@ class TimelineFragment : Fragment() {
         }
     }
 
-    private inner class ActionModeCallback : ActionMode.Callback {
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_todo_list, menu)
-            return true
-        }
+    override fun search(query: String?) {
+        queenRearingViewModel.setSearchQuery(query)
+    }
 
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            menu.findItem(R.id.action_delete_selected_tasks).isVisible = true
-            menu.findItem(R.id.action_select_all_tasks).isVisible = true
-            menu.findItem(R.id.action_mark_complete_selected_tasks).isVisible = true
-            menu.findItem(R.id.action_cancel_selection).isVisible = true
-            menu.findItem(R.id.action_search_tasks).isVisible = false
-            return true
-        }
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            val selectedTasks = todoAdapter.getSelectedItems()
-            when (item.itemId) {
-                R.id.action_delete_selected_tasks -> {
-                    showDeleteConfirmationDialog(selectedTasks)
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if (isMultiSelectMode) {
+                    menuInflater.inflate(R.menu.menu_todo_list, menu)
                 }
-                R.id.action_select_all_tasks -> {
-                    todoAdapter.selectAll()
-                }
-                R.id.action_mark_complete_selected_tasks -> {
-                    todoViewModel.updateTasksStatus(selectedTasks, true)
-                    mode.finish()
-                }
-                R.id.action_cancel_selection -> {
-                    mode.finish()
-                }
-                else -> return false
             }
-            return true
-        }
 
-        override fun onDestroyActionMode(mode: ActionMode) {
-            todoAdapter.setMultiSelectMode(false)
-            actionMode = null
-        }
+            override fun onPrepareMenu(menu: Menu) {
+                if (isResumed) {
+                    val searchItem = menu.findItem(R.id.action_search)
+                    searchItem?.isVisible = !isMultiSelectMode
+                }
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+                if (item.itemId == android.R.id.home) {
+                    if (isMultiSelectMode) {
+                        finishMultiSelectMode()
+                        return true
+                    }
+                }
+
+                if (isMultiSelectMode) {
+                    val selectedTasks = todoAdapter.getSelectedItems()
+                    return when (item.itemId) {
+                        R.id.action_delete_selected_tasks -> {
+                            showDeleteConfirmationDialog(selectedTasks)
+                            true
+                        }
+                        R.id.action_select_all_tasks -> {
+                            todoAdapter.selectAll()
+                            true
+                        }
+                        R.id.action_mark_complete_selected_tasks -> {
+                            todoViewModel.updateTasksStatus(selectedTasks, true)
+                            finishMultiSelectMode()
+                            true
+                        }
+                        R.id.action_cancel_selection -> {
+                            finishMultiSelectMode()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun finishMultiSelectMode() {
+        if (!isMultiSelectMode) return
+        isMultiSelectMode = false
+        backPressedCallback.isEnabled = false
+        todoAdapter.clearSelections()
+        todoAdapter.setMultiSelectMode(false)
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.queen_rearing)
+        activity?.invalidateOptionsMenu()
     }
 
     private fun showDeleteConfirmationDialog(tasks: List<Task>) {
@@ -151,7 +194,7 @@ class TimelineFragment : Fragment() {
             .setMessage(message)
             .setPositiveButton(R.string.dialog_yes) { _, _ ->
                 todoViewModel.deleteTasks(tasks)
-                actionMode?.finish()
+                finishMultiSelectMode()
             }
             .setNegativeButton(R.string.dialog_no, null)
             .show()

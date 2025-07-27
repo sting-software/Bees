@@ -25,12 +25,25 @@ interface QueenRearingDao {
     @Query("DELETE FROM tasks WHERE graftingBatchId IN (:batchIds)")
     suspend fun deleteTasksForBatches(batchIds: List<Long>)
 
+    /**
+     * Checks if there is at least one grafting batch that uses a starter colony.
+     * @return A Flow emitting true if at least one batch uses a starter, false otherwise.
+     */
+    @Query("SELECT EXISTS(SELECT 1 FROM grafting_batches WHERE useStarterColony = 1)")
+    fun anyBatchUsesStarter(): Flow<Boolean>
+
     // --- QueenCell Queries ---
     @Insert
     suspend fun insertQueenCells(cells: List<QueenCell>)
 
     @Update
     suspend fun updateQueenCell(cell: QueenCell)
+
+    @Update
+    suspend fun updateQueenCells(cells: List<QueenCell>)
+
+    @Delete
+    suspend fun deleteQueenCells(cells: List<QueenCell>)
 
     @Query("SELECT * FROM queen_cells WHERE batchId = :batchId")
     fun getQueenCellsForBatch(batchId: Long): Flow<List<QueenCell>>

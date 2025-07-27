@@ -41,33 +41,46 @@ class ApiaryRepository @Inject constructor(
         queenRearingDao.getGraftingBatchById(batchId)
 
     suspend fun updateQueenCell(cell: QueenCell) = queenRearingDao.updateQueenCell(cell)
+    suspend fun updateQueenCells(cells: List<QueenCell>) = queenRearingDao.updateQueenCells(cells)
+
+    suspend fun deleteQueenCells(cells: List<QueenCell>) = queenRearingDao.deleteQueenCells(cells)
+
     fun getQueenRearingTasks(): Flow<List<Task>> = taskDao.getQueenRearingTasks()
+    fun searchQueenRearingTasks(query: String): Flow<List<Task>> = taskDao.searchQueenRearingTasks(query)
+
     fun getAllQueenCells(): Flow<List<QueenCell>> = queenRearingDao.getAllQueenCells()
 
-    suspend fun insertGraftingBatchAndTasks(batch: GraftingBatch, cellCount: Int) {
+    fun anyBatchUsesStarter(): Flow<Boolean> = queenRearingDao.anyBatchUsesStarter()
+
+    suspend fun insertGraftingBatchAndTasks(batch: GraftingBatch, customTasks: List<CustomTask>) {
         db.withTransaction {
             val batchId = queenRearingDao.insertGraftingBatch(batch)
-            val cells = (1..cellCount).map { QueenCell(batchId = batchId) }
+            val cells = (1..batch.cellsGrafted).map { QueenCell(batchId = batchId) }
             queenRearingDao.insertQueenCells(cells)
 
             val graftingTime = batch.graftingDate
             val oneDayInMillis = 24 * 60 * 60 * 1000L
 
-            val checkAcceptanceTask = Task(
-                title = context.getString(R.string.check_acceptance_for, batch.name),
-                description = context.getString(R.string.check_how_many_cells_were_accepted_in_the_starter_colony),
-                dueDate = graftingTime + (1 * oneDayInMillis),
-                graftingBatchId = batchId,
-                reminderEnabled = true
-            )
+            if (batch.useStarterColony) {
+                val checkAcceptanceTask = Task(
+                    title = context.getString(R.string.check_acceptance_for, batch.name),
+                    description = context.getString(R.string.check_how_many_cells_were_accepted_in_the_starter_colony),
+                    dueDate = graftingTime + (1 * oneDayInMillis),
+                    graftingBatchId = batchId,
+                    reminderEnabled = true
+                )
 
-            val moveToFinisherTask = Task(
-                title = context.getString(R.string.move_cells_for_to_finisher, batch.name),
-                description = context.getString(R.string.check_for_capped_cells_and_move_the_cell_bar_to_a_finisher_colony),
-                dueDate = graftingTime + (5 * oneDayInMillis),
-                graftingBatchId = batchId,
-                reminderEnabled = true
-            )
+                val moveToFinisherTask = Task(
+                    title = context.getString(R.string.move_cells_for_to_finisher, batch.name),
+                    description = context.getString(R.string.check_for_capped_cells_and_move_the_cell_bar_to_a_finisher_colony),
+                    dueDate = graftingTime + (5 * oneDayInMillis),
+                    graftingBatchId = batchId,
+                    reminderEnabled = true
+                )
+                taskDao.insert(checkAcceptanceTask)
+                taskDao.insert(moveToFinisherTask)
+            }
+
 
             val emergenceTask = Task(
                 title = context.getString(R.string.queens_emerge_for, batch.name),
@@ -85,10 +98,19 @@ class ApiaryRepository @Inject constructor(
                 reminderEnabled = true
             )
 
-            taskDao.insert(checkAcceptanceTask)
-            taskDao.insert(moveToFinisherTask)
             taskDao.insert(emergenceTask)
             taskDao.insert(checkLayingTask)
+
+            customTasks.forEach { customTask ->
+                val task = Task(
+                    title = customTask.title,
+                    description = context.getString(R.string.custom_task_for_batch, batch.name),
+                    dueDate = graftingTime + (customTask.daysAfterGrafting * oneDayInMillis),
+                    graftingBatchId = batchId,
+                    reminderEnabled = true
+                )
+                taskDao.insert(task)
+            }
         }
     }
 

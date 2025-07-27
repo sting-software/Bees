@@ -16,15 +16,10 @@ import javax.inject.Inject
 class BatchDetailViewModel @Inject constructor(
     private val repository: ApiaryRepository
 ) : ViewModel() {
-
-    // This LiveData will hold the mother hive after it's fetched.
     private val _motherHive = MutableLiveData<Hive?>()
     val motherHive: LiveData<Hive?> = _motherHive
-
     fun getBatch(batchId: Long) = repository.getGraftingBatchById(batchId).asLiveData()
-
     fun getQueenCells(batchId: Long) = repository.getQueenCellsForBatch(batchId).asLiveData()
-
     /**
      * Fetches the mother hive using a coroutine because the repository function is a suspend function.
      * The result is posted to the _motherHive LiveData.
@@ -34,10 +29,20 @@ class BatchDetailViewModel @Inject constructor(
             _motherHive.value = repository.getHiveById(hiveId)
         }
     }
-
     fun updateQueenCell(cell: QueenCell) {
         viewModelScope.launch {
             repository.updateQueenCell(cell)
+        }
+    }
+    fun updateQueenCells(cells: List<QueenCell>) {
+        viewModelScope.launch {
+            repository.updateQueenCells(cells)
+        }
+    }
+
+    fun deleteQueenCells(cells: List<QueenCell>) {
+        viewModelScope.launch {
+            repository.deleteQueenCells(cells)
         }
     }
 }

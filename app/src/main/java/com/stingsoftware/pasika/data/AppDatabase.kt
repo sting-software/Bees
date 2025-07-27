@@ -5,23 +5,17 @@ import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-/**
- * The Room database for this app.
- *
- * This database now includes all original tables plus the new tables for the Queen Rearing feature.
- * The version is incremented to 7 to reflect the new schema changes.
- */
 @Database(
     entities = [
         Apiary::class,
         Hive::class,
         Inspection::class,
         Task::class,
-        // New entities for Queen Rearing
         GraftingBatch::class,
-        QueenCell::class
+        QueenCell::class,
+        CustomTask::class
     ],
-    version = 7, // Incremented version from 6 to 7
+    version = 9, // Incremented version from 8 to 9
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -37,7 +31,6 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        // --- Existing Migrations ---
         private val MIGRATION_3_4 = object : Migration(3, 4) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
@@ -68,16 +61,10 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        // --- New Migration for Queen Rearing Feature ---
         private val MIGRATION_6_7 = object : Migration(6, 7) {
             override fun migrate(db: SupportSQLiteDatabase) {
-                // 1. Add 'role' column to hives table
                 db.execSQL("ALTER TABLE `hives` ADD COLUMN `role` TEXT NOT NULL DEFAULT 'PRODUCTION'")
-
-                // 2. Add 'graftingBatchId' to tasks table
                 db.execSQL("ALTER TABLE `tasks` ADD COLUMN `graftingBatchId` INTEGER")
-
-                // 3. Create the new 'grafting_batches' table
                 db.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS `grafting_batches` (
@@ -90,8 +77,6 @@ abstract class AppDatabase : RoomDatabase() {
                     )
                 """.trimIndent()
                 )
-
-                // 4. Create the new 'queen_cells' table
                 db.execSQL(
                     """
                     CREATE TABLE IF NOT EXISTS `queen_cells` (
@@ -111,6 +96,27 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `grafting_batches` ADD COLUMN `useStarterColony` INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+
+        private val MIGRATION_8_9 = object : Migration(8, 9) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `custom_tasks` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `batchId` INTEGER NOT NULL,
+                        `title` TEXT NOT NULL,
+                        `daysAfterGrafting` INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -119,8 +125,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pasika_database"
                 )
-                    // Add all migrations, including the new one for the queen rearing feature
-                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
                     .build()
                 INSTANCE = instance
                 instance

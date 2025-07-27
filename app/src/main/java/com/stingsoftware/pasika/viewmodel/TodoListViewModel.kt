@@ -61,7 +61,7 @@ class TodoListViewModel @Inject constructor(
 
     fun deleteTasks(tasks: List<Task>) {
         viewModelScope.launch {
-            tasks.forEach { repository.deleteTask(it) }
+            repository.deleteTasks(tasks)
         }
     }
 

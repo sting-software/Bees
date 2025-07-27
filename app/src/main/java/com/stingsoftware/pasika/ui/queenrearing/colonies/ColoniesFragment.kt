@@ -14,21 +14,23 @@ import com.stingsoftware.pasika.databinding.FragmentColoniesListBinding
 import com.stingsoftware.pasika.ui.apiarydetail.HiveAdapter
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragmentDirections
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingViewModel
+import com.stingsoftware.pasika.ui.queenrearing.SearchableFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ColoniesFragment : Fragment() {
+class ColoniesFragment : Fragment(), SearchableFragment {
 
     private var _binding: FragmentColoniesListBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: QueenRearingViewModel by viewModels({ requireParentFragment() })
 
-    // Properties to hold the lists to check for the empty state
-    private var motherColonies: List<Hive>? = null
-    private var starterColonies: List<Hive>? = null
-    private var finisherColonies: List<Hive>? = null
-    private var nucleusColonies: List<Hive>? = null
+    // State holders
+    private var motherColonies: List<Hive> = emptyList()
+    private var starterColonies: List<Hive> = emptyList()
+    private var finisherColonies: List<Hive> = emptyList()
+    private var nucleusColonies: List<Hive> = emptyList()
+    private var anyBatchUsesStarter: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +43,7 @@ class ColoniesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
+        setupObservers()
     }
 
     private fun setupRecyclerViews() {
@@ -53,20 +56,43 @@ class ColoniesFragment : Fragment() {
             parentFragment?.findNavController()?.navigate(action)
         }
 
-        val motherAdapter = createAdapter(onEditClicked)
-        val starterAdapter = createAdapter(onEditClicked)
-        val finisherAdapter = createAdapter(onEditClicked)
-        val nucleusAdapter = createAdapter(onEditClicked)
+        binding.recyclerViewMother.apply { adapter = createAdapter(onEditClicked); layoutManager = LinearLayoutManager(context) }
+        binding.recyclerViewStarter.apply { adapter = createAdapter(onEditClicked); layoutManager = LinearLayoutManager(context) }
+        binding.recyclerViewFinisher.apply { adapter = createAdapter(onEditClicked); layoutManager = LinearLayoutManager(context) }
+        binding.recyclerViewNucleus.apply { adapter = createAdapter(onEditClicked); layoutManager = LinearLayoutManager(context) }
+    }
 
-        binding.recyclerViewMother.apply { adapter = motherAdapter; layoutManager = LinearLayoutManager(context) }
-        binding.recyclerViewStarter.apply { adapter = starterAdapter; layoutManager = LinearLayoutManager(context) }
-        binding.recyclerViewFinisher.apply { adapter = finisherAdapter; layoutManager = LinearLayoutManager(context) }
-        binding.recyclerViewNucleus.apply { adapter = nucleusAdapter; layoutManager = LinearLayoutManager(context) }
+    private fun setupObservers() {
+        val motherAdapter = binding.recyclerViewMother.adapter as HiveAdapter
+        val starterAdapter = binding.recyclerViewStarter.adapter as HiveAdapter
+        val finisherAdapter = binding.recyclerViewFinisher.adapter as HiveAdapter
+        val nucleusAdapter = binding.recyclerViewNucleus.adapter as HiveAdapter
 
-        viewModel.getMotherColonies().observe(viewLifecycleOwner) { motherAdapter.submitList(it); motherColonies = it; updateEmptyStateVisibility() }
-        viewModel.getStarterColonies().observe(viewLifecycleOwner) { starterAdapter.submitList(it); starterColonies = it; updateEmptyStateVisibility() }
-        viewModel.getFinisherColonies().observe(viewLifecycleOwner) { finisherAdapter.submitList(it); finisherColonies = it; updateEmptyStateVisibility() }
-        viewModel.getNucleusColonies().observe(viewLifecycleOwner) { nucleusAdapter.submitList(it); nucleusColonies = it; updateEmptyStateVisibility() }
+        viewModel.anyBatchUsesStarter.observe(viewLifecycleOwner) {
+            anyBatchUsesStarter = it
+            updateOverallVisibility()
+        }
+
+        viewModel.getMotherColonies().observe(viewLifecycleOwner) {
+            motherColonies = it
+            motherAdapter.submitList(it)
+            updateOverallVisibility()
+        }
+        viewModel.getStarterColonies().observe(viewLifecycleOwner) {
+            starterColonies = it
+            starterAdapter.submitList(it)
+            updateOverallVisibility()
+        }
+        viewModel.getFinisherColonies().observe(viewLifecycleOwner) {
+            finisherColonies = it
+            finisherAdapter.submitList(it)
+            updateOverallVisibility()
+        }
+        viewModel.getNucleusColonies().observe(viewLifecycleOwner) {
+            nucleusColonies = it
+            nucleusAdapter.submitList(it)
+            updateOverallVisibility()
+        }
     }
 
     private fun createAdapter(onEditClicked: (Hive) -> Unit) = HiveAdapter(
@@ -76,21 +102,32 @@ class ColoniesFragment : Fragment() {
         onLongClick = {},
         onSelectionChange = {}
     )
-    private fun updateEmptyStateVisibility() {
-        // Return if not all lists have been initialized yet
-        if (motherColonies == null || starterColonies == null || finisherColonies == null || nucleusColonies == null) return
 
-        val areAllEmpty = motherColonies!!.isEmpty() && starterColonies!!.isEmpty() && finisherColonies!!.isEmpty() && nucleusColonies!!.isEmpty()
+    private fun updateOverallVisibility() {
+        val showMothers = motherColonies.isNotEmpty()
+        val showStarters = anyBatchUsesStarter && starterColonies.isNotEmpty()
+        val showFinishers = finisherColonies.isNotEmpty()
+        val showNuclei = nucleusColonies.isNotEmpty()
 
-        if (areAllEmpty) {
-            binding.scrollViewColonies.visibility = View.GONE
-            binding.emptyState.root.visibility = View.VISIBLE
-            binding.emptyState.textViewEmptyMessage.text =
-                getString(R.string.no_colonies_assigned)
-        } else {
+        binding.motherColoniesCard.visibility = if (showMothers) View.VISIBLE else View.GONE
+        binding.starterColoniesCard.visibility = if (showStarters) View.VISIBLE else View.GONE
+        binding.finisherColoniesCard.visibility = if (showFinishers) View.VISIBLE else View.GONE
+        binding.nucleusColoniesCard.visibility = if (showNuclei) View.VISIBLE else View.GONE
+
+        val isAnyCardVisible = showMothers || showStarters || showFinishers || showNuclei
+
+        if (isAnyCardVisible) {
             binding.scrollViewColonies.visibility = View.VISIBLE
             binding.emptyState.root.visibility = View.GONE
+        } else {
+            binding.scrollViewColonies.visibility = View.GONE
+            binding.emptyState.root.visibility = View.VISIBLE
+            binding.emptyState.textViewEmptyMessage.text = getString(R.string.no_colonies_assigned)
         }
+    }
+
+    override fun search(query: String?) {
+        viewModel.setSearchQuery(query)
     }
 
     override fun onDestroyView() {

@@ -31,4 +31,7 @@ interface TaskDao {
 
     @Query("SELECT * FROM tasks WHERE graftingBatchId IS NOT NULL ORDER BY dueDate ASC")
     fun getQueenRearingTasks(): Flow<List<Task>>
+
+    @Query("SELECT * FROM tasks WHERE graftingBatchId IS NOT NULL AND (title LIKE '%' || :query || '%' OR description LIKE '%' || :query || '%') ORDER BY dueDate ASC")
+    fun searchQueenRearingTasks(query: String): Flow<List<Task>>
 }

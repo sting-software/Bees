@@ -70,7 +70,7 @@ class TodoAdapter(
 
         fun bind(task: Task) {
             binding.apply {
-                checkboxCompleted.isChecked = if (isMultiSelectMode) selectedItems.contains(task.id) else task.isCompleted
+                checkboxCompleted.isChecked = selectedItems.contains(task.id) || task.isCompleted
                 textViewTaskTitle.text = task.title
                 textViewTaskTitle.paintFlags = if (task.isCompleted && !isMultiSelectMode) {
                     textViewTaskTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -78,7 +78,6 @@ class TodoAdapter(
                     textViewTaskTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 }
 
-                // Show or hide the description based on its content
                 if (task.description.isNullOrBlank()) {
                     textViewTaskDescription.visibility = View.GONE
                 } else {
@@ -86,7 +85,6 @@ class TodoAdapter(
                     textViewTaskDescription.text = task.description
                 }
 
-                // Format and display the due date if it exists
                 task.dueDate?.let {
                     textViewDueDate.visibility = View.VISIBLE
                     textViewDueDate.text = formatDate(it)
@@ -94,7 +92,6 @@ class TodoAdapter(
                     textViewDueDate.visibility = View.GONE
                 }
 
-                // Set card background color based on selection or completion status
                 val cardColor = if (selectedItems.contains(task.id)) {
                     ContextCompat.getColor(itemView.context, R.color.colorHiveSelectedBackground)
                 } else if (task.isCompleted) {
@@ -106,10 +103,6 @@ class TodoAdapter(
             }
         }
 
-        /**
-         * Formats a timestamp into a readable date and time string.
-         * Example: "Sun, 27 Jul 2025, 11:10"
-         */
         private fun formatDate(timestamp: Long): String {
             val sdf = SimpleDateFormat("EEE, dd MMM yyyy, hh:mm", Locale.getDefault())
             return sdf.format(Date(timestamp))
@@ -117,14 +110,12 @@ class TodoAdapter(
     }
 
     fun setMultiSelectMode(enabled: Boolean) {
-        if (isMultiSelectMode != enabled) {
-            isMultiSelectMode = enabled
-            if (!enabled) {
-                selectedItems.clear()
-                onSelectionChange(0)
-            }
-            notifyItemRangeChanged(0, itemCount)
+        if (isMultiSelectMode == enabled) return
+        isMultiSelectMode = enabled
+        if (!enabled) {
+            clearSelections()
         }
+        notifyDataSetChanged()
     }
 
     fun toggleSelection(task: Task) {
@@ -139,12 +130,12 @@ class TodoAdapter(
 
     fun selectAll() {
         if (selectedItems.size == currentList.size) {
-            selectedItems.clear()
+            clearSelections()
         } else {
             selectedItems.clear()
             currentList.forEach { selectedItems.add(it.id) }
+            notifyDataSetChanged()
         }
-        notifyItemRangeChanged(0, itemCount)
         onSelectionChange(selectedItems.size)
     }
 
@@ -153,6 +144,14 @@ class TodoAdapter(
     }
 
     fun isMultiSelectMode(): Boolean = isMultiSelectMode
+
+    fun clearSelections() {
+        if (selectedItems.isNotEmpty()) {
+            selectedItems.clear()
+            onSelectionChange(0)
+            notifyDataSetChanged()
+        }
+    }
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) = oldItem.id == newItem.id
