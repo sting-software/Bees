@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditApiaryViewModel @Inject constructor(
     private val repository: ApiaryRepository,
-    @param:ApplicationContext private val context: Context // Inject the application context
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _saveStatus = MutableLiveData<Resource<Apiary>>()
@@ -43,30 +43,25 @@ class AddEditApiaryViewModel @Inject constructor(
         startingHiveNumber: Int?,
         endingHiveNumber: Int?
     ) = viewModelScope.launch {
-        // ... validation logic
         try {
             if (isNewApiary) {
                 val newApiaryId = repository.insertApiary(apiary)
 
                 if (autoNumberHives && startingHiveNumber != null && endingHiveNumber != null) {
-                    // Auto-numbering logic
                     for (i in startingHiveNumber..endingHiveNumber) {
                         repository.insertHive(
                             createEmptyHive(
                                 newApiaryId,
-                                i.toString(),
-                                apiary.lastInspectionDate
+                                i.toString()
                             )
                         )
                     }
                 } else if (!autoNumberHives && apiary.numberOfHives > 0) {
-                    // Manual quantity logic
                     repeat(apiary.numberOfHives) {
                         repository.insertHive(
                             createEmptyHive(
                                 newApiaryId,
-                                null,
-                                apiary.lastInspectionDate
+                                null
                             )
                         )
                     }
@@ -74,7 +69,6 @@ class AddEditApiaryViewModel @Inject constructor(
                 repository.updateApiaryHiveCount(newApiaryId)
                 _navigateToDetail.postValue(newApiaryId)
             } else {
-                // Update existing apiary
                 repository.updateApiary(apiary)
                 repository.updateApiaryHiveCount(apiary.id)
             }
@@ -90,8 +84,7 @@ class AddEditApiaryViewModel @Inject constructor(
 
     private fun createEmptyHive(
         apiaryId: Long,
-        hiveNumber: String?,
-        lastInspectionDate: Long?
+        hiveNumber: String?
     ): Hive {
         return Hive(
             apiaryId = apiaryId,
@@ -104,29 +97,14 @@ class AddEditApiaryViewModel @Inject constructor(
             materialOther = null,
             breed = null,
             breedOther = null,
-            lastInspectionDate = lastInspectionDate, // Use the parameter here
             notes = null,
             queenTagColor = null,
             queenTagColorOther = null,
             queenNumber = null,
             queenYear = null,
             queenLine = null,
-            queenCells = null,
             isolationFromDate = null,
-            isolationToDate = null,
-            defensivenessRating = null,
-            framesTotal = null,
-            framesEggs = null,
-            framesOpenBrood = null,
-            framesCappedBrood = null,
-            framesFeed = null,
-            givenBuiltCombs = null,
-            givenFoundation = null,
-            givenBrood = null,
-            givenBeesKg = null,
-            givenHoneyKg = null,
-            givenSugarKg = null,
-            treatment = null
+            isolationToDate = null
         )
     }
 }

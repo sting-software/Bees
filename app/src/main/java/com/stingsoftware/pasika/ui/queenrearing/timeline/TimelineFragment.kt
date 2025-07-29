@@ -17,6 +17,7 @@ import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Task
 import com.stingsoftware.pasika.databinding.FragmentTimelineBinding
 import com.stingsoftware.pasika.todo.TodoAdapter
+import com.stingsoftware.pasika.todo.TodoListItem
 import com.stingsoftware.pasika.todo.TodoViewModel
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragmentDirections
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingViewModel
@@ -94,7 +95,8 @@ class TimelineFragment : Fragment(), SearchableFragment {
                         (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.selected_count_format, count)
                     }
                 }
-            }
+            },
+            onHeaderClicked = { /* No headers in this fragment, so do nothing. */ }
         )
 
         binding.recyclerViewTimeline.apply {
@@ -113,7 +115,8 @@ class TimelineFragment : Fragment(), SearchableFragment {
             } else {
                 binding.recyclerViewTimeline.visibility = View.VISIBLE
                 binding.emptyState.root.visibility = View.GONE
-                todoAdapter.submitList(tasks)
+                // Wrap the list of Tasks into a list of TodoListItem.TaskItem
+                todoAdapter.submitList(tasks.map { TodoListItem.TaskItem(it) })
             }
         }
     }
@@ -133,8 +136,8 @@ class TimelineFragment : Fragment(), SearchableFragment {
 
             override fun onPrepareMenu(menu: Menu) {
                 if (isResumed) {
-                    val searchItem = menu.findItem(R.id.action_search)
-                    searchItem?.isVisible = !isMultiSelectMode
+                    val searchItem = activity?.findViewById<View>(R.id.action_search)
+                    searchItem?.visibility = if (isMultiSelectMode) View.GONE else View.VISIBLE
                 }
             }
 

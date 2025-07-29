@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.stingsoftware.pasika.R
@@ -67,9 +68,13 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
             },
             onSelectionChange = { count ->
                 updateToolbarTitleForSelection(count)
+            },
+            onHeaderClicked = { header ->
+                viewModel.toggleHeaderExpanded(header.key)
             }
         )
         binding.recyclerViewTasks.adapter = todoAdapter
+        (binding.recyclerViewTasks.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
     }
 
     private fun setupMenu() {
@@ -135,12 +140,14 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
     }
 
     private fun setupObservers() {
-        viewModel.filteredTasks.observe(viewLifecycleOwner) { tasks ->
-            todoAdapter.submitList(tasks)
-            val isEmpty = tasks.isEmpty()
-            binding.emptyStateView.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
-            binding.recyclerViewTasks.visibility = if (isEmpty) View.GONE else View.VISIBLE
-            binding.emptyStateView.textViewEmptyMessage.text = getString(R.string.empty_state_no_tasks)
+        viewModel.groupedTasks.observe(viewLifecycleOwner) { items ->
+            todoAdapter.submitList(items)
+            val isTrulyEmpty = items.isEmpty()
+            binding.emptyStateView.root.visibility = if (isTrulyEmpty) View.VISIBLE else View.GONE
+            binding.recyclerViewTasks.visibility = if (isTrulyEmpty) View.GONE else View.VISIBLE
+            if (isTrulyEmpty) {
+                binding.emptyStateView.textViewEmptyMessage.text = getString(R.string.empty_state_no_tasks)
+            }
         }
 
         viewModel.toastMessage.observe(viewLifecycleOwner) { message ->
@@ -164,6 +171,13 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
     private fun setupSwipeToDelete() {
         ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                if (viewHolder is TodoAdapter.HeaderViewHolder) {
+                    return 0
+                }
+                return super.getMovementFlags(recyclerView, viewHolder)
+            }
+
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -175,12 +189,13 @@ class TodoListFragment : Fragment(R.layout.fragment_todo_list), SearchView.OnQue
                     todoAdapter.notifyItemChanged(viewHolder.adapterPosition)
                     return
                 }
-                val task = todoAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.deleteTask(task)
-
-                Snackbar.make(requireView(), getString(R.string.message_task_deleted), Snackbar.LENGTH_LONG)
-                    .setAction(getString(R.string.action_undo)) { viewModel.insertTask(task) }
-                    .show()
+                val item = todoAdapter.currentList[viewHolder.adapterPosition]
+                if (item is TodoListItem.TaskItem) {
+                    viewModel.deleteTask(item.task)
+                    Snackbar.make(requireView(), getString(R.string.message_task_deleted), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.action_undo)) { viewModel.insertTask(item.task) }
+                        .show()
+                }
             }
         }).attachToRecyclerView(binding.recyclerViewTasks)
     }

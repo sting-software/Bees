@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.GraftingBatch
 import com.stingsoftware.pasika.databinding.FragmentBatchesListBinding
+import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragment
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragmentDirections
 import com.stingsoftware.pasika.ui.queenrearing.QueenRearingViewModel
 import com.stingsoftware.pasika.ui.queenrearing.SearchableFragment
@@ -47,12 +48,17 @@ class BatchesFragment : Fragment(), SearchableFragment {
         backPressedCallback = object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
                 if (batchesAdapter.isMultiSelectMode()) {
-                    batchesAdapter.setMultiSelectMode(false)
-                    activity?.invalidateOptionsMenu()
+                    setMultiSelectMode(false)
                 }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback!!)
+    }
+
+    private fun setMultiSelectMode(enabled: Boolean) {
+        batchesAdapter.setMultiSelectMode(enabled)
+        backPressedCallback?.isEnabled = enabled
+        activity?.invalidateOptionsMenu()
     }
 
     private fun setupRecyclerView() {
@@ -71,17 +77,16 @@ class BatchesFragment : Fragment(), SearchableFragment {
             },
             onLongClick = { batch ->
                 if (!batchesAdapter.isMultiSelectMode()) {
-                    batchesAdapter.setMultiSelectMode(true)
-                    activity?.invalidateOptionsMenu()
+                    setMultiSelectMode(true)
                     batchesAdapter.toggleSelection(batch)
                 }
             },
             onSelectionChange = { count ->
                 if (count == 0 && batchesAdapter.isMultiSelectMode()) {
-                    batchesAdapter.setMultiSelectMode(false)
+                    setMultiSelectMode(false)
+                } else {
+                    activity?.invalidateOptionsMenu()
                 }
-                backPressedCallback?.isEnabled = batchesAdapter.isMultiSelectMode()
-                activity?.invalidateOptionsMenu()
             }
         )
 
@@ -110,22 +115,35 @@ class BatchesFragment : Fragment(), SearchableFragment {
         super.onCreateOptionsMenu(menu, inflater)
         if (batchesAdapter.isMultiSelectMode()) {
             inflater.inflate(R.menu.menu_batches, menu)
-            (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.selected_count_format, batchesAdapter.getSelectedItems().size)
-        } else {
-            // Do not clear the menu here, let the parent fragment handle it
         }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        // Hide search when in multi-select mode
-        if (isResumed) { // Check if fragment is resumed
-            val searchItem = activity?.findViewById<View>(R.id.action_search)
-            searchItem?.visibility = if (batchesAdapter.isMultiSelectMode()) View.GONE else View.VISIBLE
+        val isMultiSelect = batchesAdapter.isMultiSelectMode()
+        val parentMenu = (parentFragment as? QueenRearingFragment)?.view?.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)?.menu
+        parentMenu?.findItem(R.id.action_search)?.isVisible = !isMultiSelect
+
+        if (isMultiSelect) {
+            (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.selected_count_format, batchesAdapter.getSelectedItems().size)
+        } else {
+            (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.queen_rearing)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            if (batchesAdapter.isMultiSelectMode()) {
+                setMultiSelectMode(false)
+                return true
+            }
+            return false
+        }
+
+        if (!batchesAdapter.isMultiSelectMode()) {
+            return super.onOptionsItemSelected(item)
+        }
+
         val selectedBatches = batchesAdapter.getSelectedItems()
         return when (item.itemId) {
             R.id.action_delete_selected -> {
@@ -136,18 +154,9 @@ class BatchesFragment : Fragment(), SearchableFragment {
                 batchesAdapter.selectAll()
                 true
             }
-            android.R.id.home -> {
-                if (batchesAdapter.isMultiSelectMode()) {
-                    batchesAdapter.setMultiSelectMode(false)
-                    activity?.invalidateOptionsMenu()
-                    return true
-                }
-                false
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun showDeleteConfirmationDialog(batches: List<GraftingBatch>) {
         val quantity = batches.size
@@ -167,8 +176,7 @@ class BatchesFragment : Fragment(), SearchableFragment {
             .setMessage(message)
             .setPositiveButton(R.string.dialog_yes) { _, _ ->
                 viewModel.deleteGraftingBatches(batches)
-                batchesAdapter.setMultiSelectMode(false)
-                activity?.invalidateOptionsMenu()
+                setMultiSelectMode(false)
             }
             .setNegativeButton(R.string.dialog_no, null)
             .show()
@@ -180,10 +188,6 @@ class BatchesFragment : Fragment(), SearchableFragment {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (batchesAdapter.isMultiSelectMode()) {
-            batchesAdapter.setMultiSelectMode(false)
-            activity?.invalidateOptionsMenu()
-        }
         _binding = null
     }
 }

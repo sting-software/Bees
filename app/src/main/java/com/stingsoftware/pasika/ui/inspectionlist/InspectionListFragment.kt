@@ -1,7 +1,5 @@
 package com.stingsoftware.pasika.ui.inspectionlist
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -46,10 +44,29 @@ class InspectionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.title = getString(R.string.title_inspections_for_hive, args.hiveNumber)
-
         setupMenu()
+        setupAdapter()
+        setupObservers()
+        setupSwipeToDelete()
 
+        binding.fabAddInspection.setOnClickListener {
+            val action =
+                InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
+                    hiveId = args.hiveId,
+                    inspectionId = -1L
+                )
+            findNavController().navigate(action)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Set the toolbar title here to ensure it's updated every time the fragment becomes visible and active
+        // Removed the hiveNumber argument as requested.
+        activity?.title = getString(R.string.title_inspections_for_hive)
+    }
+
+    private fun setupAdapter() {
         inspectionAdapter = InspectionAdapter { inspection ->
             val action =
                 InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
@@ -59,17 +76,18 @@ class InspectionListFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.recyclerViewInspections.adapter = inspectionAdapter
+    }
 
-        setupInspectionSwipeToDelete()
-
-        // Observe the unified 'inspections' LiveData from the ViewModel
+    private fun setupObservers() {
+        // Observe the list of inspections
         inspectionListViewModel.inspections.observe(viewLifecycleOwner) { inspections ->
             inspections?.let {
                 inspectionAdapter.submitList(it)
                 val isEmpty = it.isEmpty()
                 binding.emptyStateView.root.visibility = if (isEmpty) View.VISIBLE else View.GONE
                 binding.recyclerViewInspections.visibility = if (isEmpty) View.GONE else View.VISIBLE
-                binding.emptyStateView.textViewEmptyMessage.text = getString(R.string.empty_state_no_inspections)
+                binding.emptyStateView.textViewEmptyMessage.text =
+                    getString(R.string.empty_state_no_inspections)
             }
         }
 
@@ -84,15 +102,6 @@ class InspectionListFragment : Fragment() {
                 inspectionListViewModel.onExportStatusHandled()
             }
         }
-
-        binding.fabAddInspection.setOnClickListener {
-            val action =
-                InspectionListFragmentDirections.actionInspectionListFragmentToAddEditInspectionFragment(
-                    hiveId = args.hiveId,
-                    inspectionId = -1L
-                )
-            findNavController().navigate(action)
-        }
     }
 
     private fun setupMenu() {
@@ -101,18 +110,15 @@ class InspectionListFragment : Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_inspection_list, menu)
 
-                // Initialize SearchView
                 val searchItem = menu.findItem(R.id.action_search_inspection)
                 val searchView = searchItem.actionView as SearchView
 
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
-                        // Not needed for live search
                         return false
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        // Pass the query to the ViewModel
                         inspectionListViewModel.onSearchQueryChanged(newText.orEmpty())
                         return true
                     }
@@ -125,7 +131,7 @@ class InspectionListFragment : Fragment() {
                         showExportOptionsDialog()
                         true
                     }
-                    // The search action is handled by the OnQueryTextListener, so no action is needed here
+
                     R.id.action_search_inspection -> true
                     else -> false
                 }
@@ -134,31 +140,26 @@ class InspectionListFragment : Fragment() {
     }
 
     private fun showExportOptionsDialog() {
-        val options = arrayOf(getString(R.string.action_export_to_csv), getString(R.string.action_export_to_pdf))
+        val hiveNumber = inspectionListViewModel.hive.value?.hiveNumber ?: "export"
+        val options = arrayOf(
+            getString(R.string.action_export_to_csv),
+            getString(R.string.action_export_to_pdf)
+        )
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(getString(R.string.dialog_title_export_format))
             .setItems(options) { dialog, which ->
                 when (which) {
-                    0 -> inspectionListViewModel.exportInspectionsToCsv(
-                        requireContext(),
-                        args.hiveNumber
-                    )
-
-                    1 -> inspectionListViewModel.exportInspectionsToPdf(
-                        requireContext(),
-                        args.hiveNumber
-                    )
+                    0 -> inspectionListViewModel.exportInspectionsToCsv(requireContext(), hiveNumber)
+                    1 -> inspectionListViewModel.exportInspectionsToPdf(requireContext(), hiveNumber)
                 }
                 dialog.dismiss()
             }
             .show()
     }
 
-    private fun setupInspectionSwipeToDelete() {
+    private fun setupSwipeToDelete() {
         val itemTouchHelperCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            private val background = ColorDrawable(Color.RED)
-
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -172,7 +173,6 @@ class InspectionListFragment : Fragment() {
                     showDeleteInspectionConfirmationDialog(inspectionToDelete)
                 }
             }
-
         }
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerViewInspections)
     }
@@ -183,8 +183,11 @@ class InspectionListFragment : Fragment() {
             .setMessage(getString(R.string.dialog_message_delete_inspection))
             .setPositiveButton(getString(R.string.action_delete)) { _, _ ->
                 inspectionListViewModel.deleteInspection(inspection)
-                Toast.makeText(requireContext(),
-                    getString(R.string.message_inspection_deleted), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.message_inspection_deleted),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             .setNegativeButton(getString(R.string.action_cancel)) { _, _ ->
                 inspectionAdapter.currentList.indexOf(inspection).takeIf { it != -1 }?.let {

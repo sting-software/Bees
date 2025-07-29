@@ -196,7 +196,7 @@
 
     <string name="title_add_inspection">Додати новий огляд</string>
     <string name="title_edit_inspection">Редагувати огляд</string>
-    <string name="title_inspections_for_hive">Огляди для вулика №%1$s</string>
+    <string name="title_inspections_for_hive">Огляди вулика</string>
     <string name="title_delete_inspection">Видалити огляд</string>
     <string name="title_frames">Рамки</string>
     <string name="title_detailed_frames">Детальний підрахунок рамок</string>
@@ -446,7 +446,7 @@
     <string name="add_task">Додати завдання</string>
     <string name="add">Додати</string>
     <string name="remove_task">Прибрати завдання</string>
-    <string name="custom_notifications">Власні сповіщення</string>
+    <string name="custom_notifications">Сповіщення</string>
     <string name="add_custom_task">Додати власне завдання</string>
     <string name="days_after_grafting_string">Днів після прививки</string>
     <string name="custom_task_for_batch">Власне завдання для партії: %1$s</string>
@@ -500,5 +500,14 @@
         <item quantity="many">%d днів після прививки</item>
         <item quantity="other">%d дня після прививки</item>
     </plurals>
+
+    <string name="header_overdue">Прострочені</string>
+    <string name="header_today">Сьогодні</string>
+    <string name="header_upcoming">Майбутні</string>
+    <string name="header_no_due_date">Без дати</string>
+    <string name="header_completed">Завершені (%d)</string>
+
+    <string name="chart_cumulative_emergence">Загальний вихід</string>
+    <string name="chart_cumulative_mating">Загальне спарювання</string>
 
 </resources>

@@ -13,12 +13,14 @@ import androidx.room.PrimaryKey
         childColumns = ["apiaryId"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["apiaryId"])] // Index added for performance
+    indices = [Index(value = ["apiaryId"])]
 )
 data class Hive(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val apiaryId: Long,
+
+    // Core Hive Identification (Static)
     val hiveNumber: String?,
     val hiveType: String?,
     val hiveTypeOther: String? = null,
@@ -28,28 +30,15 @@ data class Hive(
     val materialOther: String? = null,
     val breed: String?,
     val breedOther: String? = null,
-    val lastInspectionDate: Long? = null,
     val notes: String? = null,
+    val role: HiveRole = HiveRole.PRODUCTION,
+
+    // Queen Information (Slowly Changing)
     val queenTagColor: String? = null,
     val queenTagColorOther: String? = null,
     val queenNumber: String? = null,
     val queenYear: String? = null,
     val queenLine: String? = null,
-    val queenCells: Int? = null,
     val isolationFromDate: Long? = null,
-    val isolationToDate: Long? = null,
-    val defensivenessRating: Int? = null,
-    val framesTotal: Int? = null,
-    val framesEggs: Int? = null,
-    val framesOpenBrood: Int? = null,
-    val framesCappedBrood: Int? = null,
-    val framesFeed: Int? = null,
-    val givenBuiltCombs: Int? = null,
-    val givenFoundation: Int? = null,
-    val givenBrood: Int? = null,
-    val givenBeesKg: Double? = null,
-    val givenHoneyKg: Double? = null,
-    val givenSugarKg: Double? = null,
-    val treatment: String? = null,
-    val role: HiveRole = HiveRole.PRODUCTION
+    val isolationToDate: Long? = null
 )

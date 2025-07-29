@@ -20,7 +20,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.stingsoftware.pasika.R
 import com.stingsoftware.pasika.data.Hive
@@ -42,10 +41,8 @@ class AddEditHiveFragment : Fragment() {
     private var _binding: FragmentAddEditHiveBinding? = null
     private val binding get() = _binding!!
 
-    // State tracking variables
     private var isEditMode = false
-    private var originalHive: Hive? = null // Crucial for comparing changes
-    private var selectedHiveLastInspectionDateMillis: Long? = null
+    private var originalHive: Hive? = null
     private var selectedIsolationFromDateMillis: Long? = null
     private var selectedIsolationToDateMillis: Long? = null
 
@@ -64,13 +61,11 @@ class AddEditHiveFragment : Fragment() {
         setupBackButtonHandler()
         isEditMode = args.hiveId != -1L
 
-        // Setup all UI components and listeners
         setupSpinners()
         setupRoleSpinner()
         setupConditionalViews(!isEditMode)
         setupDatePickers()
         setupTextWatchers()
-        setupFramesTextWatchers()
 
         if (isEditMode) {
             (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.title_edit_hive)
@@ -78,12 +73,10 @@ class AddEditHiveFragment : Fragment() {
                 hive?.let {
                     originalHive = it
                     populateHiveData(it)
-                    updateFramesTotal()
                 }
             }
         } else {
             (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.title_add_hive)
-            updateFramesTotal()
         }
 
         binding.buttonSaveHive.setOnClickListener { handleSave() }
@@ -127,8 +120,6 @@ class AddEditHiveFragment : Fragment() {
         return if (isEditMode) {
             originalHive != null && originalHive != currentHive
         } else {
-            // For a new hive, any non-default value is a change.
-            // Create a hive object that represents a completely empty form.
             val defaultHive = Hive(
                 id = 0L,
                 apiaryId = args.apiaryId,
@@ -141,30 +132,15 @@ class AddEditHiveFragment : Fragment() {
                 materialOther = null,
                 breed = null,
                 breedOther = null,
-                lastInspectionDate = null,
                 notes = null,
                 queenTagColor = null,
                 queenTagColorOther = null,
                 queenNumber = null,
                 queenYear = null,
                 queenLine = null,
-                queenCells = null,
                 isolationFromDate = null,
                 isolationToDate = null,
-                defensivenessRating = null,
-                framesTotal = 0, // Total is 0 when individual frames are empty/0
-                framesEggs = null,
-                framesOpenBrood = null,
-                framesCappedBrood = null,
-                framesFeed = null,
-                givenBuiltCombs = null,
-                givenFoundation = null,
-                givenBrood = null,
-                givenBeesKg = null,
-                givenHoneyKg = null,
-                givenSugarKg = null,
-                treatment = null,
-                role = HiveRole.PRODUCTION // Default role for new hives
+                role = HiveRole.PRODUCTION
             )
             currentHive != defaultHive
         }
@@ -180,40 +156,12 @@ class AddEditHiveFragment : Fragment() {
 
 
     private fun handleSave() {
-        // Divert to a separate function if adding multiple hives
         if (!isEditMode && binding.checkboxAddMultipleHives.isChecked) {
             saveMultipleHives()
             return
         }
-
-        // Standard logic for saving a single hive (new or edited)
         val hiveToSave = createHiveFromInput()
-        val dateChanged =
-            isEditMode && originalHive?.lastInspectionDate != selectedHiveLastInspectionDateMillis
-
-        if (dateChanged && selectedHiveLastInspectionDateMillis != null) {
-            showUpdateAllHivesDialog(hiveToSave)
-        } else {
-            saveHiveAndExit(hiveToSave)
-        }
-    }
-
-    private fun showUpdateAllHivesDialog(hiveToSave: Hive) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.update_inspection_date))
-            .setMessage(getString(R.string.apply_this_new_date_to_all_hives_in_this_apiary))
-            .setPositiveButton(getString(R.string.update_all)) { _, _ ->
-                addEditHiveViewModel.updateInspectionDateForApiary(
-                    hiveToSave.apiaryId,
-                    hiveToSave.lastInspectionDate!!
-                )
-                saveHiveAndExit(hiveToSave)
-            }
-            .setNegativeButton(getString(R.string.just_this_one)) { _, _ ->
-                saveHiveAndExit(hiveToSave)
-            }
-            .setNeutralButton(R.string.action_cancel, null)
-            .show()
+        saveHiveAndExit(hiveToSave)
     }
 
     private fun saveHiveAndExit(hive: Hive) {
@@ -252,7 +200,6 @@ class AddEditHiveFragment : Fragment() {
             }
         }
 
-        // Gather all data from the form to pass to the ViewModel
         val hiveData = createHiveFromInput()
 
         addEditHiveViewModel.saveOrUpdateHives(
@@ -265,7 +212,6 @@ class AddEditHiveFragment : Fragment() {
             materialOther = hiveData.materialOther,
             breed = hiveData.breed,
             breedOther = hiveData.breedOther,
-            lastInspectionDate = hiveData.lastInspectionDate,
             notes = hiveData.notes,
             quantity = quantity,
             autoNumber = autoNumber,
@@ -276,22 +222,8 @@ class AddEditHiveFragment : Fragment() {
             queenNumber = hiveData.queenNumber,
             queenYear = hiveData.queenYear,
             queenLine = hiveData.queenLine,
-            queenCells = hiveData.queenCells,
             isolationFromDate = hiveData.isolationFromDate,
             isolationToDate = hiveData.isolationToDate,
-            defensivenessRating = hiveData.defensivenessRating,
-            framesTotal = hiveData.framesTotal,
-            framesEggs = hiveData.framesEggs,
-            framesOpenBrood = hiveData.framesOpenBrood,
-            framesCappedBrood = hiveData.framesCappedBrood,
-            framesFeed = hiveData.framesFeed,
-            givenBuiltCombs = hiveData.givenBuiltCombs,
-            givenFoundation = hiveData.givenFoundation,
-            givenBrood = hiveData.givenBrood,
-            givenBeesKg = hiveData.givenBeesKg,
-            givenHoneyKg = hiveData.givenHoneyKg,
-            givenSugarKg = hiveData.givenSugarKg,
-            treatment = hiveData.treatment,
             role = hiveData.role
         )
         Toast.makeText(
@@ -332,13 +264,6 @@ class AddEditHiveFragment : Fragment() {
         val finalBreed =
             if (breed.equals(getString(R.string.other), ignoreCase = true)) breedOther else breed
 
-        val framesTotal = binding.textViewFramesTotalValue.text.toString().toIntOrNull()
-        val framesEggs = binding.editTextFramesEggs.text.toString().trim().toIntOrNull()
-        val framesOpenBrood = binding.editTextFramesOpenBrood.text.toString().trim().toIntOrNull()
-        val framesCappedBrood =
-            binding.editTextFramesCappedBrood.text.toString().trim().toIntOrNull()
-        val framesFeed = binding.editTextFramesFeed.text.toString().trim().toIntOrNull()
-
         val queenTagColor =
             binding.autoCompleteTextViewQueenTagColor.text.toString().trim().ifEmpty { null }
         val queenTagColorOther =
@@ -352,22 +277,6 @@ class AddEditHiveFragment : Fragment() {
         val queenNumber = binding.editTextQueenNumber.text.toString().trim().ifEmpty { null }
         val queenYear = binding.editTextQueenYear.text.toString().trim().ifEmpty { null }
         val queenLine = binding.editTextQueenLine.text.toString().trim().ifEmpty { null }
-
-        val defensivenessRating = when (binding.radioGroupDefensiveness.checkedRadioButtonId) {
-            R.id.radio_defensiveness_1 -> 1
-            R.id.radio_defensiveness_2 -> 2
-            R.id.radio_defensiveness_3 -> 3
-            R.id.radio_defensiveness_4 -> 4
-            else -> null
-        }
-
-        val givenBuiltCombs = binding.editTextGivenBuiltCombs.text.toString().trim().toIntOrNull()
-        val givenFoundation = binding.editTextGivenFoundation.text.toString().trim().toIntOrNull()
-        val givenBrood = binding.editTextGivenBrood.text.toString().trim().toIntOrNull()
-        val givenBeesKg = binding.editTextGivenBeesKg.text.toString().trim().toDoubleOrNull()
-        val givenHoneyKg = binding.editTextGivenHoneyKg.text.toString().trim().toDoubleOrNull()
-        val givenSugarKg = binding.editTextGivenSugarKg.text.toString().trim().toDoubleOrNull()
-        val treatment = binding.editTextTreatment.text.toString().trim().ifEmpty { null }
         val notes = binding.editTextHiveNotes.text.toString().trim().ifEmpty { null }
 
         val selectedRoleLabel = binding.autoCompleteTextViewRole.text.toString()
@@ -387,29 +296,14 @@ class AddEditHiveFragment : Fragment() {
             materialOther = materialOther,
             breed = finalBreed,
             breedOther = breedOther,
-            lastInspectionDate = selectedHiveLastInspectionDateMillis,
             notes = notes,
             queenTagColor = finalQueenTagColor,
             queenTagColorOther = queenTagColorOther,
             queenNumber = queenNumber,
             queenYear = queenYear,
             queenLine = queenLine,
-            queenCells = null, // UI for this is commented out, so passing null
             isolationFromDate = selectedIsolationFromDateMillis,
             isolationToDate = selectedIsolationToDateMillis,
-            defensivenessRating = defensivenessRating,
-            framesTotal = framesTotal,
-            framesEggs = framesEggs,
-            framesOpenBrood = framesOpenBrood,
-            framesCappedBrood = framesCappedBrood,
-            framesFeed = framesFeed,
-            givenBuiltCombs = givenBuiltCombs,
-            givenFoundation = givenFoundation,
-            givenBrood = givenBrood,
-            givenBeesKg = givenBeesKg,
-            givenHoneyKg = givenHoneyKg,
-            givenSugarKg = givenSugarKg,
-            treatment = treatment,
             role = role
         )
     }
@@ -432,11 +326,6 @@ class AddEditHiveFragment : Fragment() {
         binding.editTextBreedOther.setText(hive.breedOther)
         toggleOtherFieldVisibility(hive.breed ?: "", binding.textInputLayoutBreedOther)
 
-        binding.editTextFramesEggs.setText(hive.framesEggs?.toString())
-        binding.editTextFramesOpenBrood.setText(hive.framesOpenBrood?.toString())
-        binding.editTextFramesCappedBrood.setText(hive.framesCappedBrood?.toString())
-        binding.editTextFramesFeed.setText(hive.framesFeed?.toString())
-
         binding.autoCompleteTextViewQueenTagColor.setText(hive.queenTagColor, false)
         binding.editTextQueenTagColorOther.setText(hive.queenTagColorOther)
         toggleOtherFieldVisibility(
@@ -453,45 +342,12 @@ class AddEditHiveFragment : Fragment() {
         selectedIsolationToDateMillis = hive.isolationToDate
         updateDateEditText(selectedIsolationToDateMillis, binding.editTextIsolationToDate)
 
-        when (hive.defensivenessRating) {
-            1 -> binding.radioDefensiveness1.isChecked = true
-            2 -> binding.radioDefensiveness2.isChecked = true
-            3 -> binding.radioDefensiveness3.isChecked = true
-            4 -> binding.radioDefensiveness4.isChecked = true
-            else -> binding.radioGroupDefensiveness.clearCheck()
-        }
-
-        binding.editTextGivenBuiltCombs.setText(hive.givenBuiltCombs?.toString())
-        binding.editTextGivenFoundation.setText(hive.givenFoundation?.toString())
-        binding.editTextGivenBrood.setText(hive.givenBrood?.toString())
-        binding.editTextGivenBeesKg.setText(hive.givenBeesKg?.toString())
-        binding.editTextGivenHoneyKg.setText(hive.givenHoneyKg?.toString())
-        binding.editTextGivenSugarKg.setText(hive.givenSugarKg?.toString())
-        binding.editTextTreatment.setText(hive.treatment)
-
-        selectedHiveLastInspectionDateMillis = hive.lastInspectionDate
-        updateDateEditText(
-            selectedHiveLastInspectionDateMillis,
-            binding.editTextHiveLastInspectionDate
-        )
         binding.editTextHiveNotes.setText(hive.notes)
 
         binding.autoCompleteTextViewRole.setText(hive.role.getLabel(requireContext()), false)
     }
 
     private fun setupDatePickers() {
-        binding.editTextHiveLastInspectionDate.setOnClickListener {
-            showDatePickerDialog(
-                ::selectedHiveLastInspectionDateMillis,
-                binding.editTextHiveLastInspectionDate
-            )
-        }
-        binding.textInputLayoutHiveLastInspectionDate.setEndIconOnClickListener {
-            showDatePickerDialog(
-                ::selectedHiveLastInspectionDateMillis,
-                binding.editTextHiveLastInspectionDate
-            )
-        }
         binding.editTextIsolationFromDate.setOnClickListener {
             showDatePickerDialog(
                 ::selectedIsolationFromDateMillis,
@@ -693,29 +549,6 @@ class AddEditHiveFragment : Fragment() {
 
             override fun afterTextChanged(s: Editable?) {}
         })
-    }
-
-    private fun setupFramesTextWatchers() {
-        val framesWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                updateFramesTotal()
-            }
-        }
-        binding.editTextFramesEggs.addTextChangedListener(framesWatcher)
-        binding.editTextFramesOpenBrood.addTextChangedListener(framesWatcher)
-        binding.editTextFramesCappedBrood.addTextChangedListener(framesWatcher)
-        binding.editTextFramesFeed.addTextChangedListener(framesWatcher)
-    }
-
-    private fun updateFramesTotal() {
-        val eggs = binding.editTextFramesEggs.text.toString().toIntOrNull() ?: 0
-        val openBrood = binding.editTextFramesOpenBrood.text.toString().toIntOrNull() ?: 0
-        val cappedBrood = binding.editTextFramesCappedBrood.text.toString().toIntOrNull() ?: 0
-        val feed = binding.editTextFramesFeed.text.toString().toIntOrNull() ?: 0
-        val total = eggs + openBrood + cappedBrood + feed
-        binding.textViewFramesTotalValue.text = getString(R.string.integer_placeholder, total)
     }
 
     private fun updateCalculatedQuantity() {

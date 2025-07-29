@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -24,13 +25,14 @@ import java.util.Locale
 class AddEditInspectionFragment : Fragment() {
 
     private val args: AddEditInspectionFragmentArgs by navArgs()
-
     private val addEditInspectionViewModel: AddEditInspectionViewModel by viewModels()
 
     private var _binding: FragmentAddEditInspectionBinding? = null
     private val binding get() = _binding!!
 
     private var selectedInspectionDateMillis: Long? = null
+    private var originalInspection: Inspection? = null
+    private var isNewInspection: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,54 +45,98 @@ class AddEditInspectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val hiveId = args.hiveId
-        val inspectionId = args.inspectionId
-        val isNewInspection = inspectionId == -1L
-
-        activity?.title =
-            if (isNewInspection) getString(R.string.title_add_inspection) else getString(
-                R.string.title_edit_inspection
-            )
+        isNewInspection = args.inspectionId == -1L
+        activity?.title = if (isNewInspection) getString(R.string.title_add_inspection) else getString(R.string.title_edit_inspection)
 
         setupDatePickers()
         setupConditionalViews()
-        setupSaveCancelButtons(hiveId, inspectionId, isNewInspection)
+        setupSaveCancelButtons()
+        setupBackButtonHandler() // Setup the back button auto-save logic
 
         if (!isNewInspection) {
-            addEditInspectionViewModel.getInspection(inspectionId)
+            addEditInspectionViewModel.getInspection(args.inspectionId)
                 .observe(viewLifecycleOwner) { inspection ->
                     inspection?.let {
+                        originalInspection = it.copy() // Store a copy of the original state
                         populateInspectionData(it)
-                    } ?: run {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.error_inspection_not_found), Toast.LENGTH_SHORT
-                        ).show()
-                        findNavController().popBackStack()
                     }
                 }
         } else {
+            // For a new inspection, set the default state
             selectedInspectionDateMillis = System.currentTimeMillis()
             updateDateEditText(selectedInspectionDateMillis, binding.editTextInspectionDate)
+            originalInspection = createInspectionFromInput() // The initial state is an empty form
         }
 
         addEditInspectionViewModel.saveCompleted.observe(viewLifecycleOwner) { isSuccess ->
-            if (isSuccess != null) {
-                if (isSuccess) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.message_inspection_saved), Toast.LENGTH_SHORT
-                    ).show()
-                    findNavController().popBackStack()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.error_save_inspection_failed), Toast.LENGTH_LONG
-                    ).show()
-                }
+            if (isSuccess == true) { // Only navigate back on successful save
+                findNavController().popBackStack()
+                addEditInspectionViewModel.resetSaveCompleted()
+            } else if (isSuccess == false) {
+                Toast.makeText(requireContext(), getString(R.string.error_save_inspection_failed), Toast.LENGTH_LONG).show()
                 addEditInspectionViewModel.resetSaveCompleted()
             }
         }
+    }
+
+    private fun setupBackButtonHandler() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (hasChanges()) {
+                    saveInspection()
+                } else {
+                    // No changes, so just navigate back
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+    }
+
+    private fun hasChanges(): Boolean {
+        val currentInspection = createInspectionFromInput()
+        return originalInspection != currentInspection
+    }
+
+    private fun createInspectionFromInput(): Inspection {
+        val inspectionDate = selectedInspectionDateMillis ?: System.currentTimeMillis()
+        val queenCellsPresent = binding.checkboxQueenCellsPresent.isChecked
+        val queenCellsCount = binding.editTextQueenCellsCount.text.toString().trim().toIntOrNull()
+        val framesEggsCount = binding.editTextFramesEggsCount.text.toString().trim().toIntOrNull()
+        val framesOpenBroodCount = binding.editTextFramesOpenBroodCount.text.toString().trim().toIntOrNull()
+        val framesCappedBroodCount = binding.editTextFramesCappedBroodCount.text.toString().trim().toIntOrNull()
+        val framesHoneyCount = binding.editTextFramesHoneyCount.text.toString().trim().toIntOrNull()
+        val framesPollenCount = binding.editTextFramesPollenCount.text.toString().trim().toIntOrNull()
+        val pestsDiseasesObserved = binding.editTextPestsDiseasesObserved.text.toString().trim().ifEmpty { null }
+        val treatment = binding.editTextTreatmentApplied.text.toString().trim().ifEmpty { null }
+        val defensivenessRating = when (binding.radioGroupTemperament.checkedRadioButtonId) {
+            R.id.radio_temperament_1 -> 1
+            R.id.radio_temperament_2 -> 2
+            R.id.radio_temperament_3 -> 3
+            R.id.radio_temperament_4 -> 4
+            else -> null
+        }
+        val managementActionsTaken = binding.editTextManagementActionsTaken.text.toString().trim().ifEmpty { null }
+        val notes = binding.editTextInspectionNotes.text.toString().trim().ifEmpty { null }
+
+        return Inspection(
+            id = if (isNewInspection) 0L else args.inspectionId,
+            hiveId = args.hiveId,
+            inspectionDate = inspectionDate,
+            queenCellsPresent = queenCellsPresent,
+            queenCellsCount = queenCellsCount,
+            framesEggsCount = framesEggsCount,
+            framesOpenBroodCount = framesOpenBroodCount,
+            framesCappedBroodCount = framesCappedBroodCount,
+            framesHoneyCount = framesHoneyCount,
+            framesPollenCount = framesPollenCount,
+            pestsDiseasesObserved = pestsDiseasesObserved,
+            treatment = treatment,
+            defensivenessRating = defensivenessRating,
+            managementActionsTaken = managementActionsTaken,
+            notes = notes
+        )
     }
 
     private fun setupDatePickers() {
@@ -107,28 +153,15 @@ class AddEditInspectionFragment : Fragment() {
         editText: com.google.android.material.textfield.TextInputEditText
     ) {
         val calendar = Calendar.getInstance()
-        dateMillisProperty.get()?.let {
-            calendar.timeInMillis = it
-        }
-
+        dateMillisProperty.get()?.let { calendar.timeInMillis = it }
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, selectedYear, selectedMonth, selectedDayOfMonth ->
-                val newCalendar = Calendar.getInstance()
-                newCalendar.set(selectedYear, selectedMonth, selectedDayOfMonth)
-                dateMillisProperty.set(newCalendar.timeInMillis)
-                updateDateEditText(dateMillisProperty.get(), editText)
-            },
-            year,
-            month,
-            day
-        )
-
-        datePickerDialog.show()
+        DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDayOfMonth ->
+            val newCalendar = Calendar.getInstance().apply { set(selectedYear, selectedMonth, selectedDayOfMonth) }
+            dateMillisProperty.set(newCalendar.timeInMillis)
+            updateDateEditText(newCalendar.timeInMillis, editText)
+        }, year, month, day).show()
     }
 
     private fun updateDateEditText(
@@ -145,17 +178,16 @@ class AddEditInspectionFragment : Fragment() {
 
     private fun setupConditionalViews() {
         binding.checkboxQueenCellsPresent.setOnCheckedChangeListener { _, isChecked ->
-            binding.textInputLayoutQueenCellsCount.visibility =
-                if (isChecked) View.VISIBLE else View.GONE
+            binding.textInputLayoutQueenCellsCount.visibility = if (isChecked) View.VISIBLE else View.GONE
             if (!isChecked) {
                 binding.editTextQueenCellsCount.setText("")
             }
         }
     }
 
-    private fun setupSaveCancelButtons(hiveId: Long, inspectionId: Long, isNewInspection: Boolean) {
+    private fun setupSaveCancelButtons() {
         binding.buttonSaveInspection.setOnClickListener {
-            saveInspection(hiveId, inspectionId, isNewInspection)
+            saveInspection()
         }
         binding.buttonCancelInspection.setOnClickListener {
             findNavController().popBackStack()
@@ -165,7 +197,6 @@ class AddEditInspectionFragment : Fragment() {
     private fun populateInspectionData(inspection: Inspection) {
         selectedInspectionDateMillis = inspection.inspectionDate
         updateDateEditText(selectedInspectionDateMillis, binding.editTextInspectionDate)
-
         binding.checkboxQueenCellsPresent.isChecked = inspection.queenCellsPresent ?: false
         if (inspection.queenCellsPresent == true) {
             binding.textInputLayoutQueenCellsCount.visibility = View.VISIBLE
@@ -173,73 +204,25 @@ class AddEditInspectionFragment : Fragment() {
         } else {
             binding.textInputLayoutQueenCellsCount.visibility = View.GONE
         }
-
         binding.editTextFramesEggsCount.setText(inspection.framesEggsCount?.toString())
         binding.editTextFramesOpenBroodCount.setText(inspection.framesOpenBroodCount?.toString())
         binding.editTextFramesCappedBroodCount.setText(inspection.framesCappedBroodCount?.toString())
         binding.editTextFramesHoneyCount.setText(inspection.framesHoneyCount?.toString())
         binding.editTextFramesPollenCount.setText(inspection.framesPollenCount?.toString())
         binding.editTextPestsDiseasesObserved.setText(inspection.pestsDiseasesObserved)
-        binding.editTextTreatmentApplied.setText(inspection.treatmentApplied)
-
-        when (inspection.temperamentRating) {
+        binding.editTextTreatmentApplied.setText(inspection.treatment)
+        when (inspection.defensivenessRating) {
             1 -> binding.radioTemperament1.isChecked = true
             2 -> binding.radioTemperament2.isChecked = true
             3 -> binding.radioTemperament3.isChecked = true
             4 -> binding.radioTemperament4.isChecked = true
         }
-
         binding.editTextManagementActionsTaken.setText(inspection.managementActionsTaken)
         binding.editTextInspectionNotes.setText(inspection.notes)
     }
 
-    private fun saveInspection(hiveId: Long, inspectionId: Long, isNewInspection: Boolean) {
-        val inspectionDate = selectedInspectionDateMillis ?: System.currentTimeMillis()
-        val queenCellsPresent = binding.checkboxQueenCellsPresent.isChecked
-        val queenCellsCount = binding.editTextQueenCellsCount.text.toString().trim().toIntOrNull()
-        val framesEggsCount = binding.editTextFramesEggsCount.text.toString().trim().toIntOrNull()
-        val framesOpenBroodCount =
-            binding.editTextFramesOpenBroodCount.text.toString().trim().toIntOrNull()
-        val framesCappedBroodCount =
-            binding.editTextFramesCappedBroodCount.text.toString().trim().toIntOrNull()
-        val framesHoneyCount = binding.editTextFramesHoneyCount.text.toString().trim().toIntOrNull()
-        val framesPollenCount =
-            binding.editTextFramesPollenCount.text.toString().trim().toIntOrNull()
-        val pestsDiseasesObserved =
-            binding.editTextPestsDiseasesObserved.text.toString().trim().ifEmpty { null }
-        val treatmentApplied =
-            binding.editTextTreatmentApplied.text.toString().trim().ifEmpty { null }
-        val temperamentRating = when (binding.radioGroupTemperament.checkedRadioButtonId) {
-            R.id.radio_temperament_1 -> 1
-            R.id.radio_temperament_2 -> 2
-            R.id.radio_temperament_3 -> 3
-            R.id.radio_temperament_4 -> 4
-            else -> null
-        }
-        val managementActionsTaken =
-            binding.editTextManagementActionsTaken.text.toString().trim().ifEmpty { null }
-        val notes = binding.editTextInspectionNotes.text.toString().trim().ifEmpty { null }
-
-        val inspection = Inspection(
-            id = if (isNewInspection) 0L else inspectionId,
-            hiveId = hiveId,
-            inspectionDate = inspectionDate,
-            queenCellsPresent = queenCellsPresent,
-            queenCellsCount = queenCellsCount,
-            framesEggsCount = framesEggsCount,
-            framesOpenBroodCount = framesOpenBroodCount,
-            framesCappedBroodCount = framesCappedBroodCount,
-            framesHoneyCount = framesHoneyCount,
-            framesPollenCount = framesPollenCount,
-            honeyStoresEstimateFrames = null,
-            pollenStoresEstimateFrames = null,
-            pestsDiseasesObserved = pestsDiseasesObserved,
-            treatmentApplied = treatmentApplied,
-            temperamentRating = temperamentRating,
-            managementActionsTaken = managementActionsTaken,
-            notes = notes
-        )
-
+    private fun saveInspection() {
+        val inspection = createInspectionFromInput()
         if (isNewInspection) {
             addEditInspectionViewModel.saveInspection(inspection)
         } else {

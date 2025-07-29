@@ -15,7 +15,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         QueenCell::class,
         CustomTask::class
     ],
-    version = 9, // Incremented version from 8 to 9
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -117,6 +117,78 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_9_10 = object : Migration(9, 10) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // --- Refactor Hives Table ---
+                db.execSQL("""
+                    CREATE TABLE hives_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        apiaryId INTEGER NOT NULL,
+                        hiveNumber TEXT,
+                        hiveType TEXT,
+                        hiveTypeOther TEXT,
+                        frameType TEXT,
+                        frameTypeOther TEXT,
+                        material TEXT,
+                        materialOther TEXT,
+                        breed TEXT,
+                        breedOther TEXT,
+                        notes TEXT,
+                        role TEXT NOT NULL DEFAULT 'PRODUCTION',
+                        queenTagColor TEXT,
+                        queenTagColorOther TEXT,
+                        queenNumber TEXT,
+                        queenYear TEXT,
+                        queenLine TEXT,
+                        isolationFromDate INTEGER,
+                        isolationToDate INTEGER,
+                        FOREIGN KEY(apiaryId) REFERENCES apiaries(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    INSERT INTO hives_new (id, apiaryId, hiveNumber, hiveType, hiveTypeOther, frameType, frameTypeOther, material, materialOther, breed, breedOther, notes, role, queenTagColor, queenTagColorOther, queenNumber, queenYear, queenLine, isolationFromDate, isolationToDate)
+                    SELECT id, apiaryId, hiveNumber, hiveType, hiveTypeOther, frameType, frameTypeOther, material, materialOther, breed, breedOther, notes, role, queenTagColor, queenTagColorOther, queenNumber, queenYear, queenLine, isolationFromDate, isolationToDate FROM hives
+                """.trimIndent())
+                db.execSQL("DROP TABLE hives")
+                db.execSQL("ALTER TABLE hives_new RENAME TO hives")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_hives_apiaryId` ON `hives` (`apiaryId`)")
+
+                // --- Refactor Inspections Table ---
+                db.execSQL("""
+                    CREATE TABLE inspections_new (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        hiveId INTEGER NOT NULL,
+                        inspectionDate INTEGER NOT NULL DEFAULT 0,
+                        queenCellsPresent INTEGER,
+                        queenCellsCount INTEGER,
+                        framesEggsCount INTEGER,
+                        framesOpenBroodCount INTEGER,
+                        framesCappedBroodCount INTEGER,
+                        framesHoneyCount INTEGER,
+                        framesPollenCount INTEGER,
+                        pestsDiseasesObserved TEXT,
+                        treatment TEXT,
+                        defensivenessRating INTEGER,
+                        managementActionsTaken TEXT,
+                        givenBuiltCombs INTEGER,
+                        givenFoundation INTEGER,
+                        givenBrood INTEGER,
+                        givenBeesKg REAL,
+                        givenHoneyKg REAL,
+                        givenSugarKg REAL,
+                        notes TEXT,
+                        FOREIGN KEY(hiveId) REFERENCES hives(id) ON DELETE CASCADE
+                    )
+                """.trimIndent())
+                db.execSQL("""
+                    INSERT INTO inspections_new (id, hiveId, inspectionDate, queenCellsPresent, queenCellsCount, framesEggsCount, framesOpenBroodCount, framesCappedBroodCount, framesHoneyCount, framesPollenCount, pestsDiseasesObserved, treatment, defensivenessRating, managementActionsTaken, notes)
+                    SELECT id, hiveId, inspectionDate, queenCellsPresent, queenCellsCount, framesEggsCount, framesOpenBroodCount, framesCappedBroodCount, honeyStoresEstimateFrames, pollenStoresEstimateFrames, pestsDiseasesObserved, treatmentApplied, temperamentRating, managementActionsTaken, notes FROM inspections
+                """.trimIndent())
+                db.execSQL("DROP TABLE inspections")
+                db.execSQL("ALTER TABLE inspections_new RENAME TO inspections")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_inspections_hiveId` ON `inspections` (`hiveId`)")
+            }
+        }
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -125,7 +197,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "pasika_database"
                 )
-                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+                    .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
                     .build()
                 INSTANCE = instance
                 instance

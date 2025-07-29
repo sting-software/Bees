@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.map
-import java.util.Calendar
 
 @Singleton
 class ApiaryRepository @Inject constructor(
@@ -240,16 +239,9 @@ class ApiaryRepository @Inject constructor(
         updateApiaryHiveCount(destinationApiaryId)
     }
 
-    suspend fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) {
-        hiveDao.updateInspectionDateForApiary(apiaryId, newDateMillis)
-    }
-
-    // --- Original Inspection Methods ---
-    suspend fun insertInspectionAndUpdateHive(inspection: Inspection) {
-        db.withTransaction {
-            inspectionDao.insert(inspection)
-            hiveDao.updateLastInspectionDate(inspection.hiveId, inspection.inspectionDate)
-        }
+    // --- Inspection Methods ---
+    suspend fun insertInspection(inspection: Inspection) {
+        inspectionDao.insert(inspection)
     }
 
     suspend fun updateInspection(inspection: Inspection): Int {

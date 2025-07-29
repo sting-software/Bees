@@ -5,7 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <!-- Home and Apiary Fragments -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.stingsoftware.pasika.ui.home.HomeFragment"
@@ -78,7 +77,6 @@
             app:argType="long[]" />
     </fragment>
 
-    <!-- Hive and Inspection Fragments -->
     <fragment
         android:id="@+id/addEditHiveFragment"
         android:name="com.stingsoftware.pasika.ui.hiveedit.AddEditHiveFragment"
@@ -138,7 +136,6 @@
             app:argType="long" />
     </fragment>
 
-    <!-- To-Do Fragments -->
     <fragment
         android:id="@+id/todoListFragment"
         android:name="com.stingsoftware.pasika.todo.TodoListFragment"
@@ -164,7 +161,6 @@
             app:argType="string" />
     </fragment>
 
-    <!-- Queen Rearing Section -->
     <fragment
         android:id="@+id/queenRearingFragment"
         android:name="com.stingsoftware.pasika.ui.queenrearing.QueenRearingFragment"

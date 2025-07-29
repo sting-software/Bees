@@ -42,7 +42,7 @@ interface InspectionDao {
     WHERE hiveId = :hiveId AND (
         notes LIKE '%' || :query || '%' OR
         pestsDiseasesObserved LIKE '%' || :query || '%' OR
-        treatmentApplied LIKE '%' || :query || '%' OR
+        treatment LIKE '%' || :query || '%' OR
         managementActionsTaken LIKE '%' || :query || '%'
     )
     ORDER BY inspectionDate DESC

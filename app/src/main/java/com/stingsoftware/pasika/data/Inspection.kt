@@ -13,25 +13,37 @@ import androidx.room.PrimaryKey
         childColumns = ["hiveId"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["hiveId"])] // Index added for performance
+    indices = [Index(value = ["hiveId"])]
 )
 data class Inspection(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val hiveId: Long,
     val inspectionDate: Long = System.currentTimeMillis(),
+
+    // Queen & Brood Status
     val queenCellsPresent: Boolean? = null,
     val queenCellsCount: Int? = null,
     val framesEggsCount: Int? = null,
     val framesOpenBroodCount: Int? = null,
     val framesCappedBroodCount: Int? = null,
-    val framesHoneyCount: Int? = null,
+    val framesHoneyCount: Int? = null, // Renamed from framesFeed for clarity
     val framesPollenCount: Int? = null,
-    val honeyStoresEstimateFrames: Int? = null,
-    val pollenStoresEstimateFrames: Int? = null,
+
+    // Health & Temperament
     val pestsDiseasesObserved: String? = null,
-    val treatmentApplied: String? = null,
-    val temperamentRating: Int? = null,
+    val treatment: String? = null, // Renamed from treatmentApplied
+    val defensivenessRating: Int? = null, // Renamed from temperamentRating
+
+    // Management & Resources Given/Taken
     val managementActionsTaken: String? = null,
+    val givenBuiltCombs: Int? = null,
+    val givenFoundation: Int? = null,
+    val givenBrood: Int? = null,
+    val givenBeesKg: Double? = null,
+    val givenHoneyKg: Double? = null,
+    val givenSugarKg: Double? = null,
+
+    // General Notes
     val notes: String? = null
 )

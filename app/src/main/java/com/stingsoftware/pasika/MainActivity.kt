@@ -63,26 +63,34 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(topLevelDestinations, drawerLayout)
         NavigationUI.setupWithNavController(binding.toolbar, navController, appBarConfiguration)
 
-
-        // Let NavigationUI handle the bottom navigation automatically.
-        // This will correctly navigate between top-level destinations.
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            NavigationUI.onNavDestinationSelected(item, navController)
-        }
-
-        // Add a listener to handle re-selection of an item.
-        // This is where we pop the back stack to the start destination of the selected tab.
-        binding.bottomNavigation.setOnItemReselectedListener { item ->
-            navController.popBackStack(item.itemId, false)
-        }
-
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            binding.bottomNavigation.menu.findItem(destination.id)?.isChecked = true
-        }
+        // --- FIX: Replace the standard setup with a more explicit and robust implementation ---
+        setupBottomNav()
 
         setupDrawerContent(binding.navigationView)
         applyWindowInsets()
+    }
+
+    private fun setupBottomNav() {
+        // This listener handles the navigation logic when a bottom navigation item is selected.
+        // The onNavDestinationSelected helper correctly navigates to the destination and,
+        // importantly, pops the back stack to the start destination if the item is re-selected.
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            NavigationUI.onNavDestinationSelected(item, navController)
+            true
+        }
+
+        // This listener ensures the correct bottom navigation item is highlighted when
+        // navigating via other means (e.g., the back button or other in-app actions).
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val menu = binding.bottomNavigation.menu
+            for (i in 0 until menu.size()) {
+                val item = menu.getItem(i)
+                if (item.itemId == destination.id) {
+                    item.isChecked = true
+                    break
+                }
+            }
+        }
     }
 
     private fun showExitConfirmationDialog() {

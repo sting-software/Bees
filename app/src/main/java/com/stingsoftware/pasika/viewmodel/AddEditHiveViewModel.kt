@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.stingsoftware.pasika.data.Hive
-import com.stingsoftware.pasika.data.HiveRole // Import HiveRole
+import com.stingsoftware.pasika.data.HiveRole
 import com.stingsoftware.pasika.repository.ApiaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -47,7 +47,6 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
         materialOther: String? = null,
         breed: String?,
         breedOther: String? = null,
-        lastInspectionDate: Long?,
         notes: String?,
         quantity: Int,
         autoNumber: Boolean,
@@ -58,22 +57,8 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
         queenNumber: String?,
         queenYear: String?,
         queenLine: String?,
-        queenCells: Int?,
         isolationFromDate: Long?,
         isolationToDate: Long?,
-        defensivenessRating: Int?,
-        framesTotal: Int?,
-        framesEggs: Int?,
-        framesOpenBrood: Int?,
-        framesCappedBrood: Int?,
-        framesFeed: Int?,
-        givenBuiltCombs: Int?,
-        givenFoundation: Int?,
-        givenBrood: Int?,
-        givenBeesKg: Double?,
-        givenHoneyKg: Double?,
-        givenSugarKg: Double?,
-        treatment: String?,
         role: HiveRole
     ) = viewModelScope.launch {
         try {
@@ -82,14 +67,10 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
                 apiaryId = apiaryId, hiveNumber = null, hiveType = hiveType,
                 hiveTypeOther = hiveTypeOther, frameType = frameType, frameTypeOther = frameTypeOther,
                 material = material, materialOther = materialOther, breed = breed, breedOther = breedOther,
-                lastInspectionDate = lastInspectionDate, notes = notes, queenTagColor = queenTagColor,
+                notes = notes, queenTagColor = queenTagColor,
                 queenTagColorOther = queenTagColorOther, queenNumber = queenNumber, queenYear = queenYear,
-                queenLine = queenLine, queenCells = queenCells, isolationFromDate = isolationFromDate,
-                isolationToDate = isolationToDate, defensivenessRating = defensivenessRating,
-                framesTotal = framesTotal, framesEggs = framesEggs, framesOpenBrood = framesOpenBrood,
-                framesCappedBrood = framesCappedBrood, framesFeed = framesFeed, givenBuiltCombs = givenBuiltCombs,
-                givenFoundation = givenFoundation, givenBrood = givenBrood, givenBeesKg = givenBeesKg,
-                givenHoneyKg = givenHoneyKg, givenSugarKg = givenSugarKg, treatment = treatment,
+                queenLine = queenLine, isolationFromDate = isolationFromDate,
+                isolationToDate = isolationToDate,
                 role = role
             )
 
@@ -99,12 +80,11 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
                 }
             } else {
                 for (i in 1..quantity) {
-                    hivesToInsert.add(baseHive.copy()) // Add a copy for each quantity
+                    hivesToInsert.add(baseHive.copy())
                 }
             }
 
             if (hivesToInsert.isNotEmpty()) {
-                // Call the new repository method for bulk insert
                 repository.insertHives(hivesToInsert)
             }
 
@@ -116,19 +96,7 @@ class AddEditHiveViewModel @Inject constructor(private val repository: ApiaryRep
         }
     }
 
-    fun updateApiaryLastInspectionDate(apiaryId: Long, newDateMillis: Long) = viewModelScope.launch {
-        val apiary = repository.getApiaryById(apiaryId)
-        apiary?.let {
-            repository.updateApiary(it.copy(lastInspectionDate = newDateMillis))
-        }
-    }
-
     fun resetSaveCompleted() {
         _saveCompleted.value = null
-    }
-
-    fun updateInspectionDateForApiary(apiaryId: Long, newDateMillis: Long) = viewModelScope.launch {
-        repository.updateInspectionDateForApiary(apiaryId, newDateMillis)
-        // Optionally use LiveData to signal completion if needed
     }
 }

@@ -33,7 +33,6 @@ object CsvExporter {
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                 put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
-                // Place file in the Downloads directory
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     put(MediaStore.MediaColumns.RELATIVE_PATH, "Download/")
                 }
@@ -49,10 +48,10 @@ object CsvExporter {
 
             } ?: throw IOException("Failed to get output stream.")
 
-            true // Success
+            true
         } catch (e: IOException) {
             e.printStackTrace()
-            false // Failure
+            false
         }
     }
 
@@ -65,28 +64,23 @@ object CsvExporter {
             context.getString(R.string.label_frames_eggs),
             context.getString(R.string.label_frames_open_brood),
             context.getString(R.string.label_frames_capped_brood),
-            context.getString(R.string.hint_honey_stores_frames),
-            context.getString(R.string.hint_pollen_stores_frames),
+            context.getString(R.string.hint_frames_honey),
+            context.getString(R.string.hint_frames_pollen),
             context.getString(R.string.hint_pests_diseases),
             context.getString(R.string.hint_treatment_applied),
-            context.getString(R.string.title_temperament_rating),
+            context.getString(R.string.title_defensiveness_rating),
             context.getString(R.string.hint_management_actions),
             context.getString(R.string.hint_notes_optional)
         ).joinToString(",")
 
         stringBuilder.append(csvHeader).append("\n")
-        // Append rows
         val sortedInspections = inspections.sortedBy { it.inspectionDate }
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
 
         sortedInspections.forEach { inspection ->
             val row = listOf(
                 dateFormatter.format(Date(inspection.inspectionDate)),
-                if (inspection.queenCellsPresent == true) {
-                    context.getString(R.string.dialog_yes)
-                } else {
-                    context.getString(R.string.dialog_no)
-                },
+                if (inspection.queenCellsPresent == true) context.getString(R.string.dialog_yes) else context.getString(R.string.dialog_no),
                 inspection.queenCellsCount?.toString() ?: "",
                 inspection.framesEggsCount?.toString() ?: "",
                 inspection.framesOpenBroodCount?.toString() ?: "",
@@ -94,8 +88,8 @@ object CsvExporter {
                 inspection.framesHoneyCount?.toString() ?: "",
                 inspection.framesPollenCount?.toString() ?: "",
                 "\"${inspection.pestsDiseasesObserved?.replace("\"", "\"\"") ?: ""}\"",
-                "\"${inspection.treatmentApplied?.replace("\"", "\"\"") ?: ""}\"",
-                inspection.temperamentRating?.toString() ?: "",
+                "\"${inspection.treatment?.replace("\"", "\"\"") ?: ""}\"",
+                inspection.defensivenessRating?.toString() ?: "",
                 "\"${inspection.managementActionsTaken?.replace("\"", "\"\"") ?: ""}\"",
                 "\"${inspection.notes?.replace("\"", "\"\"") ?: ""}\""
             ).joinToString(",")
