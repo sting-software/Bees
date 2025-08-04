@@ -24,14 +24,11 @@ class ApiaryRepository @Inject constructor(
 ) {
     // --- Queen Rearing Methods ---
     fun getAllGraftingBatches(): Flow<List<GraftingBatch>> = queenRearingDao.getAllGraftingBatches()
-    suspend fun insertGraftingBatch(batch: GraftingBatch): Long =
-        queenRearingDao.insertGraftingBatch(batch)
 
     suspend fun updateGraftingBatch(batch: GraftingBatch) =
         queenRearingDao.updateGraftingBatch(batch)
 
 
-    suspend fun insertQueenCells(cells: List<QueenCell>) = queenRearingDao.insertQueenCells(cells)
     fun getQueenCellsForBatch(batchId: Long): Flow<List<QueenCell>> =
         queenRearingDao.getQueenCellsForBatch(batchId)
 
@@ -118,29 +115,56 @@ class ApiaryRepository @Inject constructor(
         queenRearingDao.deleteBatchesAndDependencies(batchIds)
     }
 
-    fun getQueenRearingStats(): Flow<QueenRearingStats> {
+    /**
+     * NEW: Calculates detailed, stage-by-stage analytics for the entire queen rearing process.
+     * This provides a much clearer view of where losses occur.
+     */
+    fun getQueenRearingAnalytics(): Flow<QueenRearingAnalytics> {
         return getAllQueenCells().map { cells ->
-            val total = cells.size
-            if (total == 0) return@map QueenRearingStats()
+            if (cells.isEmpty()) return@map QueenRearingAnalytics()
 
-            val accepted =
-                cells.count { it.status >= QueenCellStatus.ACCEPTED && it.status != QueenCellStatus.FAILED }
-            val emerged =
-                cells.count { it.status >= QueenCellStatus.EMERGED && it.status != QueenCellStatus.FAILED }
-            val laying = cells.count { it.status == QueenCellStatus.LAYING }
+            val totalGrafted = cells.size
+            val statusCounts = cells.groupingBy { it.status }.eachCount()
 
-            val acceptanceRate = if (total > 0) accepted.toFloat() / total.toFloat() else 0f
-            val emergenceRate = if (accepted > 0) emerged.toFloat() / accepted.toFloat() else 0f
-            val matingSuccessRate = if (emerged > 0) laying.toFloat() / emerged.toFloat() else 0f
+            // Define success for each stage. A cell is considered successful for a stage
+            // if its status is that stage or any subsequent non-failure stage.
+            val acceptedCount = cells.count { it.status >= QueenCellStatus.ACCEPTED && it.status != QueenCellStatus.FAILED }
+            val cappedCount = cells.count { it.status >= QueenCellStatus.CAPPED && it.status != QueenCellStatus.FAILED }
+            val emergedCount = cells.count { it.status >= QueenCellStatus.EMERGED && it.status != QueenCellStatus.FAILED }
+            val layingCount = cells.count { it.status == QueenCellStatus.LAYING || it.status == QueenCellStatus.SOLD }
 
-            QueenRearingStats(
-                totalCells = total,
-                acceptedCells = accepted,
-                emergedQueens = emerged,
-                layingQueens = laying,
-                acceptanceRate = acceptanceRate * 100,
-                emergenceRate = emergenceRate * 100,
-                matingSuccessRate = matingSuccessRate * 100
+            // Calculate performance for each stage based on the success of the previous one.
+            val acceptance = StagePerformance(
+                startingCount = totalGrafted,
+                successCount = acceptedCount,
+                successRate = (acceptedCount.toFloat() / totalGrafted) * 100
+            )
+            val capping = StagePerformance(
+                startingCount = acceptedCount,
+                successCount = cappedCount,
+                successRate = if (acceptedCount > 0) (cappedCount.toFloat() / acceptedCount) * 100 else 0f
+            )
+            val emergence = StagePerformance(
+                startingCount = cappedCount,
+                successCount = emergedCount,
+                successRate = if (cappedCount > 0) (emergedCount.toFloat() / cappedCount) * 100 else 0f
+            )
+            val mating = StagePerformance(
+                startingCount = emergedCount,
+                successCount = layingCount,
+                successRate = if (emergedCount > 0) (layingCount.toFloat() / emergedCount) * 100 else 0f
+            )
+
+            val overallSuccessRate = (layingCount.toFloat() / totalGrafted) * 100
+
+            QueenRearingAnalytics(
+                totalGrafted = totalGrafted,
+                acceptance = acceptance,
+                capping = capping,
+                emergence = emergence,
+                mating = mating,
+                overallSuccessRate = overallSuccessRate,
+                cellStatusDistribution = statusCounts
             )
         }
     }

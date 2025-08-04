@@ -499,5 +499,11 @@ If you have screenshots, logs, or other files that help illustrate your point, f
     <!-- Line DataSet Labels (cumulative yields) -->
     <string name="chart_cumulative_emergence">Cumulative Emergence</string>
     <string name="chart_cumulative_mating">Cumulative Mating</string>
+    <string name="queen_rearing_funnel">Queen Rearing Funnel</string>
+    <string name="current_cell_status">Current Cell Status</string>
+    <string name="success_rate_over_time">Success Rate Over Time</string>
+    <string name="overall_success_rate_format">Overall Success: %.1f%%</string>
+    <string name="overall_success_rate">Overall Success Rate</string>
+    <string name="cells_at_stage">Cells at Stage</string>
 
 </resources>

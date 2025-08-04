@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.stingsoftware.pasika.R
 
 // Enum to define the role of a hive in the queen rearing process.
-enum class HiveRole(@StringRes val labelRes: Int) {
+enum class HiveRole(@param:StringRes val labelRes: Int) {
     PRODUCTION(R.string.hive_role_production),
     MOTHER(R.string.hive_role_mother),
     STARTER(R.string.hive_role_starter),
@@ -23,7 +23,7 @@ enum class HiveRole(@StringRes val labelRes: Int) {
 /**
  * Enum to track the status of a queen cell throughout its lifecycle.
  */
-enum class QueenCellStatus(@StringRes val labelRes: Int) {
+enum class QueenCellStatus(@param:StringRes val labelRes: Int) {
     GRAFTED(R.string.queen_cell_status_grafted),
     ACCEPTED(R.string.queen_cell_status_accepted),
     CAPPED(R.string.queen_cell_status_capped),

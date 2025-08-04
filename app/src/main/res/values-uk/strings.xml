@@ -510,4 +510,11 @@
     <string name="chart_cumulative_emergence">Загальний вихід</string>
     <string name="chart_cumulative_mating">Загальне спарювання</string>
 
+    <string name="queen_rearing_funnel">Воронка виведення маток</string>
+    <string name="current_cell_status">Поточний статус маточників</string>
+    <string name="success_rate_over_time">Показник успішності з часом</string>
+    <string name="overall_success_rate_format">Загальний показник успішності: %.1f%%</string>
+    <string name="overall_success_rate">Загальний показник успішності</string>
+    <string name="cells_at_stage">Маточники на стадії</string>
+
 </resources>

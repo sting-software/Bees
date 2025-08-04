@@ -8,10 +8,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AnalyticsViewModel @Inject constructor(
-    private val repository: ApiaryRepository
+    repository: ApiaryRepository
 ) : ViewModel() {
 
-    val stats = repository.getQueenRearingStats().asLiveData()
+    /**
+     * NEW: Exposes a single LiveData object containing all calculated analytics.
+     * The fragment will observe this to update all charts.
+     */
+    val analytics = repository.getQueenRearingAnalytics().asLiveData()
+
+    /**
+     * These are still needed for charts that require batch-specific data,
+     * like the "Performance by Batch" chart.
+     */
     val batches = repository.getAllGraftingBatches().asLiveData()
     val allCells = repository.getAllQueenCells().asLiveData()
 }
